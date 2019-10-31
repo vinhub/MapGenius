@@ -4,11 +4,9 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
-Assets/SampleScenes
 Assets/CiDy
 Assets/Standard Assets
 /Assets/CiDy.meta
-/Assets/SampleScenes.meta
 /Assets/Standard Assets.meta
 
 # Visual Studio cache directory
