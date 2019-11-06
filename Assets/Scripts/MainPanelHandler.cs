@@ -13,6 +13,7 @@ public class MainPanelHandler : MonoBehaviour
 
         GameSystem.Instance.PauseGame();
 
+        gameObject.SetActive(true);
         panelShowingNow = transform.Find("PanelParent/Panels/" + panelName).gameObject;
 
         panelShowingNow.SetActive(true);
@@ -25,6 +26,8 @@ public class MainPanelHandler : MonoBehaviour
 
         panelShowingNow.SetActive(false);
         panelShowingNow = null;
+
+        gameObject.SetActive(false);
 
         GameSystem.Instance.ResumeGame();
     }
