@@ -5,44 +5,29 @@ using UnityEngine.UI;
 public class PauseMenu : MonoBehaviour
 {
     private Toggle m_MenuToggle;
-	private float m_TimeScaleRef = 1f;
-    private float m_VolumeRef = 1f;
-    private bool m_Paused;
-
-
+    
     void Awake()
     {
         m_MenuToggle = GetComponent <Toggle> ();
 	}
-
-
-    private void MenuOn ()
+    
+    private void MenuOn()
     {
-        m_TimeScaleRef = Time.timeScale;
-        Time.timeScale = 0f;
-
-        m_VolumeRef = AudioListener.volume;
-        AudioListener.volume = 0f;
-
-        m_Paused = true;
+        GameSystem.Instance.PauseGame();
     }
-
-
-    public void MenuOff ()
+    
+    public void MenuOff()
     {
-        Time.timeScale = m_TimeScaleRef;
-        AudioListener.volume = m_VolumeRef;
-        m_Paused = false;
+        GameSystem.Instance.ResumeGame();
     }
-
-
-    public void OnMenuStatusChange ()
+    
+    public void OnMenuStatusChange()
     {
-        if (m_MenuToggle.isOn && !m_Paused)
+        if (m_MenuToggle.isOn && !GameSystem.Instance.IsGamePaused())
         {
             MenuOn();
         }
-        else if (!m_MenuToggle.isOn && m_Paused)
+        else if (!m_MenuToggle.isOn && GameSystem.Instance.IsGamePaused())
         {
             MenuOff();
         }
@@ -59,5 +44,4 @@ public class PauseMenu : MonoBehaviour
 		}
 	}
 #endif
-
 }
