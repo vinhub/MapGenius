@@ -24,7 +24,7 @@ public class GameSystem : MonoBehaviour
 
         if (m_goMainPanelUI == null)
         {
-            m_goMainPanelUI = Instantiate(MainPanelUI);
+            m_goMainPanelUI = Instantiate(this.MainPanelUI);
             m_mainPanelHandler = m_goMainPanelUI.GetComponent<MainPanelHandler>();
         }
 
@@ -83,11 +83,11 @@ public class GameSystem : MonoBehaviour
     public void LandmarkCrossed(string landmarkName)
     {
         // when a landmark is crossed, show map panel
-        ShowPanel(Strings.MapPanelName);
+        ShowPanel(Strings.MapPanelName, landmarkName);
     }
 
-    public void ShowPanel(string panelName)
+    public void ShowPanel(string panelName, string landmarkName = null)
     {
-        m_mainPanelHandler.ShowPanel(panelName);
+        m_mainPanelHandler.ShowPanel(panelName, landmarkName);
     }
 }

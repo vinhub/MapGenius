@@ -7,7 +7,7 @@ public class MainPanelHandler : MonoBehaviour
     private GameObject m_panelShowingNow = null; // whether / which panel is showing right now
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
 
-    public void ShowPanel(string panelName)
+    public void ShowPanel(string panelName, string landmarkName = null)
     {
         if (m_panelShowingNow != null)
             return;
@@ -15,7 +15,7 @@ public class MainPanelHandler : MonoBehaviour
         GameSystem.Instance.PauseGame();
 
         if (panelName == Strings.MapPanelName)
-            SetUpMapPanel();
+            SetUpMapPanel(landmarkName);
 
         gameObject.SetActive(true);
         m_panelShowingNow = transform.Find(Strings.PanelPath + panelName).gameObject;
@@ -48,7 +48,7 @@ public class MainPanelHandler : MonoBehaviour
         }
     }
 
-    private void SetUpMapPanel()
+    private void SetUpMapPanel(string landmarkName)
     {
         if (m_isLevelComplete)
         {
@@ -57,9 +57,24 @@ public class MainPanelHandler : MonoBehaviour
         }
         else
         {
-            // TODO: highlight the playermark corresponding to the landmark that the player just crossed, if they had just done that
+            // if the panel is being shown as a result of player crossing a landmark
+            if (landmarkName != null)
+            {
+                // highlight the playermark corresponding to the landmark
+                PlayermarkHandler ph = PlayermarkFromLandmark(landmarkName);
+
+                if (ph && !ph.IsLocked)
+                {
+                    ph.SetHighlight(true);
+                }
+            }
 
         }
+    }
+
+    private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
+    {
+        throw new NotImplementedException();
     }
 
     private void SavePlayermarkChanges()
@@ -72,7 +87,7 @@ public class MainPanelHandler : MonoBehaviour
         // for each playermark that is curently unlocked, if it was dragged and dropped at least once during the time the panel was open, lock it i.e. make it undraggable
         foreach (Transform t in m_panelShowingNow.transform.Find("PlayermarksPanel/Playermarks"))
         {
-            Transform tImage = t.Find("PlayermarkImage");
+            Transform tImage = t.Find("Playermark");
             PlayermarkHandler ph = tImage.GetComponent<PlayermarkHandler>();
             if (!ph.IsLocked)
             {

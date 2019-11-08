@@ -6,11 +6,11 @@ public class MenuSceneLoader : MonoBehaviour
     public GameObject MainMenuUI;
     private GameObject m_goMainMenuUI;
 
-	void Awake ()
+	void Awake()
 	{
 	    if (m_goMainMenuUI == null)
 	    {
-	        m_goMainMenuUI = Instantiate(MainMenuUI);
+	        m_goMainMenuUI = Instantiate(this.MainMenuUI);
 	    }
 	}
 }
