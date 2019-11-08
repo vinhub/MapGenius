@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class MainPanelHandler : MonoBehaviour
 {
-    GameObject panelShowingNow = null;
+    private GameObject panelShowingNow = null;
 
     public void ShowPanel(string panelName)
     {
@@ -13,16 +13,24 @@ public class MainPanelHandler : MonoBehaviour
 
         GameSystem.Instance.PauseGame();
 
+        if (panelName == Strings.MapPanelName)
+            SetUpMapPanel();
+
         gameObject.SetActive(true);
-        panelShowingNow = transform.Find("PanelParent/Panels/" + panelName).gameObject;
+        panelShowingNow = transform.Find(Strings.PanelPath + panelName).gameObject;
 
         panelShowingNow.SetActive(true);
     }
 
-    public void HidePanel()
+    public void ClosePanel()
     {
         if (panelShowingNow == null)
             return;
+
+        if (panelShowingNow.name == Strings.MapPanelName)
+        {
+            SaveMapPanel();
+        }
 
         panelShowingNow.SetActive(false);
         panelShowingNow = null;
@@ -31,4 +39,16 @@ public class MainPanelHandler : MonoBehaviour
 
         GameSystem.Instance.ResumeGame();
     }
+
+    private void SetUpMapPanel()
+    {
+        // TODO: highlight the playermark corresponding to the landmark that the player just crossed
+    }
+
+    private void SaveMapPanel()
+    {
+        // TODO: for each playermark, if it was dragged on to the map, lock it i.e. make it undraggable
+
+    }
+
 }

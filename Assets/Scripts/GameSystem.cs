@@ -15,6 +15,8 @@ public class GameSystem : MonoBehaviour
     private GameObject m_MainPanelObj = null;
     private MainPanelHandler m_MainPanelHandler = null;
 
+    // public List<Playermark> playermarks = new List<Playermark>();
+
     void Awake()
     {
         m_Instance = this;
@@ -80,7 +82,7 @@ public class GameSystem : MonoBehaviour
     public void LandmarkCrossed(string landmarkName)
     {
         // when a landmark is crossed, show map panel
-        ShowPanel("MapPanel");
+        ShowPanel(Strings.MapPanelName);
     }
 
     public void ShowPanel(string panelName)
