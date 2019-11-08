@@ -747,7 +747,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8aafc40d80cc4647a3755c51948d4ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MainPanel: {fileID: 100086, guid: 08a05b0ac7d6c1941b1037beba1567b3, type: 3}
 --- !u!114 &11400178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,7 +795,6 @@ GameObject:
   - component: {fileID: 11400012}
   - component: {fileID: 11400180}
   - component: {fileID: 11455508}
-  - component: {fileID: 5514146679146198083}
   m_Layer: 5
   m_Name: OpenMenuButton
   m_TagString: Untagged
@@ -960,18 +958,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
-      - m_Target: {fileID: 3261881005879047362, guid: 08a05b0ac7d6c1941b1037beba1567b3,
-          type: 3}
-        m_MethodName: HidePanel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   m_IsOn: 0
 --- !u!114 &11400180
 MonoBehaviour:
@@ -995,18 +981,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 971f44ba24a74294294daed00507d80e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5514146679146198083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3683c1517cab04341bed1a0b634c2570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &102418

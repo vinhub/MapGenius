@@ -9,6 +9,7 @@ public class LandmarkHandler : MonoBehaviour
         if (other.name == "ColliderBody" || other.name == "ColliderFront" || other.name == "ColliderBottom")
         {
             Debug.Log("Car crossed landmark " + this.name);
+            GameSystem.Instance.LandmarkCrossed(this.name);
         }
     }
 }

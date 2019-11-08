@@ -11,9 +11,20 @@ public class GameSystem : MonoBehaviour
     private float m_VolumeRef = 1f;
     private bool m_Paused;
 
+    public GameObject m_MainPanel;
+    private GameObject m_MainPanelObj = null;
+    private MainPanelHandler m_MainPanelHandler = null;
+
     void Awake()
     {
         m_Instance = this;
+
+        if (m_MainPanelObj == null)
+        {
+            m_MainPanelObj = Instantiate(m_MainPanel);
+            m_MainPanelHandler = m_MainPanelObj.GetComponent<MainPanelHandler>();
+        }
+
     }
 
     void OnDestroy()
@@ -66,4 +77,14 @@ public class GameSystem : MonoBehaviour
         Application.Quit();
     }
 
+    public void LandmarkCrossed(string landmarkName)
+    {
+        // when a landmark is crossed, show map panel
+        ShowPanel("MapPanel");
+    }
+
+    public void ShowPanel(string panelName)
+    {
+        m_MainPanelHandler.ShowPanel(panelName);
+    }
 }
