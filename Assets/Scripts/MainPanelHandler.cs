@@ -14,13 +14,13 @@ public class MainPanelHandler : MonoBehaviour
 
         GameSystem.Instance.PauseGame();
 
-        if (panelName == Strings.MapPanelName)
-            SetUpMapPanel(landmarkName);
-
         gameObject.SetActive(true);
         m_panelShowingNow = transform.Find(Strings.PanelPath + panelName).gameObject;
 
         m_panelShowingNow.SetActive(true);
+
+        if (panelName == Strings.MapPanelName)
+            SetUpMapPanel(landmarkName);
     }
 
     public void ClosePanel()
@@ -74,7 +74,22 @@ public class MainPanelHandler : MonoBehaviour
 
     private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
     {
-        throw new NotImplementedException();
+        // PlayermarkListItem/PlayermarkText.text == landmarkname, then get its parent/Playermark/PlayermarkHandler
+        Debug.Assert(m_panelShowingNow != null);
+
+        foreach (Transform tPlayermarkListItem in m_panelShowingNow.transform.Find("PlayermarksPanel/Playermarks"))
+        {
+            Transform tPlayermarkText = tPlayermarkListItem.Find("PlayermarkText");
+            Text text = tPlayermarkText.GetComponent<Text>();
+
+            if (text.text == landmarkName)
+            {
+                Transform tPlayermark = tPlayermarkListItem.Find("Playermark");
+                return tPlayermark.GetComponent<PlayermarkHandler>();
+            }
+        }
+
+        return null;
     }
 
     private void SavePlayermarkChanges()
@@ -85,15 +100,15 @@ public class MainPanelHandler : MonoBehaviour
         bool areAllPlayermarksLocked = true;
 
         // for each playermark that is curently unlocked, if it was dragged and dropped at least once during the time the panel was open, lock it i.e. make it undraggable
-        foreach (Transform t in m_panelShowingNow.transform.Find("PlayermarksPanel/Playermarks"))
+        foreach (Transform tPlayermarkListItem in m_panelShowingNow.transform.Find("PlayermarksPanel/Playermarks"))
         {
-            Transform tImage = t.Find("Playermark");
-            PlayermarkHandler ph = tImage.GetComponent<PlayermarkHandler>();
+            Transform tPlayermark = tPlayermarkListItem.Find("Playermark");
+            PlayermarkHandler ph = tPlayermark.GetComponent<PlayermarkHandler>();
             if (!ph.IsLocked)
             {
                 if (ph.IsDropped)
                 {
-                    ph.IsLocked = true;
+                    ph.SetLock(true);
                 }
                 else
                 {

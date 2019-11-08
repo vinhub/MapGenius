@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class PlayermarkHandler : MonoBehaviour, IDragHandler, IEndDragHandler
 {
-    public bool IsLocked = false; // whether the marker is locked i.e. not draggable
-    public bool IsDropped = false; // whether the marker has been drag/dropped at least once
+    public bool IsLocked { get; private set; } = false; // whether the marker is locked i.e. not draggable
+    public bool IsDropped { get; private set; } = false; // whether the marker has been drag/dropped at least once
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -37,6 +37,20 @@ public class PlayermarkHandler : MonoBehaviour, IDragHandler, IEndDragHandler
         else
         {
             playermarkImage.color = new Color(0f, 150f, 0f);
+        }
+    }
+
+    internal void SetLock(bool isLocked)
+    {
+        this.IsLocked = isLocked;
+
+        if (isLocked)
+        {
+            // TODO: gray the text
+        }
+        else
+        {
+            // TODO: ungray text
         }
     }
 }
