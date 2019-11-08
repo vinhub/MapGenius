@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class MainMenuHandler : MonoBehaviour
 {
-    private PauseMenu m_PauseMenu;
+    private PauseMenu m_pauseMenu;
     private Toggle m_menuToggle;
     
     private void Awake()
     {
-        m_PauseMenu = GetComponentInChildren<PauseMenu>();
-        m_menuToggle = m_PauseMenu.GetComponent<Toggle>();
+        m_pauseMenu = GetComponentInChildren<PauseMenu>();
+        m_menuToggle = m_pauseMenu.GetComponent<Toggle>();
     }
 
     public void LoadScene(string sceneName)

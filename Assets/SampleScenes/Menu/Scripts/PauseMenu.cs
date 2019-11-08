@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
-    private Toggle m_MenuToggle;
+    private Toggle m_toggle;
     
     void Awake()
     {
-        m_MenuToggle = GetComponent <Toggle> ();
+        m_toggle = GetComponent<Toggle>();
 	}
     
     private void MenuOn()
@@ -23,11 +23,11 @@ public class PauseMenu : MonoBehaviour
     
     public void OnMenuStatusChange()
     {
-        if (m_MenuToggle.isOn && !GameSystem.Instance.IsGamePaused())
+        if (m_toggle.isOn && !GameSystem.Instance.IsGamePaused())
         {
             MenuOn();
         }
-        else if (!m_MenuToggle.isOn && GameSystem.Instance.IsGamePaused())
+        else if (!m_toggle.isOn && GameSystem.Instance.IsGamePaused())
         {
             MenuOff();
         }
@@ -39,8 +39,8 @@ public class PauseMenu : MonoBehaviour
 	{
 		if(Input.GetKeyUp(KeyCode.Escape))
 		{
-		    m_MenuToggle.isOn = !m_MenuToggle.isOn;
-            Cursor.visible = m_MenuToggle.isOn;//force the cursor visible if anythign had hidden it
+		    m_toggle.isOn = !m_toggle.isOn;
+            Cursor.visible = m_toggle.isOn;//force the cursor visible if anythign had hidden it
 		}
 	}
 #endif
