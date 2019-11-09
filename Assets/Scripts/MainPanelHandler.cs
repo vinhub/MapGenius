@@ -4,37 +4,47 @@ using UnityEngine.UI;
 
 public class MainPanelHandler : MonoBehaviour
 {
-    private GameObject m_panelShowingNow = null; // whether / which panel is showing right now
+    private GameObject m_panelCur = null; // whether / which panel is being shown right now
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
+    private PlayermarkHandler m_phCur; // playmark handler correspoding to the landmark that the player just crossed
 
     public void ShowPanel(string panelName, string landmarkName = null)
     {
-        if (m_panelShowingNow != null)
+        if (m_panelCur != null)
             return;
+
+        m_panelCur = transform.Find(Strings.PanelPath + panelName).gameObject;
+
+        m_phCur = PlayermarkFromLandmark(landmarkName);
+
+        // if the landmark has already been locked, then don't show the panel
+        if ((m_phCur != null) && m_phCur.IsLocked)
+        {
+            m_panelCur = null;
+            return;
+        }
 
         GameSystem.Instance.PauseGame();
 
         gameObject.SetActive(true);
-        m_panelShowingNow = transform.Find(Strings.PanelPath + panelName).gameObject;
-
-        m_panelShowingNow.SetActive(true);
+        m_panelCur.SetActive(true);
 
         if (panelName == Strings.MapPanelName)
-            SetUpMapPanel(landmarkName);
+            SetUpMapPanel();
     }
 
     public void ClosePanel()
     {
-        if (m_panelShowingNow == null)
+        if (m_panelCur == null)
             return;
 
-        if (m_panelShowingNow.name == Strings.MapPanelName)
+        if (m_panelCur.name == Strings.MapPanelName)
         {
             SavePlayermarkChanges();
         }
 
-        m_panelShowingNow.SetActive(false);
-        m_panelShowingNow = null;
+        m_panelCur.SetActive(false);
+        m_panelCur = null;
 
         gameObject.SetActive(false);
 
@@ -48,7 +58,7 @@ public class MainPanelHandler : MonoBehaviour
         }
     }
 
-    private void SetUpMapPanel(string landmarkName)
+    private void SetUpMapPanel()
     {
         if (m_isLevelComplete)
         {
@@ -57,27 +67,18 @@ public class MainPanelHandler : MonoBehaviour
         }
         else
         {
-            // if the panel is being shown as a result of player crossing a landmark
-            if (landmarkName != null)
-            {
-                // highlight the playermark corresponding to the landmark
-                PlayermarkHandler ph = PlayermarkFromLandmark(landmarkName);
-
-                if (ph && !ph.IsLocked)
-                {
-                    ph.SetHighlight(true);
-                }
-            }
-
+            // highlight the current playermark
+            if (m_phCur != null)
+                m_phCur.SetHighlight(true);
         }
     }
 
     private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
     {
         // PlayermarkListItem/PlayermarkText.text == landmarkname, then get its parent/Playermark/PlayermarkHandler
-        Debug.Assert(m_panelShowingNow != null);
+        Debug.Assert(m_panelCur != null);
 
-        foreach (Transform tPlayermarkListItem in m_panelShowingNow.transform.Find("PlayermarksPanel/Playermarks"))
+        foreach (Transform tPlayermarkListItem in m_panelCur.transform.Find("PlayermarksPanel/Playermarks"))
         {
             Transform tPlayermarkText = tPlayermarkListItem.Find("PlayermarkText");
             Text text = tPlayermarkText.GetComponent<Text>();
@@ -97,29 +98,27 @@ public class MainPanelHandler : MonoBehaviour
         if (m_isLevelComplete)
             return;
 
+        // lock the current playmarker
+        if (m_phCur != null)
+            m_phCur.SetLock(true);
+
+        // check if level is complete
+        m_isLevelComplete = CheckLevelComplete();
+    }
+
+    // if all playmarkers are locked, then level is complete
+    private bool CheckLevelComplete()
+    {
         bool areAllPlayermarksLocked = true;
 
-        // for each playermark that is curently unlocked, if it was dragged and dropped at least once during the time the panel was open, lock it i.e. make it undraggable
-        foreach (Transform tPlayermarkListItem in m_panelShowingNow.transform.Find("PlayermarksPanel/Playermarks"))
+        foreach (Transform tPlayermarkListItem in m_panelCur.transform.Find("PlayermarksPanel/Playermarks"))
         {
             Transform tPlayermark = tPlayermarkListItem.Find("Playermark");
             PlayermarkHandler ph = tPlayermark.GetComponent<PlayermarkHandler>();
             if (!ph.IsLocked)
-            {
-                if (ph.IsDropped)
-                {
-                    ph.SetLock(true);
-                }
-                else
-                {
-                    areAllPlayermarksLocked = false;
-                }
-            }
+                areAllPlayermarksLocked = false;
         }
 
-        if (areAllPlayermarksLocked) // if all playermarks are locked, then the level is complete
-        {
-            m_isLevelComplete = true;
-        }
+        return areAllPlayermarksLocked;
     }
 }
