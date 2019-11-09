@@ -26,44 +26,23 @@ public class PlayermarkHandler : MonoBehaviour, IDragHandler, IEndDragHandler
         this.IsDropped = true; // Just note that it was drag/dropped. They can still drag and drop it until they close the panel. Then it gets locked.
     }
 
-    internal void SetHighlight(bool highlight)
+    internal void SetState(bool isLocked, bool isDropped)
     {
-        Image playermarkImage = this.GetComponent<Image>();
-        Text playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
-
-        if (highlight)
-        {
-            playermarkImage.color = new Color(0f, 255f, 0f);
-            playermarkText.color = new Color(0f, 255f, 0f);
-        }
-        else
-        {
-            playermarkImage.color = new Color(0f, 150f, 0f);
-            playermarkText.color = new Color(0f, 150f, 0f);
-        }
-    }
-
-    internal void SetLock(bool isLocked)
-    {
-        Image playermarkImage = this.GetComponent<Image>();
-        Text playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
-
         this.IsLocked = isLocked;
+        this.IsDropped = isDropped;
+
+        Image playermarkImage = this.GetComponent<Image>();
+        Text playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
 
         if (isLocked)
         {
-            playermarkImage.color = new Color(0f, 150f, 0f);
-            playermarkText.color = new Color(170f, 170f, 170f);
+            playermarkImage.color = new Color(0f, 160f, 0f);
+            playermarkText.color = isDropped ? new Color(160f, 160f, 160f) : new Color(0f, 160f, 0f);
         }
         else
         {
             playermarkImage.color = new Color(0f, 255f, 0f);
             playermarkText.color = new Color(0f, 255f, 0f);
         }
-    }
-
-    internal void SetDropped(bool isDropped)
-    {
-        this.IsDropped = isDropped;
     }
 }

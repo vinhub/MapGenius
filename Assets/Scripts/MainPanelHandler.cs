@@ -71,8 +71,7 @@ public class MainPanelHandler : MonoBehaviour
             // highlight the current playermark and make it draggable
             if (m_phCur != null)
             {
-                m_phCur.SetLock(false);
-                m_phCur.SetHighlight(true);
+                m_phCur.SetState(false, false);
             }
         }
     }
@@ -105,9 +104,7 @@ public class MainPanelHandler : MonoBehaviour
         // lock the current playmarker and mark it as drag-dropped
         if (m_phCur != null)
         {
-            m_phCur.SetHighlight(false);
-            m_phCur.SetDropped(true);
-            m_phCur.SetLock(true);
+            m_phCur.SetState(true, true);
         }
 
         // check if level is complete
