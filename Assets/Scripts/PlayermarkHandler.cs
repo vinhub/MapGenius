@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PlayermarkHandler : MonoBehaviour, IDragHandler, IEndDragHandler
 {
-    public bool IsLocked { get; private set; } = false; // whether the marker is locked i.e. not draggable
+    public bool IsLocked { get; private set; } = true; // whether the marker is locked i.e. not draggable
     public bool IsDropped { get; private set; } = false; // whether the marker has been drag/dropped at least once
 
     public void OnDrag(PointerEventData eventData)
@@ -29,28 +29,41 @@ public class PlayermarkHandler : MonoBehaviour, IDragHandler, IEndDragHandler
     internal void SetHighlight(bool highlight)
     {
         Image playermarkImage = this.GetComponent<Image>();
+        Text playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
 
         if (highlight)
         {
             playermarkImage.color = new Color(0f, 255f, 0f);
+            playermarkText.color = new Color(0f, 255f, 0f);
         }
         else
         {
             playermarkImage.color = new Color(0f, 150f, 0f);
+            playermarkText.color = new Color(0f, 150f, 0f);
         }
     }
 
     internal void SetLock(bool isLocked)
     {
+        Image playermarkImage = this.GetComponent<Image>();
+        Text playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
+
         this.IsLocked = isLocked;
 
         if (isLocked)
         {
-            // TODO: gray the text
+            playermarkImage.color = new Color(0f, 150f, 0f);
+            playermarkText.color = new Color(170f, 170f, 170f);
         }
         else
         {
-            // TODO: ungray text
+            playermarkImage.color = new Color(0f, 255f, 0f);
+            playermarkText.color = new Color(0f, 255f, 0f);
         }
+    }
+
+    internal void SetDropped(bool isDropped)
+    {
+        this.IsDropped = isDropped;
     }
 }

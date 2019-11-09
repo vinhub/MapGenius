@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuHandler : MonoBehaviour
@@ -16,8 +15,7 @@ public class MainMenuHandler : MonoBehaviour
 
     public void LoadScene(string sceneName)
 	{
-        GameSystem.Instance.ResumeGame();
-		SceneManager.LoadScene(sceneName);
+        GameSystem.Instance.LoadScene(sceneName);
 	}
 
     public void LoadURL(string url)

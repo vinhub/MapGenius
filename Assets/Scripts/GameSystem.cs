@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameSystem : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class GameSystem : MonoBehaviour
 
     // main UI panel management
     public GameObject MainPanelUI;
+
     private GameObject m_goMainPanelUI = null;
     private MainPanelHandler m_mainPanelHandler = null;
 
@@ -43,6 +46,12 @@ public class GameSystem : MonoBehaviour
     void OnGui()
     {
         // common GUI code goes here
+    }
+
+    internal void LoadScene(string sceneName)
+    {
+        GameSystem.Instance.ResumeGame();
+        SceneManager.LoadScene(sceneName);
     }
 
     public void PauseGame()

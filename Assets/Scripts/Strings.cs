@@ -7,6 +7,8 @@ public static class Strings
     // non-localizable
     public const string MapPanelName = "MapPanel";
     public static readonly string[] CarColliderNames = { "ColliderBody", "ColliderFront", "ColliderBottom" };
+    public const string Springfield = "Springfield";
+    public const string PlayermarkText = "PlayermarkText";
     public const string PanelPath = "PanelParent/Panels/";
 
     // localizable
