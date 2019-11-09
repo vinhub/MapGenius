@@ -10,7 +10,7 @@ public class LandmarkHandler : MonoBehaviour
         // if the collider was any of the car colliders
         if (Array.FindIndex(Strings.CarColliderNames, s => s == other.name) >= 0)
         {
-            Debug.Log("Car crossed landmark " + this.name);
+            // Debug.Log("Car crossed landmark " + this.name);
             GameSystem.Instance.LandmarkCrossed(this.name);
         }
     }
