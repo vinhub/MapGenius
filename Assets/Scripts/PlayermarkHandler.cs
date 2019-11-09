@@ -36,13 +36,13 @@ public class PlayermarkHandler : MonoBehaviour, IDragHandler, IEndDragHandler
 
         if (isLocked)
         {
-            playermarkImage.color = new Color(0f, 160f, 0f);
-            playermarkText.color = isDropped ? new Color(160f, 160f, 160f) : new Color(0f, 160f, 0f);
+            playermarkImage.color = new Color32(0, 160, 0, 255);
+            playermarkText.color = isDropped ? new Color32(160, 160, 160, 255) : new Color32(0, 160, 0, 255);
         }
         else
         {
-            playermarkImage.color = new Color(0f, 255f, 0f);
-            playermarkText.color = new Color(0f, 255f, 0f);
+            playermarkImage.color = new Color32(0, 255, 0, 255);
+            playermarkText.color = new Color32(0, 255, 0, 255);
         }
     }
 }
