@@ -38,7 +38,8 @@ public class MainPanelHandler : MonoBehaviour
             SetUpMapPanel();
     }
 
-    public void ClosePanel()
+    // called in response to player clicking the "continue game" button on the panel
+    public void ContinueFromPanel()
     {
         if (m_panelCur == null)
             return;
@@ -48,13 +49,10 @@ public class MainPanelHandler : MonoBehaviour
             SavePlayermarkChanges();
         }
 
-        m_panelCur.SetActive(false);
-        m_panelCur = null;
-
-        gameObject.SetActive(false);
-
+        // if level is complete, we should not close the panel but show the results
         if (m_isLevelComplete)
         {
+            // if the score was already shown, we can move to the next level
             if (m_isScoreUpdated)
             {
                 // TODO: load next level
@@ -63,6 +61,7 @@ public class MainPanelHandler : MonoBehaviour
                 return;
             }
 
+            // show the landmarks and score
             DisplayLandmarks();
 
             // Calculate and display score
@@ -79,6 +78,11 @@ public class MainPanelHandler : MonoBehaviour
         }
         else
         {
+            m_panelCur.SetActive(false);
+            m_panelCur = null;
+
+            gameObject.SetActive(false);
+
             GameSystem.Instance.ResumeGame();
         }
     }
@@ -124,9 +128,19 @@ public class MainPanelHandler : MonoBehaviour
     // Calculate the position of the landmark on the map in the map panel
     private Vector3 CalcPosOnMap(LandmarkHandler lh)
     {
-        // TODO: 
+        Vector3 positionIn = lh.transform.position;
 
-        return lh.transform.position;
+        Transform tMapImage = m_panelCur.transform.Find("MapBackground/MapImage");
+        RectTransform rectTrans = tMapImage.GetComponentInParent<RectTransform>(); //RenderTexture holder
+
+        Camera skyCamera = GameObject.Find("Skycam").GetComponent<Camera>();
+
+        Vector2 viewPos = skyCamera.WorldToViewportPoint(positionIn);
+        Vector2 localPos = new Vector2(viewPos.x * rectTrans.sizeDelta.x, viewPos.y * rectTrans.sizeDelta.y);
+        Vector3 worldPos = rectTrans.TransformPoint(localPos);
+        float scalerRatio = (1 / this.transform.lossyScale.x) * 2; // Implying all x y z are the same for the lossy scale
+
+        return new Vector3(worldPos.x - rectTrans.sizeDelta.x / scalerRatio, worldPos.y - rectTrans.sizeDelta.y / scalerRatio, 0f);
     }
 
     private void DisplayScore()
@@ -144,7 +158,18 @@ public class MainPanelHandler : MonoBehaviour
     // Show landmarks so player can see their mistakes
     private void DisplayLandmarks()
     {
-        // TODO: turn on display of landmarks
+        GameObject[] landmarks = GameObject.FindGameObjectsWithTag("Landmark");
+        foreach (GameObject goLandmark in landmarks)
+        {
+            LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
+            Vector3 position = CalcPosOnMap(lh);
+
+            GameObject go = new GameObject();
+            go.transform.parent = m_panelCur.transform.Find("MapBackground/MapImage");
+            go.AddComponent<RectTransform>().sizeDelta = new Vector2(10, 10);
+            go.AddComponent<Image>();
+            go.transform.position = position;
+        }
     }
 
     private void SetUpMapPanel()
@@ -154,8 +179,11 @@ public class MainPanelHandler : MonoBehaviour
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.CurrentlyVisiting);
         }
 
-        int levelScore, totalScore = 0;
-        CalcScore(out levelScore, ref totalScore);
+        // display current score
+        DisplayScore();
+
+        // display landmarks to help player know where they are (without telling them which landmark is which)
+        DisplayLandmarks();
     }
 
     private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
