@@ -10,6 +10,14 @@ public class GameSystem : MonoBehaviour
     private static GameSystem m_instance;
     public static GameSystem Instance { get { return m_instance; } }
 
+    public const int MaxLevelScore = 100; // max score for a level
+    public const int NumLevels = 10; // total number of levels
+    public const int MaxScore = MaxLevelScore * NumLevels; // max possible score
+
+    public int CurLevel { get; private set; } = 1; // current level
+    public int LevelScore { get; private set; } // player's score so far for the current level
+    public int TotalScore { get; private set; } = 0; // player's total score so far
+
     // for pausing / resuming game
     private float m_timeScaleSav = 1f;
     private float m_volumeSav = 1f;
@@ -98,5 +106,11 @@ public class GameSystem : MonoBehaviour
     public void ShowPanel(string panelName, string landmarkName = null)
     {
         m_mainPanelHandler.ShowPanel(panelName, landmarkName);
+    }
+
+    internal void SetScore(int levelScore, int totalScore)
+    {
+        LevelScore = levelScore;
+        TotalScore = totalScore;
     }
 }

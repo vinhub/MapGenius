@@ -63,11 +63,17 @@ public class MainPanelHandler : MonoBehaviour
                 return;
             }
 
-            // TODO: calculate and show score
+            DisplayLandmarks();
 
-            // TODO: Show landmarks with labels so player can see their mistakes
+            // Calculate and display score
+            int levelScore;
+            int totalScore = GameSystem.Instance.TotalScore;
 
-            // TODO: change close button to next level button
+            CalcScore(out levelScore, ref totalScore);
+
+            GameSystem.Instance.SetScore(levelScore, totalScore);
+
+            DisplayScore();
 
             m_isScoreUpdated = true;
         }
@@ -77,12 +83,79 @@ public class MainPanelHandler : MonoBehaviour
         }
     }
 
+    private void CalcScore(out int levelScore, ref int totalScore)
+    {
+        levelScore = 0;
+
+        int numLandmarksInLevel = 1;
+        float maxLandmarkScore = GameSystem.MaxLevelScore / numLandmarksInLevel;
+        float maxMapDistance = 100;
+
+        // calculate and add up the score for each landmark
+        GameObject[] landmarks = GameObject.FindGameObjectsWithTag("Landmark");
+        foreach (GameObject goLandmark in landmarks)
+        {
+            LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
+
+            // find corresponding playermark
+            PlayermarkHandler ph = PlayermarkFromLandmark(lh.name);
+
+            // calculate position of landmark in the map
+            Vector3 landmarkPos = CalcPosOnMap(lh);
+
+            // claculate position of playermark in the map
+            Transform tPlayermark = ph.transform;
+
+            // calculae distance between them
+            double distance = Vector3.Distance(landmarkPos, tPlayermark.position);
+
+            if (distance > maxMapDistance)
+                distance = maxMapDistance;
+
+            // interpolate between the distance and the max distance possible in the map to get the score for this landmark
+            int landmarkScore = (int)Math.Round(Mathf.Lerp(0, maxLandmarkScore, 1f - (float)(distance / maxMapDistance)));
+
+            levelScore += landmarkScore;
+        }
+
+        totalScore += levelScore;
+    }
+
+    // Calculate the position of the landmark on the map in the map panel
+    private Vector3 CalcPosOnMap(LandmarkHandler lh)
+    {
+        // TODO: 
+
+        return lh.transform.position;
+    }
+
+    private void DisplayScore()
+    {
+        Text levelText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelText").GetComponent<Text>();
+        levelText.text = "Level: " + GameSystem.Instance.CurLevel + ".";
+
+        Text levelScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelScoreText").GetComponent<Text>();
+        levelScoreText.text = "Level Score: " + GameSystem.Instance.LevelScore + " / " + GameSystem.MaxLevelScore + ".";
+
+        Text totalScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
+        totalScoreText.text = "Total Score: " + GameSystem.Instance.TotalScore + " / " + GameSystem.MaxScore + ".";
+    }
+
+    // Show landmarks so player can see their mistakes
+    private void DisplayLandmarks()
+    {
+        // TODO: turn on display of landmarks
+    }
+
     private void SetUpMapPanel()
     {
         if (m_phCur != null)
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.CurrentlyVisiting);
         }
+
+        int levelScore, totalScore = 0;
+        CalcScore(out levelScore, ref totalScore);
     }
 
     private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)

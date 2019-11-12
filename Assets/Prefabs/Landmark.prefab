@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 1556769359485150978}
   m_Layer: 0
   m_Name: Landmark
-  m_TagString: Untagged
+  m_TagString: Landmark
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
