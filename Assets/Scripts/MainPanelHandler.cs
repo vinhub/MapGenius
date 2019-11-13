@@ -173,7 +173,7 @@ public class MainPanelHandler : MonoBehaviour
 
             GameObject go = new GameObject();
             go.transform.parent = m_panelCur.transform.Find("MapBackground/MapImage");
-            go.AddComponent<RectTransform>().sizeDelta = new Vector2(10, 10);
+            go.AddComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
             go.AddComponent<Image>();
             go.transform.position = position;
         }
