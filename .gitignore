@@ -4,10 +4,6 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
-Assets/CiDy
-Assets/Standard Assets
-/Assets/CiDy.meta
-/Assets/Standard Assets.meta
 
 # Visual Studio cache directory
 .vs/

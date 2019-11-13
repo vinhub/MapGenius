@@ -1,0 +1,13 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+[System.Serializable]
+public class CiDyListWrapper {
+
+	public List<Vector3> vectorList;
+
+	public CiDyListWrapper(List<Vector3> newList){
+		vectorList = newList;
+	}
+}
