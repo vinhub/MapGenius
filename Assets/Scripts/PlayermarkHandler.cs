@@ -16,15 +16,16 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     private bool m_isDropped = false; // whether the marker has been drag/dropped at least once
 
-    private Color32 m_unvisitedColor = new Color32(255, 255, 0, 255);
+    private Color32 m_unvisitedColor = new Color32(0, 160, 0, 255);
     private Color32 m_currentlyVisitingColor = new Color32(0, 255, 0, 255);
     private Color32 m_visitedColor = new Color32(160, 160, 160, 255);
-    private Color32 m_droppedColor = new Color32(255, 255, 0, 255);
+    private Color32 m_droppedColor = new Color32(0, 160, 0, 255);
 
     public void Awake()
     {
         m_playermarkImage = this.GetComponent<Image>();
         m_playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
+        SetState(PlayermarkState.Unvisited);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -68,7 +69,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
             case PlayermarkState.CurrentlyVisiting:
                 // highlight the current playermark and make it draggable
                 m_playermarkImage.color = m_currentlyVisitingColor;
-                m_playermarkText.color = m_unvisitedColor;
+                m_playermarkText.color = m_currentlyVisitingColor;
 
                 // make image blink
                 StartCoroutine(Blink(1000));
@@ -98,6 +99,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         {
             m_playermarkImage.color = m_unvisitedColor;
             yield return new WaitForSecondsRealtime(0.5f);
+
             m_playermarkImage.color = m_currentlyVisitingColor;
             yield return new WaitForSecondsRealtime(0.5f);
         }

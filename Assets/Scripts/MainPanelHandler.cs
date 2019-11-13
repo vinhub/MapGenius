@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,8 @@ public class MainPanelHandler : MonoBehaviour
     private bool m_isScoreUpdated = false; // has score been updated after player has completed the level?
 
     private Text m_continueGameText; // text object for the "continue game" button
+
+    private Text m_levelText, m_levelScoreText, m_totalScoreText;
 
     public void ShowPanel(string panelName, string landmarkName = null)
     {
@@ -43,6 +46,27 @@ public class MainPanelHandler : MonoBehaviour
             SetUpMapPanel();
         else
             m_continueGameText.text = "Continue Game";
+    }
+
+    private void SetUpMapPanel()
+    {
+        m_levelText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelText").GetComponent<Text>();
+        m_levelScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelScoreText").GetComponent<Text>();
+        m_totalScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
+
+        // display current score
+        DisplayScore(false);
+
+        // display landmarks to help player know where they are (without telling them which landmark is which)
+        DisplayLandmarks();
+
+        m_continueGameText.text = "Save and Continue Game";
+
+        // mark the current playermark as currently visiting
+        if (m_phCur != null)
+        {
+            m_phCur.SetState(PlayermarkHandler.PlayermarkState.CurrentlyVisiting);
+        }
     }
 
     // called in response to player clicking the "continue game" button on the panel
@@ -79,12 +103,14 @@ public class MainPanelHandler : MonoBehaviour
 
             GameSystem.Instance.SetScore(levelScore, totalScore);
 
-            DisplayScore();
+            DisplayScore(true);
 
             m_isScoreUpdated = true;
         }
         else
         {
+            StopAllCoroutines();
+
             m_panelCur.SetActive(false);
             m_panelCur = null;
 
@@ -98,12 +124,13 @@ public class MainPanelHandler : MonoBehaviour
     {
         levelScore = 0;
 
-        int numLandmarksInLevel = 1;
+        GameObject[] landmarks = GameObject.FindGameObjectsWithTag("Landmark");
+
+        int numLandmarksInLevel = landmarks.Length;
         float maxLandmarkScore = GameSystem.MaxLevelScore / numLandmarksInLevel;
         float maxMapDistance = 100;
 
         // calculate and add up the score for each landmark
-        GameObject[] landmarks = GameObject.FindGameObjectsWithTag("Landmark");
         foreach (GameObject goLandmark in landmarks)
         {
             LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
@@ -150,16 +177,31 @@ public class MainPanelHandler : MonoBehaviour
         return new Vector3(worldPos.x - rectTrans.sizeDelta.x / scalerRatio, worldPos.y - rectTrans.sizeDelta.y / scalerRatio, 0f);
     }
 
-    private void DisplayScore()
+    private void DisplayScore(bool isNewScore)
     {
-        Text levelText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelText").GetComponent<Text>();
-        levelText.text = "Level: " + GameSystem.Instance.CurLevel + ".";
+        m_levelText.text = "Level: " + GameSystem.Instance.CurLevel + ".";
+        m_levelScoreText.text = "Level Score: " + GameSystem.Instance.LevelScore + " / " + GameSystem.MaxLevelScore + ".";
+        m_totalScoreText.text = "Total Score: " + GameSystem.Instance.TotalScore + " / " + GameSystem.MaxScore + ".";
 
-        Text levelScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelScoreText").GetComponent<Text>();
-        levelScoreText.text = "Level Score: " + GameSystem.Instance.LevelScore + " / " + GameSystem.MaxLevelScore + ".";
+        if (isNewScore)
+        {
+            // if the score is new, blink it
+            StartCoroutine(Blink(1000));
+        }
+    }
 
-        Text totalScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
-        totalScoreText.text = "Total Score: " + GameSystem.Instance.TotalScore + " / " + GameSystem.MaxScore + ".";
+    IEnumerator Blink(int blinkCount)
+    {
+        for (int i = 0; i < blinkCount; i++)
+        {
+            m_levelScoreText.color = new Color(m_levelScoreText.color.r, m_levelScoreText.color.g, m_levelScoreText.color.b, 0);
+            m_totalScoreText.color = new Color(m_levelScoreText.color.r, m_levelScoreText.color.g, m_levelScoreText.color.b, 0);
+            yield return new WaitForSecondsRealtime(0.5f);
+
+            m_levelScoreText.color = new Color(m_levelScoreText.color.r, m_levelScoreText.color.g, m_levelScoreText.color.b, 1);
+            m_totalScoreText.color = new Color(m_levelScoreText.color.r, m_levelScoreText.color.g, m_levelScoreText.color.b, 1);
+            yield return new WaitForSecondsRealtime(0.5f);
+        }
     }
 
     // Show landmarks so player can see their mistakes
@@ -176,23 +218,6 @@ public class MainPanelHandler : MonoBehaviour
             go.AddComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
             go.AddComponent<Image>();
             go.transform.position = position;
-        }
-    }
-
-    private void SetUpMapPanel()
-    {
-        // display current score
-        DisplayScore();
-
-        // display landmarks to help player know where they are (without telling them which landmark is which)
-        DisplayLandmarks();
-
-        m_continueGameText.text = "Save and Continue Game";
-
-        // mark the current playermark as currently visiting
-        if (m_phCur != null)
-        {
-            m_phCur.SetState(PlayermarkHandler.PlayermarkState.CurrentlyVisiting);
         }
     }
 
