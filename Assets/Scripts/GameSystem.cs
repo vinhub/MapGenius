@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.Vehicles.Car;
 
 public class GameSystem : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class GameSystem : MonoBehaviour
     public int CurLevel { get; private set; } = 1; // current level
     public int LevelScore { get; private set; } // player's score so far for the current level
     public int TotalScore { get; private set; } = 0; // player's total score so far
+
+    public GameObject Car; // the car being driven by the player
+    private CarController m_carController;
 
     // for pausing / resuming game
     private float m_timeScaleSav = 1f;
@@ -39,6 +43,7 @@ public class GameSystem : MonoBehaviour
             m_mainPanelHandler = m_goMainPanelUI.GetComponent<MainPanelHandler>();
         }
 
+        m_carController = Car.GetComponent<CarController>();
     }
 
     void OnDestroy()
