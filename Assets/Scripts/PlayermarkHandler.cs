@@ -97,9 +97,9 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         for (int i = 0; i < blinkCount; i++)
         {
             m_playermarkImage.color = m_unvisitedColor;
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(0.5f);
             m_playermarkImage.color = m_currentlyVisitingColor;
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(0.5f);
         }
     }
 }

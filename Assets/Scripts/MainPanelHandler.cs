@@ -181,11 +181,6 @@ public class MainPanelHandler : MonoBehaviour
 
     private void SetUpMapPanel()
     {
-        if (m_phCur != null)
-        {
-            m_phCur.SetState(PlayermarkHandler.PlayermarkState.CurrentlyVisiting);
-        }
-
         // display current score
         DisplayScore();
 
@@ -193,9 +188,15 @@ public class MainPanelHandler : MonoBehaviour
         DisplayLandmarks();
 
         m_continueGameText.text = "Save and Continue Game";
+
+        // mark the current playermark as currently visiting
+        if (m_phCur != null)
+        {
+            m_phCur.SetState(PlayermarkHandler.PlayermarkState.CurrentlyVisiting);
+        }
     }
 
-        private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
+    private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
     {
         Debug.Assert(m_panelCur != null);
 
