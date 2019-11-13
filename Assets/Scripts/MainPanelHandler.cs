@@ -10,12 +10,17 @@ public class MainPanelHandler : MonoBehaviour
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
     private bool m_isScoreUpdated = false; // has score been updated after player has completed the level?
 
+    private Text m_continueGameText; // text object for the "continue game" button
+
     public void ShowPanel(string panelName, string landmarkName = null)
     {
         if (m_panelCur != null)
             return;
 
+        m_isLevelComplete = m_isScoreUpdated = false;
+
         m_panelCur = transform.Find(Strings.PanelPath + panelName).gameObject;
+        m_continueGameText = transform.Find(Strings.ContinueGameTextPath).GetComponent<Text>();
 
         if (panelName == Strings.MapPanelName)
         {
@@ -36,6 +41,8 @@ public class MainPanelHandler : MonoBehaviour
 
         if (panelName == Strings.MapPanelName)
             SetUpMapPanel();
+        else
+            m_continueGameText.text = "Continue Game";
     }
 
     // called in response to player clicking the "continue game" button on the panel
@@ -184,9 +191,11 @@ public class MainPanelHandler : MonoBehaviour
 
         // display landmarks to help player know where they are (without telling them which landmark is which)
         DisplayLandmarks();
+
+        m_continueGameText.text = "Save and Continue Game";
     }
 
-    private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
+        private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
     {
         Debug.Assert(m_panelCur != null);
 

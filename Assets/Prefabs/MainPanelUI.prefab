@@ -1942,7 +1942,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -4}
-  m_SizeDelta: {x: 200, y: 40}
+  m_SizeDelta: {x: 300, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5543535495555844306
 CanvasRenderer:
@@ -2530,12 +2530,12 @@ PrefabInstance:
       propertyPath: m_Text
       value: Library
       objectReference: {fileID: 0}
-    - target: {fileID: 734118519770859322, guid: 09d401ec638f8624693edbe49c418e06,
+    - target: {fileID: 1455416766727613426, guid: 09d401ec638f8624693edbe49c418e06,
         type: 3}
       propertyPath: m_Text
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 1455416766727613426, guid: 09d401ec638f8624693edbe49c418e06,
+    - target: {fileID: 734118519770859322, guid: 09d401ec638f8624693edbe49c418e06,
         type: 3}
       propertyPath: m_Text
       value: 4
@@ -2685,16 +2685,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 734118519770859322, guid: 09d401ec638f8624693edbe49c418e06,
-        type: 3}
-      propertyPath: m_Text
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1455416766727613426, guid: 09d401ec638f8624693edbe49c418e06,
-        type: 3}
-      propertyPath: m_Text
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 3320533514115453365, guid: 09d401ec638f8624693edbe49c418e06,
         type: 3}
       propertyPath: m_Color.g
@@ -2709,6 +2699,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.b
       value: 0.627451
+      objectReference: {fileID: 0}
+    - target: {fileID: 1455416766727613426, guid: 09d401ec638f8624693edbe49c418e06,
+        type: 3}
+      propertyPath: m_Text
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 734118519770859322, guid: 09d401ec638f8624693edbe49c418e06,
+        type: 3}
+      propertyPath: m_Text
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09d401ec638f8624693edbe49c418e06, type: 3}
@@ -2860,12 +2860,12 @@ PrefabInstance:
       propertyPath: m_Text
       value: School
       objectReference: {fileID: 0}
-    - target: {fileID: 734118519770859322, guid: 09d401ec638f8624693edbe49c418e06,
+    - target: {fileID: 1455416766727613426, guid: 09d401ec638f8624693edbe49c418e06,
         type: 3}
       propertyPath: m_Text
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 1455416766727613426, guid: 09d401ec638f8624693edbe49c418e06,
+    - target: {fileID: 734118519770859322, guid: 09d401ec638f8624693edbe49c418e06,
         type: 3}
       propertyPath: m_Text
       value: 3
