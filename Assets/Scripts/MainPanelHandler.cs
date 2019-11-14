@@ -60,7 +60,7 @@ public class MainPanelHandler : MonoBehaviour
         if (!m_isMapPanelInitialized)
         {
             m_skyCamera = GameObject.Find("Skycam").GetComponent<Camera>();
-            m_tMapImage = this.transform.Find("PanelParent/Panels/MapPanel/MapBackground/MapImage");
+            m_tMapImage = this.transform.Find(Strings.MapImagePath);
             m_levelText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelText").GetComponent<Text>();
             m_levelScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelScoreText").GetComponent<Text>();
             m_totalScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
@@ -88,7 +88,7 @@ public class MainPanelHandler : MonoBehaviour
             if (m_phCur.tag == Strings.StartTag)
             {
                 // move Start playermark to map
-                MovePlayermarkToMap();
+                StartCoroutine(MovePlayermarkToMap());
             }
         }
     }
@@ -98,6 +98,8 @@ public class MainPanelHandler : MonoBehaviour
     {
         if (m_panelCur == null)
             return;
+
+        StopAllCoroutines();
 
         if (m_panelCur.name == Strings.MapPanelName)
         {
@@ -230,7 +232,7 @@ public class MainPanelHandler : MonoBehaviour
             Vector3 position = CalcPosOnMap(lh);
 
             GameObject go = new GameObject();
-            go.transform.parent = this.transform.Find(Strings.MapImagePath);
+            go.transform.parent = m_tMapImage;
             go.AddComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
             go.AddComponent<Image>();
             go.transform.position = position;
@@ -284,9 +286,11 @@ public class MainPanelHandler : MonoBehaviour
         return null;
     }
 
-    // move the given playermark from the playermark panel to the related landmark on the map
-    private void MovePlayermarkToMap()
+    // move the current playermark from the playermark panel to the corresponding landmark on the map
+    private IEnumerator MovePlayermarkToMap()
     {
+        yield return new WaitForSecondsRealtime(1f); // need to delay calcs until things have settled down. Plus, it looks better this way.
+
         GameObject goLandmark = LandmarkFromPlayermark(m_phCur);
         LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
 

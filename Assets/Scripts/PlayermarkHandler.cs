@@ -56,7 +56,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         {
             transform.position = Vector3.Lerp(transform.position, m_newPosition, 1.5f * Time.unscaledDeltaTime);
 
-            if (Vector3.Distance(transform.position, m_newPosition) < 0.01) // stop animation when close enough
+            if (Vector3.Distance(transform.position, m_newPosition) < 0.1) // stop animation when close enough
             {
                 m_isMoving = false;
                 m_isDropped = true;
