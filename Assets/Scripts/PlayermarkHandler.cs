@@ -21,7 +21,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Color32 m_visitedColor = new Color32(160, 160, 160, 255);
     private Color32 m_droppedColor = new Color32(0, 160, 0, 255);
 
-    public void Awake()
+    private void Start()
     {
         m_playermarkImage = this.GetComponent<Image>();
         m_playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
@@ -93,7 +93,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
     }
 
-    IEnumerator Blink(int blinkCount)
+    private IEnumerator Blink(int blinkCount)
     {
         for (int i = 0; i < blinkCount; i++)
         {

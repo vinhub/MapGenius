@@ -13,6 +13,7 @@ public class MainPanelHandler : MonoBehaviour
 
     private Text m_continueGameText; // text object for the "continue game" button
 
+    private bool m_isMapPanelInitialized = false;
     private Text m_levelText, m_levelScoreText, m_totalScoreText;
 
     public void ShowPanel(string panelName, string landmarkName = null)
@@ -50,15 +51,20 @@ public class MainPanelHandler : MonoBehaviour
 
     private void SetUpMapPanel()
     {
-        m_levelText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelText").GetComponent<Text>();
-        m_levelScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelScoreText").GetComponent<Text>();
-        m_totalScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
+        if (!m_isMapPanelInitialized)
+        {
+            m_levelText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelText").GetComponent<Text>();
+            m_levelScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelScoreText").GetComponent<Text>();
+            m_totalScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
+
+            // add landmarks to the map help player know where they are (without telling them which landmark is which)
+            AddLandmarksToMap();
+
+            m_isMapPanelInitialized = true;
+        }
 
         // display current score
         DisplayScore(false);
-
-        // display landmarks to help player know where they are (without telling them which landmark is which)
-        DisplayLandmarks();
 
         m_continueGameText.text = "Save and Continue Game";
 
@@ -91,9 +97,6 @@ public class MainPanelHandler : MonoBehaviour
 
                 return;
             }
-
-            // show the landmarks and score
-            DisplayLandmarks();
 
             // Calculate and display score
             int levelScore;
@@ -164,7 +167,7 @@ public class MainPanelHandler : MonoBehaviour
     {
         Vector3 positionIn = lh.transform.position;
 
-        Transform tMapImage = m_panelCur.transform.Find("MapBackground/MapImage");
+        Transform tMapImage = this.transform.Find("PanelParent/Panels/MapPanel/MapBackground/MapImage");
         RectTransform rectTrans = tMapImage.GetComponentInParent<RectTransform>(); //RenderTexture holder
 
         Camera skyCamera = GameObject.Find("Skycam").GetComponent<Camera>();
@@ -190,7 +193,7 @@ public class MainPanelHandler : MonoBehaviour
         }
     }
 
-    IEnumerator Blink(int blinkCount)
+    private IEnumerator Blink(int blinkCount)
     {
         for (int i = 0; i < blinkCount; i++)
         {
@@ -204,8 +207,8 @@ public class MainPanelHandler : MonoBehaviour
         }
     }
 
-    // Show landmarks so player can see their mistakes
-    private void DisplayLandmarks()
+    // add landmarks to the map help player know where they are (without telling them which landmark is which)
+    private void AddLandmarksToMap()
     {
         GameObject[] landmarks = GameObject.FindGameObjectsWithTag("Landmark");
         foreach (GameObject goLandmark in landmarks)
@@ -214,7 +217,7 @@ public class MainPanelHandler : MonoBehaviour
             Vector3 position = CalcPosOnMap(lh);
 
             GameObject go = new GameObject();
-            go.transform.parent = m_panelCur.transform.Find("MapBackground/MapImage");
+            go.transform.parent = this.transform.Find(Strings.MapImagePath);
             go.AddComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
             go.AddComponent<Image>();
             go.transform.position = position;

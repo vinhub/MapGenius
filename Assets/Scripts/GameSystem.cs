@@ -33,35 +33,38 @@ public class GameSystem : MonoBehaviour
     private GameObject m_goMainPanelUI = null;
     private MainPanelHandler m_mainPanelHandler = null;
 
-    void Awake()
+    private void Awake()
     {
         m_instance = this;
 
         if (m_goMainPanelUI == null)
         {
             m_goMainPanelUI = Instantiate(this.MainPanelUI);
-            m_mainPanelHandler = m_goMainPanelUI.GetComponent<MainPanelHandler>();
         }
+    }
 
+    private void Start()
+    {
+        m_mainPanelHandler = m_goMainPanelUI.GetComponent<MainPanelHandler>();
         m_carController = Car.GetComponent<CarController>();
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         m_instance = null;
     }
 
-    void Update()
+    private void Update()
     {
         // global game update logic goes here
     }
 
-    void OnGui()
+    private void OnGui()
     {
         // common GUI code goes here
     }
 
-    internal void LoadScene(string sceneName)
+    public void LoadScene(string sceneName)
     {
         GameSystem.Instance.ResumeGame();
         SceneManager.LoadScene(sceneName);
@@ -113,7 +116,7 @@ public class GameSystem : MonoBehaviour
         m_mainPanelHandler.ShowPanel(panelName, landmarkName);
     }
 
-    internal void SetScore(int levelScore, int totalScore)
+    public void SetScore(int levelScore, int totalScore)
     {
         LevelScore = levelScore;
         TotalScore = totalScore;

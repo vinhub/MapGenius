@@ -6,7 +6,7 @@ public class PauseMenu : MonoBehaviour
 {
     private Toggle m_toggle;
     
-    void Awake()
+    private void Start()
     {
         m_toggle = GetComponent<Toggle>();
 	}
@@ -16,12 +16,12 @@ public class PauseMenu : MonoBehaviour
         GameSystem.Instance.PauseGame();
     }
     
-    public void MenuOff()
+    private void MenuOff()
     {
         GameSystem.Instance.ResumeGame();
     }
     
-    public void OnMenuStatusChange()
+    private void OnMenuStatusChange()
     {
         if (m_toggle.isOn && !GameSystem.Instance.IsGamePaused())
         {
@@ -35,7 +35,7 @@ public class PauseMenu : MonoBehaviour
 
 
 #if !MOBILE_INPUT
-	void Update()
+	private void Update()
 	{
 		if(Input.GetKeyUp(KeyCode.Escape))
 		{

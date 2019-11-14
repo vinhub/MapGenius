@@ -6,7 +6,7 @@ public class MenuSceneLoader : MonoBehaviour
     public GameObject MainMenuUI;
     private GameObject m_goMainMenuUI;
 
-	void Awake()
+	private void Awake()
 	{
 	    if (m_goMainMenuUI == null)
 	    {

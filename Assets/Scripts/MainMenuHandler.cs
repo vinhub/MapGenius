@@ -7,7 +7,7 @@ public class MainMenuHandler : MonoBehaviour
     private PauseMenu m_pauseMenu;
     private Toggle m_menuToggle;
     
-    private void Awake()
+    private void Start()
     {
         m_pauseMenu = GetComponentInChildren<PauseMenu>();
         m_menuToggle = m_pauseMenu.GetComponent<Toggle>();

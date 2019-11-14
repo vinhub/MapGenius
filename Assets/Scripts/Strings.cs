@@ -10,8 +10,8 @@ public static class Strings
     public const string Springfield = "Springfield";
     public const string PlayermarkText = "PlayermarkText";
     public const string PanelPath = "PanelParent/Panels/";
-
     public const string ContinueGameTextPath = "PanelParent/ButtonBar/ContinueGameButton/ContinueGameText";
+    public const string MapImagePath = "PanelParent/Panels/MapPanel/MapBackground/MapImage";
 
     // localizable
 }
