@@ -6,15 +6,20 @@ using UnityEngine.UI;
 public class MainPanelHandler : MonoBehaviour
 {
     private GameObject m_panelCur = null; // whether / which panel is being shown right now
-    private PlayermarkHandler m_phCur; // playmark handler correspoding to the landmark that the player just crossed
+    private PlayermarkHandler m_phCur = null; // playmark handler correspoding to the landmark that the player just crossed
 
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
     private bool m_isScoreUpdated = false; // has score been updated after player has completed the level?
 
     private Text m_continueGameText; // text object for the "continue game" button
+    private Transform m_tMapImage;
+    private Camera m_skyCamera;
 
     private bool m_isMapPanelInitialized = false;
     private Text m_levelText, m_levelScoreText, m_totalScoreText;
+    private GameObject[] m_goLandmarks;
+    private Transform m_tPlayermarkList;
+    private string m_landmarkName;
 
     public void ShowPanel(string panelName, string landmarkName = null)
     {
@@ -23,15 +28,16 @@ public class MainPanelHandler : MonoBehaviour
 
         m_isLevelComplete = m_isScoreUpdated = false;
 
+        m_landmarkName = landmarkName;
         m_panelCur = transform.Find(Strings.PanelPath + panelName).gameObject;
         m_continueGameText = transform.Find(Strings.ContinueGameTextPath).GetComponent<Text>();
 
-        if (panelName == Strings.MapPanelName)
+        // if map panel is being invoked as a result of the player crossing a landmark but it has already been visited, then don't show the panel
+        if (m_isMapPanelInitialized && (panelName == Strings.MapPanelName) && (landmarkName != null))
         {
             m_phCur = PlayermarkFromLandmark(landmarkName);
 
-            // if the playermark has already been visited, then don't show the panel
-            if ((m_phCur != null) && (m_phCur.State != PlayermarkHandler.PlayermarkState.Unvisited))
+            if (m_phCur.State != PlayermarkHandler.PlayermarkState.Unvisited)
             {
                 m_panelCur = null;
                 return;
@@ -53,14 +59,20 @@ public class MainPanelHandler : MonoBehaviour
     {
         if (!m_isMapPanelInitialized)
         {
+            m_skyCamera = GameObject.Find("Skycam").GetComponent<Camera>();
+            m_tMapImage = this.transform.Find("PanelParent/Panels/MapPanel/MapBackground/MapImage");
             m_levelText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelText").GetComponent<Text>();
             m_levelScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelScoreText").GetComponent<Text>();
             m_totalScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
+            m_goLandmarks = GameObject.FindGameObjectsWithTag("Landmark");
+            m_tPlayermarkList = m_panelCur.transform.Find("PlayermarksPanel/Playermarks");
+
+            m_isMapPanelInitialized = true;
 
             // add landmarks to the map help player know where they are (without telling them which landmark is which)
             AddLandmarksToMap();
 
-            m_isMapPanelInitialized = true;
+            m_phCur = PlayermarkFromLandmark(m_landmarkName);
         }
 
         // display current score
@@ -72,6 +84,12 @@ public class MainPanelHandler : MonoBehaviour
         if (m_phCur != null)
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.CurrentlyVisiting);
+
+            if (m_phCur.tag == Strings.StartTag)
+            {
+                // move Start playermark to map
+                MovePlayermarkToMap();
+            }
         }
     }
 
@@ -114,6 +132,7 @@ public class MainPanelHandler : MonoBehaviour
         {
             StopAllCoroutines();
 
+            m_phCur = null;
             m_panelCur.SetActive(false);
             m_panelCur = null;
 
@@ -127,14 +146,12 @@ public class MainPanelHandler : MonoBehaviour
     {
         levelScore = 0;
 
-        GameObject[] landmarks = GameObject.FindGameObjectsWithTag("Landmark");
-
-        int numLandmarksInLevel = landmarks.Length;
+        int numLandmarksInLevel = m_goLandmarks.Length;
         float maxLandmarkScore = GameSystem.MaxLevelScore / numLandmarksInLevel;
         float maxMapDistance = 100;
 
         // calculate and add up the score for each landmark
-        foreach (GameObject goLandmark in landmarks)
+        foreach (GameObject goLandmark in m_goLandmarks)
         {
             LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
 
@@ -167,12 +184,9 @@ public class MainPanelHandler : MonoBehaviour
     {
         Vector3 positionIn = lh.transform.position;
 
-        Transform tMapImage = this.transform.Find("PanelParent/Panels/MapPanel/MapBackground/MapImage");
-        RectTransform rectTrans = tMapImage.GetComponentInParent<RectTransform>(); //RenderTexture holder
+        RectTransform rectTrans = m_tMapImage.GetComponentInParent<RectTransform>(); //RenderTexture holder
 
-        Camera skyCamera = GameObject.Find("Skycam").GetComponent<Camera>();
-
-        Vector2 viewPos = skyCamera.WorldToViewportPoint(positionIn);
+        Vector2 viewPos = m_skyCamera.WorldToViewportPoint(positionIn);
         Vector2 localPos = new Vector2(viewPos.x * rectTrans.sizeDelta.x, viewPos.y * rectTrans.sizeDelta.y);
         Vector3 worldPos = rectTrans.TransformPoint(localPos);
         float scalerRatio = (1 / this.transform.lossyScale.x) * 2; // Implying all x y z are the same for the lossy scale
@@ -210,8 +224,7 @@ public class MainPanelHandler : MonoBehaviour
     // add landmarks to the map help player know where they are (without telling them which landmark is which)
     private void AddLandmarksToMap()
     {
-        GameObject[] landmarks = GameObject.FindGameObjectsWithTag("Landmark");
-        foreach (GameObject goLandmark in landmarks)
+        foreach (GameObject goLandmark in m_goLandmarks)
         {
             LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
             Vector3 position = CalcPosOnMap(lh);
@@ -226,13 +239,14 @@ public class MainPanelHandler : MonoBehaviour
 
     private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
     {
+        Debug.Assert(m_isMapPanelInitialized);
         Debug.Assert(m_panelCur != null);
 
         if (landmarkName == null)
             return null;
 
         // PlayermarkListItem/PlayermarkText.text == landmarkname, then get its parent/Playermark/PlayermarkHandler
-        foreach (Transform tPlayermarkListItem in m_panelCur.transform.Find("PlayermarksPanel/Playermarks"))
+        foreach (Transform tPlayermarkListItem in m_tPlayermarkList)
         {
             Transform tPlayermarkText = tPlayermarkListItem.Find("PlayermarkText");
             Text text = tPlayermarkText.GetComponent<Text>();
@@ -245,6 +259,40 @@ public class MainPanelHandler : MonoBehaviour
         }
 
         return null;
+    }
+
+    private GameObject LandmarkFromPlayermark(PlayermarkHandler ph)
+    {
+        Debug.Assert(m_panelCur != null);
+
+        if ((ph == null) || (m_goLandmarks == null))
+            return null;
+
+        // get its parent/PlayermarkText/Text
+        Transform tPlayermarkText = ph.transform.parent.Find("PlayermarkText");
+        Text text = tPlayermarkText.GetComponent<Text>();
+
+        // Text.text == goLandmark.name
+        foreach (GameObject goLandmark in m_goLandmarks)
+        {
+            if (text.text == goLandmark.name)
+            {
+                return goLandmark;
+            }
+        }
+
+        return null;
+    }
+
+    // move the given playermark from the playermark panel to the related landmark on the map
+    private void MovePlayermarkToMap()
+    {
+        GameObject goLandmark = LandmarkFromPlayermark(m_phCur);
+        LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
+
+        Vector3 position = CalcPosOnMap(lh);
+
+        m_phCur.Move(position);
     }
 
     private void SavePlayermarkChanges()
@@ -264,7 +312,7 @@ public class MainPanelHandler : MonoBehaviour
     {
         bool allPlayermarksVisited = true;
 
-        foreach (Transform tPlayermarkListItem in m_panelCur.transform.Find("PlayermarksPanel/Playermarks"))
+        foreach (Transform tPlayermarkListItem in m_tPlayermarkList)
         {
             Transform tPlayermark = tPlayermarkListItem.Find("Playermark");
             PlayermarkHandler ph = tPlayermark.GetComponent<PlayermarkHandler>();

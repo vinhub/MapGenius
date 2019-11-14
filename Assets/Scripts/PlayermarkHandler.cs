@@ -20,13 +20,8 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Color32 m_currentlyVisitingColor = new Color32(0, 255, 0, 255);
     private Color32 m_visitedColor = new Color32(160, 160, 160, 255);
     private Color32 m_droppedColor = new Color32(0, 160, 0, 255);
-
-    private void Start()
-    {
-        m_playermarkImage = this.GetComponent<Image>();
-        m_playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
-        SetState(PlayermarkState.Unvisited);
-    }
+    private bool m_isMoving = false;
+    private Vector3 m_newPosition;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -55,8 +50,33 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         this.m_isDropped = true; // Just note that it was drag/dropped. They can still drag and drop it until they close the panel. Then it gets locked.
     }
 
-    internal void SetState(PlayermarkState state)
+    void Update()
     {
+        if (m_isMoving)
+        {
+            transform.position = Vector3.Lerp(transform.position, m_newPosition, 1.5f * Time.unscaledDeltaTime);
+
+            if (Vector3.Distance(transform.position, m_newPosition) < 0.01) // stop animation when close enough
+            {
+                m_isMoving = false;
+                m_isDropped = true;
+                SetState(PlayermarkHandler.PlayermarkState.Visited);
+            }
+        }
+    }
+
+    // artificially move the playermark to given position as if it was drag-dropped
+    public void Move(Vector3 position)
+    {
+        // set up the animation which will occur during update
+        m_newPosition = position;
+        m_isMoving = true;
+    }
+
+    public void SetState(PlayermarkState state)
+    {
+        InitMembers();
+
         this.State = state;
 
         switch (state)
@@ -90,6 +110,15 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
                 m_playermarkText.color = m_visitedColor;
                 break;
+        }
+    }
+
+    private void InitMembers()
+    {
+        if (m_playermarkImage == null)
+        {
+            m_playermarkImage = this.GetComponent<Image>();
+            m_playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
         }
     }
 

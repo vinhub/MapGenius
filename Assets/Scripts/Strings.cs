@@ -12,6 +12,7 @@ public static class Strings
     public const string PanelPath = "PanelParent/Panels/";
     public const string ContinueGameTextPath = "PanelParent/ButtonBar/ContinueGameButton/ContinueGameText";
     public const string MapImagePath = "PanelParent/Panels/MapPanel/MapBackground/MapImage";
+    public const string StartTag = "Start";
 
     // localizable
 }
