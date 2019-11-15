@@ -31,6 +31,7 @@ public class MainPanelHandler : MonoBehaviour
         m_landmarkName = landmarkName;
         m_panelCur = transform.Find(Strings.PanelPath + panelName).gameObject;
         m_continueGameText = transform.Find(Strings.ContinueGameTextPath).GetComponent<Text>();
+        m_phCur = null;
 
         // if map panel is being invoked as a result of the player crossing a landmark but it has already been visited, then don't show the panel
         if (m_isMapPanelInitialized && (panelName == Strings.MapPanelName) && (landmarkName != null))
@@ -78,7 +79,7 @@ public class MainPanelHandler : MonoBehaviour
         // display current score
         DisplayScore(false);
 
-        m_continueGameText.text = "Save and Continue Game";
+        m_continueGameText.text = Strings.SaveAndContinue;
 
         // mark the current playermark as currently visiting
         if (m_phCur != null)
@@ -129,11 +130,11 @@ public class MainPanelHandler : MonoBehaviour
             DisplayScore(true);
 
             m_isScoreUpdated = true;
+
+            m_continueGameText.text = Strings.MoveToNextLevel;
         }
         else
         {
-            StopAllCoroutines();
-
             m_phCur = null;
             m_panelCur.SetActive(false);
             m_panelCur = null;
@@ -309,6 +310,9 @@ public class MainPanelHandler : MonoBehaviour
 
         // check if level is complete
         m_isLevelComplete = CheckLevelComplete();
+
+        if (m_isLevelComplete)
+            m_continueGameText.text = Strings.CheckScore;
     }
 
     // if all playermarks have been finalized i.e. drag-dropped and locked, then the level is complete

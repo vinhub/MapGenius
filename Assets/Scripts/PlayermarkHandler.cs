@@ -77,6 +77,8 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         InitMembers();
 
+        // Debug.Log(m_playermarkText.text + ": Setstate: " + state);
+
         this.State = state;
 
         switch (state)
