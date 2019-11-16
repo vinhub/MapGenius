@@ -64,6 +64,12 @@ public class GameSystem : MonoBehaviour
         // common GUI code goes here
     }
 
+    public void NewGame()
+    {
+        GameSystem.Instance.ResumeGame();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     public void LoadScene(string sceneName)
     {
         GameSystem.Instance.ResumeGame();

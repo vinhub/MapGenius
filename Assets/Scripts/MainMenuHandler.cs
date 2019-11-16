@@ -13,6 +13,16 @@ public class MainMenuHandler : MonoBehaviour
         m_menuToggle = m_pauseMenu.GetComponent<Toggle>();
     }
 
+    public void ResumeGame()
+    {
+        GameSystem.Instance.ResumeGame();
+    }
+
+    public void NewGame()
+    {
+        GameSystem.Instance.NewGame();
+    }
+
     public void LoadScene(string sceneName)
 	{
         GameSystem.Instance.LoadScene(sceneName);
