@@ -93,4 +93,9 @@ public class PanelManager : MonoBehaviour {
 	{
 		EventSystem.current.SetSelectedGameObject(go);
 	}
+
+    public void LoadScene(string sceneName)
+    {
+        GameSystem.Instance.LoadScene(sceneName);
+    }
 }
