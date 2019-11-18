@@ -17,7 +17,7 @@ public class PanelManager : MonoBehaviour {
 
 	public void OnEnable()
 	{
-		m_OpenParameterId = Animator.StringToHash (k_OpenTransitionName);
+		m_OpenParameterId = Animator.StringToHash(k_OpenTransitionName);
 
 		if (initiallyOpen == null)
 			return;
@@ -47,12 +47,12 @@ public class PanelManager : MonoBehaviour {
 		SetSelected(go);
 	}
 
-	static GameObject FindFirstEnabledSelectable (GameObject gameObject)
+	static GameObject FindFirstEnabledSelectable(GameObject gameObject)
 	{
 		GameObject go = null;
-		var selectables = gameObject.GetComponentsInChildren<Selectable> (true);
+		var selectables = gameObject.GetComponentsInChildren<Selectable>(true);
 		foreach (var selectable in selectables) {
-			if (selectable.IsActive () && selectable.IsInteractable ()) {
+			if (selectable.IsActive () && selectable.IsInteractable()) {
 				go = selectable.gameObject;
 				break;
 			}
