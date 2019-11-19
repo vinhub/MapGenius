@@ -27,25 +27,16 @@ public class GameSystem : MonoBehaviour
     private float m_volumeSav = 1f;
     private bool m_paused;
 
-    // main UI panel management
-    public GameObject MainPanelUI;
-
-    private GameObject m_goMainPanelUI = null;
-    private MainPanelHandler m_mainPanelHandler = null;
+    private PanelManager m_mainPanelManager;
+    private Transform m_mapPanel;
 
     private void Awake()
     {
         m_instance = this;
 
-        if (m_goMainPanelUI == null)
-        {
-            m_goMainPanelUI = Instantiate(this.MainPanelUI);
-        }
-    }
-
-    private void Start()
-    {
-        m_mainPanelHandler = m_goMainPanelUI.GetComponent<MainPanelHandler>();
+        GameObject mainMenuUI = GameObject.FindWithTag("MainMenuUI");
+        m_mainPanelManager = mainMenuUI.transform.Find("MainMenuParent/PanelManager").GetComponent<PanelManager>();
+        m_mapPanel = mainMenuUI.transform.Find("MainMenuParent/Map");
         m_carController = Car.GetComponent<CarController>();
     }
 
@@ -114,12 +105,7 @@ public class GameSystem : MonoBehaviour
     public void LandmarkCrossed(string landmarkName)
     {
         // when a landmark is crossed, show map panel
-        ShowPanel(Strings.MapPanelName, landmarkName);
-    }
-
-    public void ShowPanel(string panelName, string landmarkName = null)
-    {
-        m_mainPanelHandler.ShowPanel(panelName, landmarkName);
+        m_mainPanelManager.OpenPanel(m_mapPanel.gameObject);
     }
 
     public void SetScore(int levelScore, int totalScore)

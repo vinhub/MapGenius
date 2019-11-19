@@ -12,6 +12,7 @@ TagManager:
   - Playermark
   - Fire
   - Start
+  - MainMenuUI
   layers:
   - Default
   - TransparentFX

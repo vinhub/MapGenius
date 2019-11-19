@@ -37,7 +37,7 @@ public class MainMenuHandler : MonoBehaviour
     {
         m_menuToggle.isOn = false;
 
-        GameSystem.Instance.ShowPanel(panelName);
+        //GameSystem.Instance.ShowPanel(panelName);
     }
 
     public void QuitGame()
