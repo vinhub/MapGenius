@@ -21,14 +21,17 @@ public class PauseMenu : MonoBehaviour
         GameSystem.Instance.ResumeGame();
     }
     
-    private void OnMenuStatusChange()
+    public void OnMenuStatusChange()
     {
         if (m_toggle.isOn && !GameSystem.Instance.IsGamePaused())
         {
             MenuOn();
         }
-        else if (!m_toggle.isOn && GameSystem.Instance.IsGamePaused())
+        else if (GameSystem.Instance.IsGamePaused())
         {
+            if (m_toggle.isOn)
+                m_toggle.isOn = false;
+
             MenuOff();
         }
     }
