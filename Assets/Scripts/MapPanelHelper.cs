@@ -3,9 +3,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainPanelHandler : MonoBehaviour
+public class MapPanelHelper : MonoBehaviour
 {
-    private GameObject m_panelCur = null; // whether / which panel is being shown right now
+    private Transform m_tMapPanel = null; // whether / which panel is being shown right now
     private PlayermarkHandler m_phCur = null; // playmark handler correspoding to the landmark that the player just crossed
 
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
@@ -16,57 +16,43 @@ public class MainPanelHandler : MonoBehaviour
     private Camera m_skyCamera;
 
     private bool m_isMapPanelInitialized = false;
-    private Text m_levelText, m_levelScoreText, m_totalScoreText;
+    private Text m_levelText, m_totalScoreText;
     private GameObject[] m_goLandmarks;
     private Transform m_tPlayermarkList;
     private string m_landmarkName;
 
-    public void ShowPanel(string panelName, string landmarkName = null)
+    public void Setup(Transform tMapPanel, string landmarkName = null)
     {
-        if (m_panelCur != null)
+        if (m_tMapPanel != null)
             return;
 
-        m_isLevelComplete = m_isScoreUpdated = false;
-
+        m_tMapPanel = tMapPanel;
         m_landmarkName = landmarkName;
-        m_panelCur = transform.Find(Strings.PanelPath + panelName).gameObject;
-        m_continueGameText = transform.Find(Strings.ContinueGameTextPath).GetComponent<Text>();
+
+        m_isLevelComplete = m_isScoreUpdated = false;
+        m_continueGameText = m_tMapPanel.Find(Strings.ContinueGameTextPath).GetComponent<Text>();
         m_phCur = null;
 
         // if map panel is being invoked as a result of the player crossing a landmark but it has already been visited, then don't show the panel
-        if (m_isMapPanelInitialized && (panelName == Strings.MapPanelName) && (landmarkName != null))
+        if (m_isMapPanelInitialized && (landmarkName != null))
         {
             m_phCur = PlayermarkFromLandmark(landmarkName);
 
             if (m_phCur.State != PlayermarkHandler.PlayermarkState.Unvisited)
             {
-                m_panelCur = null;
+                m_tMapPanel = null;
                 return;
             }
         }
 
-        GameSystem.Instance.PauseGame();
-
-        gameObject.SetActive(true);
-        m_panelCur.SetActive(true);
-
-        if (panelName == Strings.MapPanelName)
-            SetUpMapPanel();
-        else
-            m_continueGameText.text = "Continue Game";
-    }
-
-    private void SetUpMapPanel()
-    {
         if (!m_isMapPanelInitialized)
         {
             m_skyCamera = GameObject.Find("Skycam").GetComponent<Camera>();
-            m_tMapImage = this.transform.Find(Strings.MapImagePath);
-            m_levelText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelText").GetComponent<Text>();
-            m_levelScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/LevelScoreText").GetComponent<Text>();
-            m_totalScoreText = m_panelCur.transform.Find("PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
+            m_tMapImage = m_tMapPanel.Find(Strings.MapImagePath);
+            m_levelText = m_tMapPanel.Find("MapWindow/MapPanel/PlayermarksPanel/Score/LevelText").GetComponent<Text>();
+            m_totalScoreText = m_tMapPanel.Find("MapWindow/MapPanel/PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
             m_goLandmarks = GameObject.FindGameObjectsWithTag("Landmark");
-            m_tPlayermarkList = m_panelCur.transform.Find("PlayermarksPanel/Playermarks");
+            m_tPlayermarkList = m_tMapPanel.Find("MapWindow/MapPanel/PlayermarksPanel/Playermarks");
 
             m_isMapPanelInitialized = true;
 
@@ -95,17 +81,14 @@ public class MainPanelHandler : MonoBehaviour
     }
 
     // called in response to player clicking the "continue game" button on the panel
-    public void ContinueFromPanel()
+    public void Close()
     {
-        if (m_panelCur == null)
+        if (m_tMapPanel == null)
             return;
 
         StopAllCoroutines();
 
-        if (m_panelCur.name == Strings.MapPanelName)
-        {
-            SavePlayermarkChanges();
-        }
+        SavePlayermarkChanges();
 
         // if level is complete, we should not close the panel but show the results
         if (m_isLevelComplete)
@@ -136,12 +119,7 @@ public class MainPanelHandler : MonoBehaviour
         else
         {
             m_phCur = null;
-            m_panelCur.SetActive(false);
-            m_panelCur = null;
-
-            gameObject.SetActive(false);
-
-            GameSystem.Instance.ResumeGame();
+            m_tMapPanel = null;
         }
     }
 
@@ -192,7 +170,7 @@ public class MainPanelHandler : MonoBehaviour
         Vector2 viewPos = m_skyCamera.WorldToViewportPoint(positionIn);
         Vector2 localPos = new Vector2(viewPos.x * rectTrans.sizeDelta.x, viewPos.y * rectTrans.sizeDelta.y);
         Vector3 worldPos = rectTrans.TransformPoint(localPos);
-        float scalerRatio = (1 / this.transform.lossyScale.x) * 2; // Implying all x y z are the same for the lossy scale
+        float scalerRatio = (1 / m_tMapPanel.lossyScale.x) * 2; // Implying all x y z are the same for the lossy scale
 
         return new Vector3(worldPos.x - rectTrans.sizeDelta.x / scalerRatio, worldPos.y - rectTrans.sizeDelta.y / scalerRatio, 0f);
     }
@@ -200,7 +178,6 @@ public class MainPanelHandler : MonoBehaviour
     private void DisplayScore(bool isNewScore)
     {
         m_levelText.text = "Level: " + GameSystem.Instance.CurLevel + ".";
-        m_levelScoreText.text = "Level Score: " + GameSystem.Instance.LevelScore + " / " + GameSystem.MaxLevelScore + ".";
         m_totalScoreText.text = "Total Score: " + GameSystem.Instance.TotalScore + " / " + GameSystem.MaxScore + ".";
 
         if (isNewScore)
@@ -214,12 +191,10 @@ public class MainPanelHandler : MonoBehaviour
     {
         for (int i = 0; i < blinkCount; i++)
         {
-            m_levelScoreText.color = new Color(m_levelScoreText.color.r, m_levelScoreText.color.g, m_levelScoreText.color.b, 0);
-            m_totalScoreText.color = new Color(m_levelScoreText.color.r, m_levelScoreText.color.g, m_levelScoreText.color.b, 0);
+            m_totalScoreText.color = new Color(m_totalScoreText.color.r, m_totalScoreText.color.g, m_totalScoreText.color.b, 0);
             yield return new WaitForSecondsRealtime(0.5f);
 
-            m_levelScoreText.color = new Color(m_levelScoreText.color.r, m_levelScoreText.color.g, m_levelScoreText.color.b, 1);
-            m_totalScoreText.color = new Color(m_levelScoreText.color.r, m_levelScoreText.color.g, m_levelScoreText.color.b, 1);
+            m_totalScoreText.color = new Color(m_totalScoreText.color.r, m_totalScoreText.color.g, m_totalScoreText.color.b, 1);
             yield return new WaitForSecondsRealtime(0.5f);
         }
     }
@@ -243,7 +218,7 @@ public class MainPanelHandler : MonoBehaviour
     private PlayermarkHandler PlayermarkFromLandmark(string landmarkName)
     {
         Debug.Assert(m_isMapPanelInitialized);
-        Debug.Assert(m_panelCur != null);
+        Debug.Assert(m_tMapPanel != null);
 
         if (landmarkName == null)
             return null;
@@ -266,7 +241,7 @@ public class MainPanelHandler : MonoBehaviour
 
     private GameObject LandmarkFromPlayermark(PlayermarkHandler ph)
     {
-        Debug.Assert(m_panelCur != null);
+        Debug.Assert(m_tMapPanel != null);
 
         if ((ph == null) || (m_goLandmarks == null))
             return null;

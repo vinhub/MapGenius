@@ -8,9 +8,8 @@ public static class Strings
     public const string MapPanelName = "MapPanel";
     public static readonly string[] CarColliderNames = { "ColliderBody", "ColliderFront", "ColliderBottom" };
     public const string PlayermarkText = "PlayermarkText";
-    public const string PanelPath = "PanelParent/Panels/";
-    public const string ContinueGameTextPath = "PanelParent/ButtonBar/ContinueGameButton/ContinueGameText";
-    public const string MapImagePath = "PanelParent/Panels/MapPanel/MapBackground/MapImage";
+    public const string ContinueGameTextPath = "MapWindow/Back/Background/Label";
+    public const string MapImagePath = "MapWindow/MapPanel/MapBackground/MapImage";
     public const string StartTag = "Start";
 
     // localizable

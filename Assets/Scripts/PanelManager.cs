@@ -10,57 +10,66 @@ public class PanelManager : MonoBehaviour {
 	private GameObject m_goPanel;
 	private GameObject m_goPrevSelected;
 
-	public void OnEnable()
-	{
-	}
+    private GameObject m_mapPanel;
+    private MapPanelHelper m_mpHelper;
+    private GameObject m_fader;
 
-	public void OpenPanel(GameObject goPanel)
+    private void Awake()
 	{
-        CloseCurrent();
+        GameObject mainMenuUI = GameObject.FindWithTag("MainMenuUI");
+
+        m_mapPanel = mainMenuUI.transform.Find("Map").gameObject;
+        m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
+        m_fader = mainMenuUI.transform.Find("Fader").gameObject;
+    }
+
+    public void OpenPanel(GameObject goPanel)
+	{
+        if (m_goPanel == goPanel)
+            return;
 
         goPanel.SetActive(true);
 
         GameObject goCurSelected = EventSystem.current.currentSelectedGameObject;
 
-		goPanel.transform.SetAsLastSibling();
+        goPanel.transform.SetAsLastSibling();
 
-		m_goPrevSelected = goCurSelected;
+        CloseCurrentPanel();
 
-		m_goPanel = goPanel;
+        m_goPrevSelected = goCurSelected;
 
-		GameObject go = FindFirstEnabledSelectable(goPanel);
+        m_goPanel = goPanel;
 
-		SetSelected(go);
+        GameObject go = FindFirstEnabledSelectable(goPanel);
+
+        EventSystem.current.SetSelectedGameObject(go);
 	}
 
-	static GameObject FindFirstEnabledSelectable(GameObject gameObject)
-	{
-		GameObject go = null;
-		var selectables = gameObject.GetComponentsInChildren<Selectable>(true);
-		foreach (var selectable in selectables) {
-			if (selectable.IsActive () && selectable.IsInteractable()) {
-				go = selectable.gameObject;
-				break;
-			}
-		}
-		return go;
-	}
+    public void OpenMapPanel(string landmarkName)
+    {
+        m_fader.SetActive(true);
+        OpenPanel(m_mapPanel);
 
-	public void CloseCurrent()
+        // set up map panel
+        m_mpHelper.Setup(m_mapPanel.transform, landmarkName);
+    }
+
+	public void CloseCurrentPanel()
 	{
 		if (m_goPanel == null)
 			return;
 
-		SetSelected(m_goPrevSelected);
+        if (m_goPanel == m_mapPanel)
+        {
+            m_mpHelper.Close();
+            m_fader.SetActive(false);
+        }
+
+        EventSystem.current.SetSelectedGameObject(m_goPrevSelected);
 
         m_goPanel.SetActive(false);
 
 		m_goPanel = null;
-	}
-
-	private void SetSelected(GameObject go)
-	{
-		EventSystem.current.SetSelectedGameObject(go);
 	}
 
     public void LoadScene(string sceneName)
@@ -77,4 +86,22 @@ public class PanelManager : MonoBehaviour {
     {
         GameSystem.Instance.NewGame();
     }
+
+    private static GameObject FindFirstEnabledSelectable(GameObject gameObject)
+    {
+        GameObject go = null;
+        var selectables = gameObject.GetComponentsInChildren<Selectable>(true);
+        foreach (var selectable in selectables)
+        {
+            if (selectable.IsActive() && selectable.IsInteractable())
+            {
+                go = selectable.gameObject;
+                break;
+            }
+        }
+
+        return go;
+    }
+
+    // Map panel methods
 }

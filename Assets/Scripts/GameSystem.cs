@@ -28,9 +28,6 @@ public class GameSystem : MonoBehaviour
     private bool m_paused;
 
     private PanelManager m_mainPanelManager;
-    private GameObject m_mapPanel;
-    private GameObject m_fader;
-
 
     private void Awake()
     {
@@ -38,8 +35,6 @@ public class GameSystem : MonoBehaviour
 
         GameObject mainMenuUI = GameObject.FindWithTag("MainMenuUI");
         m_mainPanelManager = mainMenuUI.transform.Find("PanelManager").GetComponent<PanelManager>();
-        m_mapPanel = mainMenuUI.transform.Find("Map").gameObject;
-        m_fader = mainMenuUI.transform.Find("Fader").gameObject;
 
         m_carController = Car.GetComponent<CarController>();
     }
@@ -111,8 +106,7 @@ public class GameSystem : MonoBehaviour
         PauseGame();
 
         // when a landmark is crossed, show map panel
-        m_fader.SetActive(true);
-        m_mainPanelManager.OpenPanel(m_mapPanel);
+        m_mainPanelManager.OpenMapPanel(landmarkName);
     }
 
     public void SetScore(int levelScore, int totalScore)
