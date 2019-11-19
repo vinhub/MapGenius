@@ -6,7 +6,7 @@ public static class Strings
 {
     // non-localizable
     public const string MapPanelName = "MapPanel";
-    public static readonly string[] CarColliderNames = { "ColliderBody", "ColliderFront", "ColliderBottom" };
+    public static readonly string[] CarColliderNames = { "ColliderBody" }; // TODO: Do we need them all? { "ColliderBody", "ColliderFront", "ColliderBottom" };
     public const string PlayermarkText = "PlayermarkText";
     public const string ContinueGameTextPath = "MapWindow/Back/Background/Label";
     public const string MapImagePath = "MapWindow/MapPanel/MapBackground/MapImage";

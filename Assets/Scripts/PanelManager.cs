@@ -10,6 +10,7 @@ public class PanelManager : MonoBehaviour {
 	private GameObject m_goPanel;
 	private GameObject m_goPrevSelected;
 
+    private string m_landmarkCrossed;
     private GameObject m_mapPanel;
     private MapPanelHelper m_mpHelper;
     private GameObject m_fader;
@@ -47,6 +48,13 @@ public class PanelManager : MonoBehaviour {
 
     public void OpenMapPanel(string landmarkName)
     {
+        if (m_landmarkCrossed != null) // already showing the panel
+            return;
+
+        m_landmarkCrossed = landmarkName;
+
+        GameSystem.Instance.PauseGame();
+
         m_fader.SetActive(true);
         OpenPanel(m_mapPanel);
 
@@ -59,10 +67,12 @@ public class PanelManager : MonoBehaviour {
 		if (m_goPanel == null)
 			return;
 
-        if (m_goPanel == m_mapPanel)
+        if (m_landmarkCrossed != null) // map panel was invoked in response to landmark crossing
         {
             m_mpHelper.Close();
             m_fader.SetActive(false);
+            GameSystem.Instance.ResumeGame();
+            m_landmarkCrossed = null;
         }
 
         EventSystem.current.SetSelectedGameObject(m_goPrevSelected);

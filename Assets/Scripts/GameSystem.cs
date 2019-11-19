@@ -103,8 +103,6 @@ public class GameSystem : MonoBehaviour
 
     public void LandmarkCrossed(string landmarkName)
     {
-        PauseGame();
-
         // when a landmark is crossed, show map panel
         m_mainPanelManager.OpenMapPanel(landmarkName);
     }
