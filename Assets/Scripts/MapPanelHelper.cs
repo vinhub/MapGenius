@@ -11,7 +11,7 @@ public class MapPanelHelper : MonoBehaviour
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
     private bool m_isScoreUpdated = false; // has score been updated after player has completed the level?
 
-    private Text m_continueGameText; // text object for the "continue game" button
+    private Text m_closePanelText; // text object for the "continue game" button
     private Transform m_tMapImage;
     private Camera m_skyCamera;
 
@@ -30,7 +30,7 @@ public class MapPanelHelper : MonoBehaviour
         m_landmarkName = landmarkName;
 
         m_isLevelComplete = m_isScoreUpdated = false;
-        m_continueGameText = m_tMapPanel.Find(Strings.ContinueGameTextPath).GetComponent<Text>();
+        m_closePanelText = m_tMapPanel.Find(Strings.ContinueGameTextPath).GetComponent<Text>();
         m_phCur = null;
 
         // if map panel is being invoked as a result of the player crossing a landmark but it has already been visited, then don't show the panel
@@ -65,7 +65,8 @@ public class MapPanelHelper : MonoBehaviour
         // display current score
         DisplayScore(false);
 
-        m_continueGameText.text = Strings.SaveAndContinue;
+        if (landmarkName != null)
+            m_closePanelText.text = Strings.SaveAndContinue;
 
         // mark the current playermark as currently visiting
         if (m_phCur != null)
@@ -80,11 +81,11 @@ public class MapPanelHelper : MonoBehaviour
         }
     }
 
-    // called in response to player clicking the "continue game" button on the panel
-    public void Close()
+    // called in response to player clicking the "save and continu" button on the panel. Returns true if panel can be closed. False if not (when showing results instead of closing down)
+    public bool Close()
     {
         if (m_tMapPanel == null)
-            return;
+            return true;
 
         StopAllCoroutines();
 
@@ -99,7 +100,7 @@ public class MapPanelHelper : MonoBehaviour
                 // TODO: load next level
                 GameSystem.Instance.LoadScene(Strings.Springfield);
 
-                return;
+                return true;
             }
 
             // Calculate and display score
@@ -114,13 +115,17 @@ public class MapPanelHelper : MonoBehaviour
 
             m_isScoreUpdated = true;
 
-            m_continueGameText.text = Strings.MoveToNextLevel;
+            m_closePanelText.text = Strings.MoveToNextLevel;
+
+            return false;
         }
         else
         {
             m_phCur = null;
             m_tMapPanel = null;
         }
+
+        return true;
     }
 
     private void CalcScore(out int levelScore, ref int totalScore)
@@ -287,7 +292,7 @@ public class MapPanelHelper : MonoBehaviour
         m_isLevelComplete = CheckLevelComplete();
 
         if (m_isLevelComplete)
-            m_continueGameText.text = Strings.CheckScore;
+            m_closePanelText.text = Strings.CheckScore;
     }
 
     // if all playermarks have been finalized i.e. drag-dropped and locked, then the level is complete

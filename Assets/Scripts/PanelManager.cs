@@ -69,7 +69,9 @@ public class PanelManager : MonoBehaviour {
 
         if (m_landmarkCrossed != null) // map panel was invoked in response to landmark crossing
         {
-            m_mpHelper.Close();
+            if (!m_mpHelper.Close()) // don't close it if the panel helper disallows it (used when game is over and we need to show results instead of closing the panel)
+                return;
+
             m_fader.SetActive(false);
             GameSystem.Instance.ResumeGame();
             m_landmarkCrossed = null;
@@ -97,6 +99,12 @@ public class PanelManager : MonoBehaviour {
         GameSystem.Instance.NewGame();
     }
 
+    public void QuitGame()
+    {
+        GameSystem.Instance.QuitGame();
+    }
+
+    // --------------- helper methods ------------------
     private static GameObject FindFirstEnabledSelectable(GameObject gameObject)
     {
         GameObject go = null;

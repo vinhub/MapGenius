@@ -98,7 +98,12 @@ public class GameSystem : MonoBehaviour
     public void QuitGame()
     {
         Debug.Log("Player quit the game.");
-        Application.Quit();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+		Application.Quit();
+#endif
     }
 
     public void LandmarkCrossed(string landmarkName)
