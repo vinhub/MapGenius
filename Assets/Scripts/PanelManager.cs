@@ -19,7 +19,8 @@ public class PanelManager : MonoBehaviour {
         CloseCurrent();
 
         goPanel.SetActive(true);
-		GameObject goCurSelected = EventSystem.current.currentSelectedGameObject;
+
+        GameObject goCurSelected = EventSystem.current.currentSelectedGameObject;
 
 		goPanel.transform.SetAsLastSibling();
 
