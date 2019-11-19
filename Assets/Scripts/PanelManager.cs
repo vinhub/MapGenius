@@ -16,12 +16,12 @@ public class PanelManager : MonoBehaviour {
 
 	public void OpenPanel(GameObject goPanel)
 	{
-		goPanel.SetActive(true);
+        CloseCurrent();
+
+        goPanel.SetActive(true);
 		GameObject goCurSelected = EventSystem.current.currentSelectedGameObject;
 
 		goPanel.transform.SetAsLastSibling();
-
-		CloseCurrent();
 
 		m_goPrevSelected = goCurSelected;
 
