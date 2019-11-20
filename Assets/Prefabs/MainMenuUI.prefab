@@ -742,10 +742,10 @@ RectTransform:
   m_Father: {fileID: 22400086}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 1300, y: 900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4668155662263889110
 Canvas:
@@ -820,7 +820,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 900, y: 600}
+  m_SizeDelta: {x: 1000, y: 630}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1480637309289242970
 CanvasRenderer:
@@ -2168,7 +2168,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -60, y: 0}
+  m_SizeDelta: {x: -80, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5067651329372679883
 CanvasRenderer:
@@ -2209,12 +2209,12 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "MapGenius is a fun game involving exploration and mapping.\n\n- Drive the
-    car using:\n    - W, A, S, D or arrow keys on the keyboard or\n    - Standard
-    movement controls on the controller.\n- When you cross a landmark for the first
-    time, the game will pause and the map of the current level will be shown to you.\n-
-    You will need to figure out where the landamrk is on the map and mark its location
-    on the map.\n- Your score will be updated after you have visited all the landmarks.\n-
+  m_Text: "MapGenius is a fun game of exploration and mapping.\n\n- Drive the car
+    using standard navigation controls:\n    - W, A, S, D or arrow keys on the keyboard
+    or\n    - Standard movement controls on the game controller.\n- When you cross
+    any landmark, the game will pause and the map of the current level will be shown
+    to you.\n- You will need to locate the landmark on the map and mark its location.\n-
+    Your score will be updated after you have visited all the landmarks in the level.\n-
     The score will be based on:\n    - How close your markings are to the real landmarks.\n
     \   - How quickly you complete the level.\n\n- OK? Let's get ready to rumble!"
 --- !u!1 &4126016201660900676
