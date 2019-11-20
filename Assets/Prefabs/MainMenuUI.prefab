@@ -1542,7 +1542,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 900, y: 60}
+  m_SizeDelta: {x: 1200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4661947941704255184
 CanvasRenderer:
@@ -1656,7 +1656,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Level Map
+  m_Text: MapGenius - from Redmond Labs - Level Map
 --- !u!1 &3065238231517818868
 GameObject:
   m_ObjectHideFlags: 0
@@ -1733,7 +1733,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Instructions
+  m_Text: MapGenius - from Redmond Labs - Instructions
 --- !u!1 &3384862995524064843
 GameObject:
   m_ObjectHideFlags: 0
@@ -5841,7 +5841,6 @@ GameObject:
   - component: {fileID: 5736685844845153050}
   - component: {fileID: 5736685844845153053}
   - component: {fileID: 5736685844845153052}
-  - component: {fileID: 5736685844845153055}
   - component: {fileID: 9190554734900696913}
   m_Layer: 5
   m_Name: Window
@@ -5913,19 +5912,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
---- !u!114 &5736685844845153055
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5736685844845153025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5b01eb497714c1449cb2df46eb5ac6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: {x: -7, y: -3}
 --- !u!114 &9190554734900696913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7191,7 +7177,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MapGenius - from Redmond Labs
+  m_Text: MapGenius - from Redmond Labs - Main Menu
 --- !u!1 &5736685845087560364
 GameObject:
   m_ObjectHideFlags: 0
@@ -7302,7 +7288,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 900, y: 60}
+  m_SizeDelta: {x: 1200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5736685845099289294
 CanvasRenderer:
@@ -8754,7 +8740,6 @@ GameObject:
   - component: {fileID: 5736685845521110597}
   - component: {fileID: 5736685845521110592}
   - component: {fileID: 5736685845521110595}
-  - component: {fileID: 5736685845521110594}
   - component: {fileID: 173083223298026038}
   m_Layer: 5
   m_Name: SettingsWindow
@@ -8823,19 +8808,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5736685845521110594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5736685845521110596}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5b01eb497714c1449cb2df46eb5ac6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: {x: -7, y: -3}
 --- !u!114 &173083223298026038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9796,7 +9768,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 900, y: 60}
+  m_SizeDelta: {x: 1200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5736685845800459953
 CanvasRenderer:
@@ -9983,7 +9955,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Settings
+  m_Text: MapGenius - from Redmond Labs - Settings
 --- !u!1 &5736685845827056739
 GameObject:
   m_ObjectHideFlags: 0
@@ -13027,7 +12999,6 @@ GameObject:
   - component: {fileID: 1311343257651774815}
   - component: {fileID: 6517477968832127474}
   - component: {fileID: 4934315456969831299}
-  - component: {fileID: 2520426941505140162}
   - component: {fileID: 9100640334105681788}
   m_Layer: 5
   m_Name: LevelsWindow
@@ -13096,19 +13067,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2520426941505140162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8283591051990399725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5b01eb497714c1449cb2df46eb5ac6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: {x: -7, y: -3}
 --- !u!114 &9100640334105681788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13822,7 +13780,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 900, y: 60}
+  m_SizeDelta: {x: 1200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9121592383006722899
 CanvasRenderer:
@@ -13936,7 +13894,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Levels
+  m_Text: MapGenius - from Redmond Labs - Levels
 --- !u!1 &9150965936536526034
 GameObject:
   m_ObjectHideFlags: 0
