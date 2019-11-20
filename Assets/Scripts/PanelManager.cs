@@ -11,14 +11,18 @@ public class PanelManager : MonoBehaviour {
 	private GameObject m_goPrevSelected;
 
     private string m_landmarkCrossed;
-    private GameObject m_mapPanel;
+    private GameObject m_mainMenu, m_instructionsPanel, m_mapPanel;
     private MapPanelHelper m_mpHelper;
     private GameObject m_fader;
+    private bool m_gameStartInstructions;
 
     private void Awake()
 	{
         GameObject mainMenuUI = GameObject.FindWithTag("MainMenuUI");
 
+        m_mainMenu = mainMenuUI.transform.Find("MainMenu").gameObject;
+        m_instructionsPanel = mainMenuUI.transform.Find("Instructions").gameObject;
+        m_instructionsPanel = mainMenuUI.transform.Find("Instructions").gameObject;
         m_mapPanel = mainMenuUI.transform.Find("Map").gameObject;
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
         m_fader = mainMenuUI.transform.Find("Fader").gameObject;
@@ -29,6 +33,7 @@ public class PanelManager : MonoBehaviour {
         if (m_goPanel == goPanel)
             return;
 
+        m_mainMenu.SetActive(false);
         goPanel.SetActive(true);
 
         GameObject goCurSelected = EventSystem.current.currentSelectedGameObject;
@@ -62,20 +67,49 @@ public class PanelManager : MonoBehaviour {
         m_mpHelper.Setup(m_mapPanel.transform, landmarkName);
     }
 
-	public void CloseCurrentPanel()
+    // this is called when game is started
+    public void OpenInstructionsPanel()
+    {
+        m_gameStartInstructions = true;
+
+        GameSystem.Instance.PauseGame();
+
+        m_fader.SetActive(true);
+        OpenPanel(m_instructionsPanel);
+
+        Text closePanelText = m_instructionsPanel.transform.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
+        closePanelText.text = Strings.StartGame;
+    }
+
+    public void CloseCurrentPanel()
 	{
 		if (m_goPanel == null)
 			return;
 
-        if (m_landmarkCrossed != null) // map panel was invoked in response to landmark crossing
+        if (m_gameStartInstructions) // instructions panel is being shown at the start of the game
+        {
+            m_fader.SetActive(false);
+            GameSystem.Instance.ResumeGame();
+
+            m_gameStartInstructions = false;
+        }
+        else if (m_landmarkCrossed != null) // map panel was invoked in response to landmark crossing
         {
             if (!m_mpHelper.Close()) // don't close it if the panel helper disallows it (used when game is over and we need to show results instead of closing the panel)
                 return;
 
             m_fader.SetActive(false);
             GameSystem.Instance.ResumeGame();
+
             m_landmarkCrossed = null;
         }
+        else
+        {
+            m_mainMenu.SetActive(true);
+        }
+
+        Text closePanelText = m_goPanel.transform.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
+        closePanelText.text = Strings.Back;
 
         EventSystem.current.SetSelectedGameObject(m_goPrevSelected);
 

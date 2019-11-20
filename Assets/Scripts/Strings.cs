@@ -8,14 +8,16 @@ public static class Strings
     public const string MapPanelName = "MapPanel";
     public static readonly string[] CarColliderNames = { "ColliderBody" }; // TODO: Do we need them all? { "ColliderBody", "ColliderFront", "ColliderBottom" };
     public const string PlayermarkText = "PlayermarkText";
-    public const string ContinueGameTextPath = "MapWindow/Back/Background/Label";
-    public const string MapImagePath = "MapWindow/MapPanel/MapBackground/MapImage";
+    public const string PanelCloseButtonPath = "Window/Close/Background/Label";
+    public const string MapImagePath = "Window/MapPanel/MapBackground/MapImage";
     public const string StartTag = "Start";
 
     // localizable
-    public const string Springfield = "Springfield";
+    public const string StartGame = "Start Game";
+    public const string Back = "Back";
     public const string SaveAndContinue = "Save and Continue";
     public const string MoveToNextLevel = "Move To Next Level";
-
     public const string CheckScore = "Check Score";
+
+    public const string Springfield = "Springfield";
 }

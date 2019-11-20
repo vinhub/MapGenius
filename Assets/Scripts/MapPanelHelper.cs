@@ -30,7 +30,7 @@ public class MapPanelHelper : MonoBehaviour
         m_landmarkName = landmarkName;
 
         m_isLevelComplete = m_isScoreUpdated = false;
-        m_closePanelText = m_tMapPanel.Find(Strings.ContinueGameTextPath).GetComponent<Text>();
+        m_closePanelText = m_tMapPanel.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
         m_phCur = null;
 
         // if map panel is being invoked as a result of the player crossing a landmark but it has already been visited, then don't show the panel
@@ -49,10 +49,10 @@ public class MapPanelHelper : MonoBehaviour
         {
             m_skyCamera = GameObject.Find("Skycam").GetComponent<Camera>();
             m_tMapImage = m_tMapPanel.Find(Strings.MapImagePath);
-            m_levelText = m_tMapPanel.Find("MapWindow/MapPanel/PlayermarksPanel/Score/LevelText").GetComponent<Text>();
-            m_totalScoreText = m_tMapPanel.Find("MapWindow/MapPanel/PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
+            m_levelText = m_tMapPanel.Find("Window/MapPanel/PlayermarksPanel/Score/LevelText").GetComponent<Text>();
+            m_totalScoreText = m_tMapPanel.Find("Window/MapPanel/PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
             m_goLandmarks = GameObject.FindGameObjectsWithTag("Landmark");
-            m_tPlayermarkList = m_tMapPanel.Find("MapWindow/MapPanel/PlayermarksPanel/Playermarks");
+            m_tPlayermarkList = m_tMapPanel.Find("Window/MapPanel/PlayermarksPanel/Playermarks");
 
             m_isMapPanelInitialized = true;
 

@@ -6,7 +6,7 @@ public class PauseMenu : MonoBehaviour
 {
     private Toggle m_toggle;
     
-    private void Start()
+    private void Awake()
     {
         m_toggle = GetComponent<Toggle>();
 	}

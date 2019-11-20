@@ -39,6 +39,11 @@ public class GameSystem : MonoBehaviour
         m_carController = Car.GetComponent<CarController>();
     }
 
+    private void Start()
+    {
+        m_mainPanelManager.OpenInstructionsPanel();
+    }
+
     private void OnDestroy()
     {
         m_instance = null;
