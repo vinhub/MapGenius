@@ -11,6 +11,7 @@ public static class Strings
     public const string PanelCloseButtonPath = "Window/Close/Background/Label";
     public const string MapImagePath = "Window/MapPanel/MapBackground/MapImage";
     public const string StartTag = "Start";
+    public const string ShowInstructionsAtStart = "ShowInstructionsAtStart";
 
     // localizable
     public const string StartGame = "Start Game";

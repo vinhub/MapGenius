@@ -41,7 +41,12 @@ public class GameSystem : MonoBehaviour
 
     private void Start()
     {
-        m_mainPanelManager.OpenInstructionsPanel();
+        // show game instructions at start once
+        if (PlayerPrefs.GetInt(Strings.ShowInstructionsAtStart, 1) == 1)
+        {
+            m_mainPanelManager.OpenInstructionsPanel();
+            PlayerPrefs.SetInt(Strings.ShowInstructionsAtStart, 0);
+        }
     }
 
     private void OnDestroy()
