@@ -1482,7 +1482,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Map
+  m_Text: Level Map
 --- !u!1 &2760293385459505249
 GameObject:
   m_ObjectHideFlags: 0
@@ -1821,7 +1821,7 @@ RectTransform:
   m_Children:
   - {fileID: 3440297481958320799}
   m_Father: {fileID: 5736685844845153050}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2883,7 +2883,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5326646159952457019
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2897,7 +2897,7 @@ RectTransform:
   m_Children:
   - {fileID: 5326646159952457023}
   m_Father: {fileID: 5736685844845153050}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4616,7 +4616,7 @@ GameObject:
   - component: {fileID: 5736685844585079058}
   - component: {fileID: 5736685844588947254}
   m_Layer: 5
-  m_Name: Quit
+  m_Name: QuitGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4799,7 +4799,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Quit
+  m_Text: Quit Game
 --- !u!1 &5736685844579554550
 GameObject:
   m_ObjectHideFlags: 0
@@ -5818,10 +5818,10 @@ RectTransform:
   m_Children:
   - {fileID: 5736685845098850318}
   - {fileID: 5736685844860753133}
+  - {fileID: 3440297481958320795}
   - {fileID: 614859943309390457}
   - {fileID: 5326646159952457019}
   - {fileID: 5736685845015982566}
-  - {fileID: 3440297481958320795}
   - {fileID: 5736685845066335380}
   - {fileID: 5736685844601331282}
   m_Father: {fileID: 5736685844641199815}
@@ -6043,7 +6043,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Continue
+  m_Text: Continue Game
 --- !u!1 &5736685844874108493
 GameObject:
   m_ObjectHideFlags: 0
@@ -6057,7 +6057,7 @@ GameObject:
   - component: {fileID: 5736685844863380397}
   - component: {fileID: 5736685844864626057}
   m_Layer: 5
-  m_Name: Continue
+  m_Name: ContinueGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6355,7 +6355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5736685845015982566
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6369,7 +6369,7 @@ RectTransform:
   m_Children:
   - {fileID: 5736685845015982562}
   m_Father: {fileID: 5736685844845153050}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -12963,7 +12963,7 @@ GameObject:
   - component: {fileID: 2509754549394980586}
   - component: {fileID: 8423267834099933503}
   m_Layer: 5
-  m_Name: Map
+  m_Name: LevelMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12982,7 +12982,7 @@ RectTransform:
   m_Children:
   - {fileID: 1463819035134358528}
   m_Father: {fileID: 5736685844845153050}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
