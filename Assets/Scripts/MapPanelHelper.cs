@@ -182,8 +182,8 @@ public class MapPanelHelper : MonoBehaviour
 
     private void DisplayScore(bool isNewScore)
     {
-        m_levelText.text = "Level: " + GameSystem.Instance.CurLevel + ".";
-        m_totalScoreText.text = "Total Score: " + GameSystem.Instance.TotalScore + " / " + GameSystem.MaxScore + ".";
+        m_levelText.text = String.Format(Strings.LevelTextFormat, GameSystem.Instance.CurLevel);
+        m_totalScoreText.text = String.Format(Strings.ScoreTextFormat, GameSystem.Instance.TotalScore);
 
         if (isNewScore)
         {

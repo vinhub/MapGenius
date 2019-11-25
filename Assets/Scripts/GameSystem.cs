@@ -47,6 +47,8 @@ public class GameSystem : MonoBehaviour
             m_mainPanelManager.OpenInstructionsPanel();
             PlayerPrefs.SetInt(Strings.ShowInstructionsAtStart, 0);
         }
+
+        SetScore(0, 0);
     }
 
     private void OnDestroy()
@@ -126,5 +128,7 @@ public class GameSystem : MonoBehaviour
     {
         LevelScore = levelScore;
         TotalScore = totalScore;
+
+        m_mainPanelManager.UpdateScore(levelScore, totalScore);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,4 +22,8 @@ public static class Strings
     public const string CheckScore = "Check Score";
 
     public const string Springfield = "Springfield";
+
+    // format strings
+    public const string ScoreTextFormat = "Score: {0:d3}";
+    public const string LevelTextFormat = "Level: {0}";
 }

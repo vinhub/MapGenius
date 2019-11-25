@@ -12,6 +12,7 @@ public class PanelManager : MonoBehaviour {
 
     private string m_landmarkCrossed;
     private GameObject m_mainMenu, m_instructionsPanel, m_mapPanel;
+    private Text m_scoreText;
     private MapPanelHelper m_mpHelper;
     private GameObject m_fader;
     private bool m_gameStartInstructions;
@@ -26,6 +27,7 @@ public class PanelManager : MonoBehaviour {
         m_mapPanel = mainMenuUI.transform.Find("Map").gameObject;
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
         m_fader = mainMenuUI.transform.Find("Fader").gameObject;
+        m_scoreText = mainMenuUI.transform.Find("OpenMenuButton/ScoreText").GetComponent<Text>();
     }
 
     public void OpenPanel(GameObject goPanel)
@@ -117,6 +119,11 @@ public class PanelManager : MonoBehaviour {
 
 		m_goPanel = null;
 	}
+
+    public void UpdateScore(int levelScore, int totalScore)
+    {
+        m_scoreText.text = String.Format(Strings.ScoreTextFormat, totalScore);
+    }
 
     public void LoadScene(string sceneName)
     {
