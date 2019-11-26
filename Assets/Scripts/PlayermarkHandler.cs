@@ -60,7 +60,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
             {
                 m_isMoving = false;
                 m_isDropped = true;
-                SetState(PlayermarkHandler.PlayermarkState.Visited);
+                SetState(PlayermarkState.Visited);
             }
         }
     }

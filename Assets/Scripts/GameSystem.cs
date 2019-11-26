@@ -118,9 +118,31 @@ public class GameSystem : MonoBehaviour
 #endif
     }
 
+    // called when the player crosses a landmark
     public void LandmarkCrossed(string landmarkName)
     {
-        // when a landmark is crossed, show map panel
+        if (!String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // currently processing a landmark?
+            return;
+
+        PauseGame();
+
+        StartCoroutine(HandleLandmarkCrossed(landmarkName));
+    }
+
+    private IEnumerator HandleLandmarkCrossed(string landmarkName)
+    {
+        // flash a popup letting the player know they crossed the landmark
+        string messageText = String.Format(Strings.LandmarkCrossedMessageFormat, landmarkName) +
+            ((landmarkName == Strings.StartLandmarkName) ? Strings.StartupLandmarkCrossedMessage : Strings.OtherLandmarkCrossedMessage);
+
+        PopupMessage.ShowMessage(messageText);
+
+        // let it stay for some time
+        yield return new WaitForSecondsRealtime(5f);
+
+        PopupMessage.HideMessage();
+
+        // then show map panel
         m_mainPanelManager.OpenMapPanel(landmarkName);
     }
 

@@ -31,19 +31,6 @@ public class MapPanelHelper : MonoBehaviour
 
         m_isLevelComplete = m_isScoreUpdated = false;
         m_closePanelText = m_tMapPanel.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
-        m_phCur = null;
-
-        // if map panel is being invoked as a result of the player crossing a landmark but it has already been visited, then don't show the panel
-        if (m_isMapPanelInitialized && !String.IsNullOrEmpty(landmarkName))
-        {
-            m_phCur = PlayermarkFromLandmark(landmarkName);
-
-            if (m_phCur.State != PlayermarkHandler.PlayermarkState.Unvisited)
-            {
-                m_tMapPanel = null;
-                return;
-            }
-        }
 
         if (!m_isMapPanelInitialized)
         {
@@ -58,9 +45,9 @@ public class MapPanelHelper : MonoBehaviour
 
             // add landmarks to the map help player know where they are (without telling them which landmark is which)
             AddLandmarksToMap();
-
-            m_phCur = PlayermarkFromLandmark(m_landmarkName);
         }
+
+        m_phCur = PlayermarkFromLandmark(m_landmarkName);
 
         // display current score
         DisplayScore(false);

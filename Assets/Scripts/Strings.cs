@@ -12,6 +12,7 @@ public static class Strings
     public const string ShowInstructionsAtStart = "ShowInstructionsAtStart";
 
     // object names and paths
+    public const string StartLandmarkName = "Start";
     public const string PlayermarkName = "Playermark";
     public const string PlayermarkTextName = "PlayermarkText";
     public const string MainMenuName = "MainMenu";
@@ -25,6 +26,8 @@ public static class Strings
     public const string LevelTextPath = "Window/MapPanel/PlayermarksPanel/Score/LevelText";
     public const string TotalScoreTextPath = "Window/MapPanel/PlayermarksPanel/Score/TotalScoreText";
     public const string PlayermarksPath = "Window/MapPanel/PlayermarksPanel/Playermarks";
+    public const string PopupWindowPath = "Window";
+    public const string PopupMessageTextPath = "Window/Popup/Background/MessageText";
 
     // tag names
     public const string StartTag = "Start";
@@ -40,11 +43,13 @@ public static class Strings
     public const string StartGame = "Start Game";
     public const string Back = "Back";
     public const string SaveAndContinue = "Save and Continue";
-    public const string MoveToNextLevel = "Move To Next Level";
+    public const string MoveToNextLevel = "Try Again";
     public const string CheckScore = "Check Score";
 
     // format strings
     public const string ScoreTextFormat = "Score: {0:d3}";
     public const string LevelTextFormat = "Level: {0}";
-
+    public const string LandmarkCrossedMessageFormat = "You just crossed the \"{0}\" landmark!";
+    public const string StartupLandmarkCrossedMessage = "\r\n\r\nWe will now demonstrate how to mark its position on the map.";
+    public const string OtherLandmarkCrossedMessage = "\r\n\r\nDrag and drop the blinking marker to the appropriate position on the map.";
 }
