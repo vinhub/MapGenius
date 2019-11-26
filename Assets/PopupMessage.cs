@@ -25,6 +25,8 @@ public class PopupMessage : MonoBehaviour
     {
         m_messageText.text = message;
         m_popupWindow.SetActive(true);
+
+        transform.SetAsLastSibling();
     }
 
     private void _HideMessage()

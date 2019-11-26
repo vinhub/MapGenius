@@ -54,4 +54,5 @@ public static class Strings
     public const string LandmarkCrossedMessageFormat = "You just crossed the \"{0}\" landmark!";
     public const string StartupLandmarkCrossedMessage = "\r\n\r\nWe will now demonstrate how to mark its position on the map.";
     public const string OtherLandmarkCrossedMessage = "\r\n\r\nDrag and drop the blinking marker to the appropriate position on the map.";
+    public const string LevelCompleteMessageFormat = "Congratulations! Level completed!\r\n\r\nYou scored {0} points in {1} seconds!";
 }

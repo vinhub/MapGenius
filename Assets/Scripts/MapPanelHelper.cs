@@ -100,6 +100,8 @@ public class MapPanelHelper : MonoBehaviour
 
             GameSystem.Instance.SetScore(levelScore, totalScore);
 
+            StartCoroutine(ShowLevelCompleteMessage());
+
             DisplayScore(true);
 
             m_isScoreUpdated = true;
@@ -115,6 +117,15 @@ public class MapPanelHelper : MonoBehaviour
         }
 
         return true;
+    }
+
+    private IEnumerator ShowLevelCompleteMessage()
+    {
+        PopupMessage.ShowMessage(String.Format(Strings.LevelCompleteMessageFormat, GameSystem.Instance.LevelScore, (int)Time.fixedTime));
+
+        yield return new WaitForSecondsRealtime(5f);
+
+        PopupMessage.HideMessage();
     }
 
     private void CalcScore(out int levelScore, ref int totalScore)
