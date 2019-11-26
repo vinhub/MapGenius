@@ -12,7 +12,7 @@ public class PanelManager : MonoBehaviour {
 
     public string CurLandmarkName { get; private set; }
     private GameObject m_mainMenu, m_panels, m_instructionsPanel, m_mapPanel;
-    private Text m_scoreText;
+    private Text m_scoreText, m_timeText;
     private MapPanelHelper m_mpHelper;
     private bool m_gameStartInstructions;
 
@@ -26,6 +26,12 @@ public class PanelManager : MonoBehaviour {
         m_mapPanel = mainMenuUI.transform.Find(Strings.MapPanelPath).gameObject;
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
         m_scoreText = mainMenuUI.transform.Find(Strings.MenuScoreTextPath).GetComponent<Text>();
+        m_timeText = mainMenuUI.transform.Find(Strings.MenuTimeTextPath).GetComponent<Text>();
+    }
+
+    private void Update()
+    {
+        m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.fixedTime);
     }
 
     public void OpenPanel(GameObject goPanel)

@@ -21,6 +21,7 @@ public static class Strings
     public const string InstructionsPanelPath = "Panels/Instructions";
     public const string MapPanelPath = "Panels/Map";
     public const string MenuScoreTextPath = "OpenMenuButton/ScoreText";
+    public const string MenuTimeTextPath = "OpenMenuButton/TimeText";
     public const string PanelCloseButtonPath = "Window/Close/Background/Label";
     public const string MapImagePath = "Window/MapPanel/MapBackground/MapImage";
     public const string LevelTextPath = "Window/MapPanel/PlayermarksPanel/Score/LevelText";
@@ -48,6 +49,7 @@ public static class Strings
 
     // format strings
     public const string ScoreTextFormat = "Score: {0:d3}";
+    public const string TimeTextFormat = "Time: {0:d3}";
     public const string LevelTextFormat = "Level: {0}";
     public const string LandmarkCrossedMessageFormat = "You just crossed the \"{0}\" landmark!";
     public const string StartupLandmarkCrossedMessage = "\r\n\r\nWe will now demonstrate how to mark its position on the map.";
