@@ -120,7 +120,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (m_playermarkImage == null)
         {
             m_playermarkImage = this.GetComponent<Image>();
-            m_playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkText).GetComponent<Text>();
+            m_playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkTextName).GetComponent<Text>();
         }
     }
 

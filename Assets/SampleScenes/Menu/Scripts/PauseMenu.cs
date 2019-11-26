@@ -10,7 +10,12 @@ public class PauseMenu : MonoBehaviour
     {
         m_toggle = GetComponent<Toggle>();
 	}
-    
+
+    private void OnDisable()
+    {
+        m_toggle.isOn = false;    
+    }
+
     private void MenuOn()
     {
         GameSystem.Instance.PauseGame();
@@ -48,3 +53,4 @@ public class PauseMenu : MonoBehaviour
 	}
 #endif
 }
+

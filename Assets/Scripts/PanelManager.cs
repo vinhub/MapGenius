@@ -11,23 +11,21 @@ public class PanelManager : MonoBehaviour {
 	private GameObject m_goPrevSelected;
 
     private string m_landmarkCrossed;
-    private GameObject m_mainMenu, m_instructionsPanel, m_mapPanel;
+    private GameObject m_mainMenu, m_panels, m_instructionsPanel, m_mapPanel;
     private Text m_scoreText;
     private MapPanelHelper m_mpHelper;
-    private GameObject m_fader;
     private bool m_gameStartInstructions;
 
     private void Awake()
 	{
-        GameObject mainMenuUI = GameObject.FindWithTag("MainMenuUI");
+        GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
 
-        m_mainMenu = mainMenuUI.transform.Find("MainMenu").gameObject;
-        m_instructionsPanel = mainMenuUI.transform.Find("Instructions").gameObject;
-        m_instructionsPanel = mainMenuUI.transform.Find("Instructions").gameObject;
-        m_mapPanel = mainMenuUI.transform.Find("Map").gameObject;
+        m_mainMenu = mainMenuUI.transform.Find(Strings.MainMenuName).gameObject;
+        m_panels = mainMenuUI.transform.Find(Strings.PanelsName).gameObject;
+        m_instructionsPanel = mainMenuUI.transform.Find(Strings.InstructionsPanelPath).gameObject;
+        m_mapPanel = mainMenuUI.transform.Find(Strings.MapPanelPath).gameObject;
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
-        m_fader = mainMenuUI.transform.Find("Fader").gameObject;
-        m_scoreText = mainMenuUI.transform.Find("OpenMenuButton/ScoreText").GetComponent<Text>();
+        m_scoreText = mainMenuUI.transform.Find(Strings.MenuScoreTextPath).GetComponent<Text>();
     }
 
     public void OpenPanel(GameObject goPanel)
@@ -36,6 +34,7 @@ public class PanelManager : MonoBehaviour {
             return;
 
         m_mainMenu.SetActive(false);
+        m_panels.SetActive(true);
         goPanel.SetActive(true);
 
         GameObject goCurSelected = EventSystem.current.currentSelectedGameObject;
@@ -62,7 +61,6 @@ public class PanelManager : MonoBehaviour {
 
         GameSystem.Instance.PauseGame();
 
-        m_fader.SetActive(true);
         OpenPanel(m_mapPanel);
 
         // set up map panel
@@ -76,7 +74,6 @@ public class PanelManager : MonoBehaviour {
 
         GameSystem.Instance.PauseGame();
 
-        m_fader.SetActive(true);
         OpenPanel(m_instructionsPanel);
 
         Text closePanelText = m_instructionsPanel.transform.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
@@ -93,7 +90,6 @@ public class PanelManager : MonoBehaviour {
             Debug.Assert(m_goPanel == m_instructionsPanel);
 
             // we will resume the game directly instead of going back to the main menu as is the usual case
-            m_fader.SetActive(false);
             GameSystem.Instance.ResumeGame();
 
             m_gameStartInstructions = false;
@@ -111,7 +107,6 @@ public class PanelManager : MonoBehaviour {
             else
             {
                 // if map panel was invoked in response to landmark crossing, we return directly back to the game 
-                m_fader.SetActive(false);
                 GameSystem.Instance.ResumeGame();
 
                 m_landmarkCrossed = null;
@@ -129,6 +124,7 @@ public class PanelManager : MonoBehaviour {
         EventSystem.current.SetSelectedGameObject(m_goPrevSelected);
 
         m_goPanel.SetActive(false);
+        m_panels.SetActive(false);
 
 		m_goPanel = null;
 	}

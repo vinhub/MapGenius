@@ -49,10 +49,10 @@ public class MapPanelHelper : MonoBehaviour
         {
             m_skyCamera = GameObject.Find("Skycam").GetComponent<Camera>();
             m_tMapImage = m_tMapPanel.Find(Strings.MapImagePath);
-            m_levelText = m_tMapPanel.Find("Window/MapPanel/PlayermarksPanel/Score/LevelText").GetComponent<Text>();
-            m_totalScoreText = m_tMapPanel.Find("Window/MapPanel/PlayermarksPanel/Score/TotalScoreText").GetComponent<Text>();
-            m_goLandmarks = GameObject.FindGameObjectsWithTag("Landmark");
-            m_tPlayermarkList = m_tMapPanel.Find("Window/MapPanel/PlayermarksPanel/Playermarks");
+            m_levelText = m_tMapPanel.Find(Strings.LevelTextPath).GetComponent<Text>();
+            m_totalScoreText = m_tMapPanel.Find(Strings.TotalScoreTextPath).GetComponent<Text>();
+            m_goLandmarks = GameObject.FindGameObjectsWithTag(Strings.LandmarkTag);
+            m_tPlayermarkList = m_tMapPanel.Find(Strings.PlayermarksPath);
 
             m_isMapPanelInitialized = true;
 
@@ -233,12 +233,12 @@ public class MapPanelHelper : MonoBehaviour
         // PlayermarkListItem/PlayermarkText.text == landmarkname, then get its parent/Playermark/PlayermarkHandler
         foreach (Transform tPlayermarkListItem in m_tPlayermarkList)
         {
-            Transform tPlayermarkText = tPlayermarkListItem.Find("PlayermarkText");
+            Transform tPlayermarkText = tPlayermarkListItem.Find(Strings.PlayermarkTextName);
             Text text = tPlayermarkText.GetComponent<Text>();
 
             if (text.text == landmarkName)
             {
-                Transform tPlayermark = tPlayermarkListItem.Find("Playermark");
+                Transform tPlayermark = tPlayermarkListItem.Find(Strings.PlayermarkName);
                 return tPlayermark.GetComponent<PlayermarkHandler>();
             }
         }
@@ -254,7 +254,7 @@ public class MapPanelHelper : MonoBehaviour
             return null;
 
         // get its parent/PlayermarkText/Text
-        Transform tPlayermarkText = ph.transform.parent.Find("PlayermarkText");
+        Transform tPlayermarkText = ph.transform.parent.Find(Strings.PlayermarkTextName);
         Text text = tPlayermarkText.GetComponent<Text>();
 
         // Text.text == goLandmark.name
@@ -304,7 +304,7 @@ public class MapPanelHelper : MonoBehaviour
 
         foreach (Transform tPlayermarkListItem in m_tPlayermarkList)
         {
-            Transform tPlayermark = tPlayermarkListItem.Find("Playermark");
+            Transform tPlayermark = tPlayermarkListItem.Find(Strings.PlayermarkName);
             PlayermarkHandler ph = tPlayermark.GetComponent<PlayermarkHandler>();
             if (ph.State != PlayermarkHandler.PlayermarkState.Visited)
                 allPlayermarksVisited = false;
