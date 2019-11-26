@@ -55,7 +55,7 @@ public class PanelManager : MonoBehaviour {
 
     public void OpenMapPanel(string landmarkName)
     {
-        if (m_landmarkCrossed != null) // already showing the panel
+        if (!String.IsNullOrEmpty(m_landmarkCrossed)) // already showing the panel
             return;
 
         m_landmarkCrossed = landmarkName;
@@ -70,9 +70,9 @@ public class PanelManager : MonoBehaviour {
     }
 
     // this is called when game is started
-    public void OpenInstructionsPanel()
+    public void OpenInstructionsPanel(bool isGameStarting)
     {
-        m_gameStartInstructions = true;
+        m_gameStartInstructions = isGameStarting;
 
         GameSystem.Instance.PauseGame();
 
@@ -80,7 +80,7 @@ public class PanelManager : MonoBehaviour {
         OpenPanel(m_instructionsPanel);
 
         Text closePanelText = m_instructionsPanel.transform.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
-        closePanelText.text = Strings.StartGame;
+        closePanelText.text = isGameStarting ? Strings.StartGame : Strings.Back;
     }
 
     public void CloseCurrentPanel()
@@ -90,23 +90,36 @@ public class PanelManager : MonoBehaviour {
 
         if (m_gameStartInstructions) // instructions panel is being shown at the start of the game
         {
+            Debug.Assert(m_goPanel == m_instructionsPanel);
+
+            // we will resume the game directly instead of going back to the main menu as is the usual case
             m_fader.SetActive(false);
             GameSystem.Instance.ResumeGame();
 
             m_gameStartInstructions = false;
         }
-        else if (m_landmarkCrossed != null) // map panel was invoked in response to landmark crossing
+        else if (m_goPanel == m_mapPanel) // map panel was being shown
         {
             if (!m_mpHelper.Close()) // don't close it if the panel helper disallows it (used when game is over and we need to show results instead of closing the panel)
                 return;
 
-            m_fader.SetActive(false);
-            GameSystem.Instance.ResumeGame();
+            if (String.IsNullOrEmpty(m_landmarkCrossed))
+            {
+                // if the map panel was invoked from the main menu, we handle it like any other menu
+                m_mainMenu.SetActive(true);
+            }
+            else
+            {
+                // if map panel was invoked in response to landmark crossing, we return directly back to the game 
+                m_fader.SetActive(false);
+                GameSystem.Instance.ResumeGame();
 
-            m_landmarkCrossed = null;
+                m_landmarkCrossed = null;
+            }
         }
         else
         {
+            // back to the main menu
             m_mainMenu.SetActive(true);
         }
 

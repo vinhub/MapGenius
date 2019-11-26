@@ -44,7 +44,7 @@ public class GameSystem : MonoBehaviour
         // show game instructions at start once
         if (PlayerPrefs.GetInt(Strings.ShowInstructionsAtStart, 1) == 1)
         {
-            m_mainPanelManager.OpenInstructionsPanel();
+            m_mainPanelManager.OpenInstructionsPanel(true);
             PlayerPrefs.SetInt(Strings.ShowInstructionsAtStart, 0);
         }
 

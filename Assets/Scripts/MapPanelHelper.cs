@@ -21,7 +21,7 @@ public class MapPanelHelper : MonoBehaviour
     private Transform m_tPlayermarkList;
     private string m_landmarkName;
 
-    public void Setup(Transform tMapPanel, string landmarkName = null)
+    public void Setup(Transform tMapPanel, string landmarkName)
     {
         if (m_tMapPanel != null)
             return;
@@ -34,7 +34,7 @@ public class MapPanelHelper : MonoBehaviour
         m_phCur = null;
 
         // if map panel is being invoked as a result of the player crossing a landmark but it has already been visited, then don't show the panel
-        if (m_isMapPanelInitialized && (landmarkName != null))
+        if (m_isMapPanelInitialized && !String.IsNullOrEmpty(landmarkName))
         {
             m_phCur = PlayermarkFromLandmark(landmarkName);
 
@@ -65,7 +65,9 @@ public class MapPanelHelper : MonoBehaviour
         // display current score
         DisplayScore(false);
 
-        if (landmarkName != null)
+        if (String.IsNullOrEmpty(landmarkName))
+            m_closePanelText.text = Strings.Back;
+        else
             m_closePanelText.text = Strings.SaveAndContinue;
 
         // mark the current playermark as currently visiting
@@ -225,7 +227,7 @@ public class MapPanelHelper : MonoBehaviour
         Debug.Assert(m_isMapPanelInitialized);
         Debug.Assert(m_tMapPanel != null);
 
-        if (landmarkName == null)
+        if (String.IsNullOrEmpty(landmarkName))
             return null;
 
         // PlayermarkListItem/PlayermarkText.text == landmarkname, then get its parent/Playermark/PlayermarkHandler
