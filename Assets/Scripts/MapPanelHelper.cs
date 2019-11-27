@@ -133,8 +133,8 @@ public class MapPanelHelper : MonoBehaviour
         levelScore = 0;
 
         int numLandmarksInLevel = m_goLandmarks.Length;
-        float maxLandmarkScore = GameSystem.MaxLevelScore / numLandmarksInLevel;
-        float maxMapDistance = 100;
+        int maxLandmarkScore = GameSystem.MaxLevelScore / numLandmarksInLevel;
+        int maxSlopDistance = 30; // amount of slop allowed in placement of playermark
 
         // calculate and add up the score for each landmark
         foreach (GameObject goLandmark in m_goLandmarks)
@@ -153,13 +153,10 @@ public class MapPanelHelper : MonoBehaviour
             // calculae distance between them
             double distance = Vector3.Distance(landmarkPos, tPlayermark.position);
 
-            if (distance > maxMapDistance)
-                distance = maxMapDistance;
+            // full points if the playermarn is within slop distance of the landmark
+            int landmarkScore = (distance <= maxSlopDistance) ? maxLandmarkScore : 0;
 
-            // interpolate between the distance and the max distance possible in the map to get the score for this landmark
-            int landmarkScore = (int)Math.Round(Mathf.Lerp(0f, maxLandmarkScore, 1f - (float)(distance / maxMapDistance)));
-
-            ph.SetScore(landmarkScore, maxLandmarkScore);
+            ph.SetScore(landmarkScore);
 
             levelScore += landmarkScore;
         }

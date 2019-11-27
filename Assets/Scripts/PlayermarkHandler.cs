@@ -141,12 +141,10 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     }
 
     // set the score for the playermark when the level is complete. Adjust colors etc accordingly.
-    public void SetScore(float score, float maxScore)
+    public void SetScore(int score)
     {
         InitMembers();
 
-        m_playermarkImage.color = Color32.Lerp(m_red, m_green, score / maxScore);
-        m_emptyPlayermarkImage.color = Color32.Lerp(m_red, m_green, score / maxScore);
-        m_playermarkText.color = Color32.Lerp(m_red, m_green, score / maxScore);
+        m_playermarkImage.color = m_emptyPlayermarkImage.color = m_playermarkText.color = (score > 0) ? m_green : m_red;
     }
 }
