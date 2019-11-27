@@ -157,7 +157,9 @@ public class MapPanelHelper : MonoBehaviour
                 distance = maxMapDistance;
 
             // interpolate between the distance and the max distance possible in the map to get the score for this landmark
-            int landmarkScore = (int)Math.Round(Mathf.Lerp(0, maxLandmarkScore, 1f - (float)(distance / maxMapDistance)));
+            int landmarkScore = (int)Math.Round(Mathf.Lerp(0f, maxLandmarkScore, 1f - (float)(distance / maxMapDistance)));
+
+            ph.SetScore(landmarkScore, maxLandmarkScore);
 
             levelScore += landmarkScore;
         }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private Image m_playermarkImage;
+    private Image m_playermarkImage, m_emptyPlayermarkImage;
     private Text m_playermarkText;
 
     public enum PlayermarkState { Unvisited, CurrentlyVisiting, Visited };
@@ -20,6 +20,9 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Color32 m_currentlyVisitingColor = new Color32(0, 255, 0, 255);
     private Color32 m_visitedColor = new Color32(160, 160, 160, 255);
     private Color32 m_droppedColor = new Color32(0, 160, 0, 255);
+    private Color32 m_red = new Color32(255, 0, 0, 255);
+    private Color32 m_green = new Color32(0, 255, 0, 255);
+
     private bool m_isMoving = false;
     private Vector3 m_newPosition;
 
@@ -121,6 +124,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         {
             m_playermarkImage = this.GetComponent<Image>();
             m_playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkTextName).GetComponent<Text>();
+            m_emptyPlayermarkImage = this.gameObject.transform.parent.Find(Strings.EmptyPlayermarkName).GetComponent<Image>();
         }
     }
 
@@ -134,5 +138,15 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
             m_playermarkImage.color = m_currentlyVisitingColor;
             yield return new WaitForSecondsRealtime(0.5f);
         }
+    }
+
+    // set the score for the playermark when the level is complete. Adjust colors etc accordingly.
+    public void SetScore(float score, float maxScore)
+    {
+        InitMembers();
+
+        m_playermarkImage.color = Color32.Lerp(m_red, m_green, score / maxScore);
+        m_emptyPlayermarkImage.color = Color32.Lerp(m_red, m_green, score / maxScore);
+        m_playermarkText.color = Color32.Lerp(m_red, m_green, score / maxScore);
     }
 }

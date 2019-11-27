@@ -15,6 +15,7 @@ public static class Strings
     public const string StartLandmarkName = "Start";
     public const string PlayermarkName = "Playermark";
     public const string PlayermarkTextName = "PlayermarkText";
+    public const string EmptyPlayermarkName = "PlayermarkEmpty";
     public const string MainMenuName = "MainMenu";
     public const string PanelsName = "Panels";
     public const string PanelManagerPath = "PanelManager";
