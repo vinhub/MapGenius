@@ -58,6 +58,12 @@ public class PanelManager : MonoBehaviour {
         EventSystem.current.SetSelectedGameObject(go);
 	}
 
+    // called from menu
+    public void OpenMapPanel()
+    {
+        OpenMapPanel(null, false);
+    }
+
     public void OpenMapPanel(string landmarkName, bool firstLandmarkCrossed)
     {
         if (!String.IsNullOrEmpty(CurLandmarkName)) // already showing the panel
