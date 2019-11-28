@@ -58,7 +58,7 @@ public class PanelManager : MonoBehaviour {
         EventSystem.current.SetSelectedGameObject(go);
 	}
 
-    public void OpenMapPanel(string landmarkName)
+    public void OpenMapPanel(string landmarkName, bool firstLandmarkCrossed)
     {
         if (!String.IsNullOrEmpty(CurLandmarkName)) // already showing the panel
             return;
@@ -68,7 +68,7 @@ public class PanelManager : MonoBehaviour {
         OpenPanel(m_mapPanel);
 
         // set up map panel
-        m_mpHelper.Setup(m_mapPanel.transform, landmarkName);
+        m_mpHelper.Setup(m_mapPanel.transform, landmarkName, firstLandmarkCrossed);
     }
 
     // this is called when game is started

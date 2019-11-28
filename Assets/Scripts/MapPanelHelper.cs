@@ -21,7 +21,7 @@ public class MapPanelHelper : MonoBehaviour
     private Transform m_tPlayermarkList;
     private string m_landmarkName;
 
-    public void Setup(Transform tMapPanel, string landmarkName)
+    public void Setup(Transform tMapPanel, string landmarkName, bool firstLandmarkCrossed)
     {
         if (m_tMapPanel != null)
             return;
@@ -62,7 +62,7 @@ public class MapPanelHelper : MonoBehaviour
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.CurrentlyVisiting);
 
-            if (m_phCur.tag == Strings.StartTag)
+            if (firstLandmarkCrossed)
             {
                 // move Start playermark to map
                 StartCoroutine(MovePlayermarkToMap());

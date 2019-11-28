@@ -28,6 +28,7 @@ public class GameSystem : MonoBehaviour
     private bool m_paused;
 
     private PanelManager m_mainPanelManager;
+    private bool m_firstLandmarkCrossed = true;
 
     private void Awake()
     {
@@ -133,17 +134,19 @@ public class GameSystem : MonoBehaviour
     {
         // flash a popup letting the player know they crossed the landmark
         string messageText = String.Format(Strings.LandmarkCrossedMessageFormat, landmarkName) +
-            ((landmarkName == Strings.StartLandmarkName) ? Strings.StartupLandmarkCrossedMessage : Strings.OtherLandmarkCrossedMessage);
+            (m_firstLandmarkCrossed ? Strings.FirstLandmarkCrossedMessage : Strings.OtherLandmarkCrossedMessage);
 
         PopupMessage.ShowMessage(messageText);
 
         // let it stay for some time
-        yield return new WaitForSecondsRealtime(5f);
+        yield return new WaitForSecondsRealtime(m_firstLandmarkCrossed ? 5f : 4f);
 
         PopupMessage.HideMessage();
 
         // then show map panel
-        m_mainPanelManager.OpenMapPanel(landmarkName);
+        m_mainPanelManager.OpenMapPanel(landmarkName, m_firstLandmarkCrossed);
+
+        m_firstLandmarkCrossed = false;
     }
 
     public void SetScore(int levelScore, int totalScore)
