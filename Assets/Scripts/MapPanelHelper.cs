@@ -20,6 +20,7 @@ public class MapPanelHelper : MonoBehaviour
     private GameObject[] m_goLandmarks;
     private Transform m_tPlayermarkList;
     private string m_landmarkName;
+    private bool m_revealedLandmarksOnMap = false;
 
     public void Setup(Transform tMapPanel, string landmarkName, bool firstLandmarkCrossed)
     {
@@ -119,6 +120,22 @@ public class MapPanelHelper : MonoBehaviour
         return true;
     }
 
+    public void OnHintToggleChange(bool showLandmarksOnMap)
+    {
+        int childCount = m_tMapImage.childCount;
+
+        for (int iChild = 0; iChild < childCount; iChild++)
+        {
+            Transform tChild = m_tMapImage.GetChild(iChild);
+            if (tChild.name == Strings.LandmarkOnMap)
+                tChild.gameObject.SetActive(showLandmarksOnMap);
+        }
+
+        // remember that landmarks were revealed
+        if (showLandmarksOnMap)
+            m_revealedLandmarksOnMap = true;
+    }
+
     private IEnumerator ShowLevelCompleteMessage()
     {
         PopupMessage.ShowMessage(String.Format(Strings.LevelCompleteMessageFormat, GameSystem.Instance.LevelScore, (int)Time.fixedTime));
@@ -161,6 +178,9 @@ public class MapPanelHelper : MonoBehaviour
             levelScore += landmarkScore;
         }
 
+        if (m_revealedLandmarksOnMap) // if landmarks were revealed, cut 25%
+            levelScore = (int)Math.Round(levelScore * 0.75);
+
         totalScore += levelScore;
     }
 
@@ -169,7 +189,7 @@ public class MapPanelHelper : MonoBehaviour
     {
         Vector3 positionIn = lh.transform.position;
 
-        RectTransform rectTrans = m_tMapImage.GetComponentInParent<RectTransform>(); //RenderTexture holder
+        RectTransform rectTrans = m_tMapImage.GetComponentInParent<RectTransform>(); // RenderTexture holder
 
         Vector2 viewPos = m_skyCamera.WorldToViewportPoint(positionIn);
         Vector2 localPos = new Vector2(viewPos.x * rectTrans.sizeDelta.x, viewPos.y * rectTrans.sizeDelta.y);
@@ -212,6 +232,8 @@ public class MapPanelHelper : MonoBehaviour
             Vector3 position = CalcPosOnMap(lh);
 
             GameObject go = new GameObject();
+            go.SetActive(m_revealedLandmarksOnMap);
+            go.name = Strings.LandmarkOnMap;
             go.transform.parent = m_tMapImage;
             go.AddComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
             go.AddComponent<Image>();

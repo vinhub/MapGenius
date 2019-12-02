@@ -29,6 +29,7 @@ public static class Strings
     public const string PlayermarksPath = "Window/MapPanel/PlayermarksPanel/Playermarks";
     public const string PopupWindowPath = "Window";
     public const string PopupMessageTextPath = "Window/Popup/Background/MessageText";
+    public const string LandmarkOnMap = "LandmarkOnMap";
 
     // tag names
     public const string StartTag = "Start";
