@@ -61,11 +61,16 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
             if (Vector3.Distance(transform.position, m_newPosition) < 0.1) // stop animation when close enough
             {
-                m_isMoving = false;
-                m_isDropped = true;
-                SetState(PlayermarkState.Visited);
+                DoneMoving();
             }
         }
+    }
+
+    public void DoneMoving()
+    {
+        m_isMoving = false;
+        m_isDropped = true;
+        SetState(PlayermarkState.Visited);
     }
 
     // artificially move the playermark to given position as if it was drag-dropped

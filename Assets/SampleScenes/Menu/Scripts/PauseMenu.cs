@@ -28,6 +28,9 @@ public class PauseMenu : MonoBehaviour
     
     public void OnMenuStatusChange()
     {
+        if ((m_toggle == null) || (GameSystem.Instance == null))
+            return;
+
         if (m_toggle.isOn && !GameSystem.Instance.IsGamePaused())
         {
             MenuOn();

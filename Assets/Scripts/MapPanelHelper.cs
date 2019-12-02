@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class MapPanelHelper : MonoBehaviour
 {
     private Transform m_tMapPanel = null; // whether / which panel is being shown right now
+    private string m_landmarkName;
+    private bool m_firstLandmarkCrossed = false;
+
     private PlayermarkHandler m_phCur = null; // playmark handler correspoding to the landmark that the player just crossed
 
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
@@ -19,7 +22,6 @@ public class MapPanelHelper : MonoBehaviour
     private Text m_levelText, m_totalScoreText;
     private GameObject[] m_goLandmarks;
     private Transform m_tPlayermarkList;
-    private string m_landmarkName;
     private bool m_revealedLandmarksOnMap = false;
 
     public void Setup(Transform tMapPanel, string landmarkName, bool firstLandmarkCrossed)
@@ -29,6 +31,7 @@ public class MapPanelHelper : MonoBehaviour
 
         m_tMapPanel = tMapPanel;
         m_landmarkName = landmarkName;
+        m_firstLandmarkCrossed = firstLandmarkCrossed;
 
         m_isLevelComplete = m_isScoreUpdated = false;
         m_closePanelText = m_tMapPanel.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
@@ -79,6 +82,18 @@ public class MapPanelHelper : MonoBehaviour
 
         StopAllCoroutines();
 
+        if (m_firstLandmarkCrossed)
+        {
+            // ensure the first landmark is properly positioned on the map in case coroutine was stopped before it ended
+            GameObject goLandmark = LandmarkFromPlayermark(m_phCur);
+            LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
+            Vector3 position = CalcPosOnMap(lh);
+            m_phCur.transform.position = position;
+            m_phCur.DoneMoving();
+
+            m_firstLandmarkCrossed = false;
+        }
+
         SavePlayermarkChanges();
 
         // if level is complete, we should not close the panel but show the results
@@ -122,6 +137,9 @@ public class MapPanelHelper : MonoBehaviour
 
     public void OnHintToggleChange(bool showLandmarksOnMap)
     {
+        if (!m_isMapPanelInitialized)
+            return;
+
         int childCount = m_tMapImage.childCount;
 
         for (int iChild = 0; iChild < childCount; iChild++)
