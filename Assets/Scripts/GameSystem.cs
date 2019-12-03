@@ -24,11 +24,13 @@ public class GameSystem : MonoBehaviour
 
     // for pausing / resuming game
     private float m_timeScaleSav = 1f;
-    private float m_volumeSav = 1f;
     private bool m_paused;
 
     private PanelManager m_mainPanelManager;
     private bool m_firstLandmarkCrossed = true;
+
+    private AudioSource m_audioSource;
+    public AudioClip LandmarkCrossedSound;
 
     private void Awake()
     {
@@ -38,6 +40,8 @@ public class GameSystem : MonoBehaviour
         m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
 
         m_carController = Car.GetComponent<CarController>();
+
+        m_audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -84,11 +88,10 @@ public class GameSystem : MonoBehaviour
         if (m_paused)
             return;
 
+        m_carController.StopCar();
+
         m_timeScaleSav = Time.timeScale;
         Time.timeScale = 0f;
-
-        m_volumeSav = AudioListener.volume;
-        AudioListener.volume = 0f;
 
         m_paused = true;
     }
@@ -99,7 +102,6 @@ public class GameSystem : MonoBehaviour
             return;
 
         Time.timeScale = m_timeScaleSav;
-        AudioListener.volume = m_volumeSav;
         m_paused = false;
     }
 
@@ -126,6 +128,8 @@ public class GameSystem : MonoBehaviour
             return;
 
         PauseGame();
+
+        m_audioSource.PlayOneShot(LandmarkCrossedSound);
 
         StartCoroutine(HandleLandmarkCrossed(landmarkName));
     }

@@ -70,8 +70,9 @@ namespace UnityStandardAssets.Vehicles.Car
             m_StartedSound = true;
         }
 
-
-        private void StopSound()
+        // VINMOD: START (made public)
+        public void StopSound()
+        // VINMOD: END
         {
             //Destroy all audio sources on this object:
             foreach (var source in GetComponents<AudioSource>())

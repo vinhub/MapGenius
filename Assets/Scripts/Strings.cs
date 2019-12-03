@@ -30,6 +30,7 @@ public static class Strings
     public const string PopupWindowPath = "Window";
     public const string PopupMessageTextPath = "Window/Popup/Background/MessageText";
     public const string LandmarkOnMap = "LandmarkOnMap";
+    public const string ButtonClickAudioSourceName = "ButtonClickAudioSource";
 
     // tag names
     public const string StartTag = "Start";

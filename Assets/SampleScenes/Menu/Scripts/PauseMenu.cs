@@ -5,10 +5,12 @@ using UnityEngine.UI;
 public class PauseMenu : MonoBehaviour
 {
     private Toggle m_toggle;
-    
+    private AudioSource m_buttonClickAudioSource;
+
     private void Awake()
     {
         m_toggle = GetComponent<Toggle>();
+        m_buttonClickAudioSource = transform.parent.Find(Strings.ButtonClickAudioSourceName).GetComponent<AudioSource>();
 	}
 
     private void OnDisable()
@@ -18,6 +20,7 @@ public class PauseMenu : MonoBehaviour
 
     private void MenuOn()
     {
+        m_buttonClickAudioSource.Play();
         GameSystem.Instance.PauseGame();
     }
     
