@@ -29,9 +29,6 @@ public class GameSystem : MonoBehaviour
     private PanelManager m_mainPanelManager;
     private bool m_firstLandmarkCrossed = true;
 
-    private AudioSource m_audioSource;
-    public AudioClip LandmarkCrossedSound;
-
     private void Awake()
     {
         m_instance = this;
@@ -40,8 +37,6 @@ public class GameSystem : MonoBehaviour
         m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
 
         m_carController = Car.GetComponent<CarController>();
-
-        m_audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -128,8 +123,6 @@ public class GameSystem : MonoBehaviour
             return;
 
         PauseGame();
-
-        m_audioSource.PlayOneShot(LandmarkCrossedSound);
 
         StartCoroutine(HandleLandmarkCrossed(landmarkName));
     }

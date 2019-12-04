@@ -13,16 +13,22 @@ public class PopupMessage : MonoBehaviour
     private Text m_messageText;
     private GameObject m_popupWindow;
 
+    private AudioSource m_audioSource;
+
     private void Awake()
     {
         m_instance = this;
 
         m_messageText = transform.Find(Strings.PopupMessageTextPath).GetComponent<Text>();
         m_popupWindow = transform.Find(Strings.PopupWindowPath).gameObject;
+
+        m_audioSource = GetComponent<AudioSource>();
     }
 
     private void _ShowMessage(string message)
     {
+        m_audioSource.Play();
+
         m_messageText.text = message;
         m_popupWindow.SetActive(true);
 
