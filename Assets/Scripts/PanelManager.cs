@@ -39,7 +39,7 @@ public class PanelManager : MonoBehaviour {
         if (m_goPanel == goPanel)
             return;
 
-        //m_goPrevSelected = EventSystem.current.currentSelectedGameObject;
+        m_goPrevSelected = EventSystem.current.currentSelectedGameObject;
 
         m_mainMenu.SetActive(false);
         m_panels.SetActive(true);
@@ -48,10 +48,6 @@ public class PanelManager : MonoBehaviour {
         goPanel.transform.SetAsLastSibling();
 
         m_goPanel = goPanel;
-
-        //GameObject go = FindFirstEnabledSelectable(goPanel);
-
-        //EventSystem.current.SetSelectedGameObject(go);
 	}
 
     // called from menu
@@ -127,10 +123,10 @@ public class PanelManager : MonoBehaviour {
         Text closePanelText = m_goPanel.transform.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
         closePanelText.text = Strings.Back;
 
+        EventSystem.current.SetSelectedGameObject(m_goPrevSelected);
+
         m_goPanel.SetActive(false);
         m_panels.SetActive(false);
-
-        //EventSystem.current.SetSelectedGameObject(m_goPrevSelected);
 
         m_goPanel = null;
 	}
