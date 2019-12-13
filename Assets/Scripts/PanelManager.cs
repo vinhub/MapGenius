@@ -47,6 +47,8 @@ public class PanelManager : MonoBehaviour {
 
         goPanel.transform.SetAsLastSibling();
 
+        //EventSystem.current.SetSelectedGameObject(FindFirstEnabledSelectable(goPanel));
+
         m_goPanel = goPanel;
 	}
 
