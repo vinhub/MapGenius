@@ -125,7 +125,7 @@ public class PanelManager : MonoBehaviour {
         Text closePanelText = m_goPanel.transform.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
         closePanelText.text = Strings.Back;
 
-        EventSystem.current.SetSelectedGameObject(m_goPrevSelected);
+        EventSystem.current.SetSelectedGameObject(null);
 
         m_goPanel.SetActive(false);
         m_panels.SetActive(false);
