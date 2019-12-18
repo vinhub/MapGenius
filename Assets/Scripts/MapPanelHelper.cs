@@ -151,7 +151,13 @@ public class MapPanelHelper : MonoBehaviour
 
         // remember that landmarks were revealed
         if (showLandmarksOnMap)
+        {
             m_revealedLandmarksOnMap = true;
+
+            // disable the toggle
+            Transform tToggle = m_tMapPanel.Find(Strings.ShowLandmarksTogglePath);
+            tToggle.GetComponent<Toggle>().enabled = false;
+        }
     }
 
     private IEnumerator ShowLevelCompleteMessage()
@@ -188,16 +194,13 @@ public class MapPanelHelper : MonoBehaviour
             // calculae distance between them
             double distance = Vector3.Distance(landmarkPos, tPlayermark.position);
 
-            // full points if the playermarn is within slop distance of the landmark
-            int landmarkScore = (distance <= maxSlopDistance) ? maxLandmarkScore : 0;
+            // full points if the playermark is within slop distance of the landmark
+            int landmarkScore = (distance <= maxSlopDistance) ? (maxLandmarkScore * ph.ScoreFactor / 100) : 0;
 
-            ph.SetScore(landmarkScore);
+            ph.OnUpdateScore(landmarkScore);
 
             levelScore += landmarkScore;
         }
-
-        if (m_revealedLandmarksOnMap) // if landmarks were revealed, cut 25%
-            levelScore = (int)Math.Round(levelScore * 0.75);
 
         totalScore += levelScore;
     }
@@ -325,6 +328,7 @@ public class MapPanelHelper : MonoBehaviour
         if (m_phCur != null)
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.Visited);
+            m_phCur.SetScoreFactor(m_revealedLandmarksOnMap ? 75 : 100);
         }
 
         // check if level is complete
