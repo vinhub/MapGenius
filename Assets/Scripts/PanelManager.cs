@@ -31,7 +31,7 @@ public class PanelManager : MonoBehaviour {
 
     private void Update()
     {
-        m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.fixedTime);
+        m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.timeSinceLevelLoad);
     }
 
     public void OpenPanel(GameObject goPanel)

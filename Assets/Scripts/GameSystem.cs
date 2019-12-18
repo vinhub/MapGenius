@@ -33,14 +33,14 @@ public class GameSystem : MonoBehaviour
     {
         m_instance = this;
 
-        GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
-        m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
-
         m_carController = Car.GetComponent<CarController>();
     }
 
     private void Start()
     {
+        GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
+        m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
+
         // show game instructions at start once
         if (PlayerPrefs.GetInt(Strings.ShowInstructionsAtStart, 1) == 1)
         {
