@@ -16,8 +16,8 @@ public class GameSystem : MonoBehaviour
     public const int MaxScore = MaxLevelScore * NumLevels; // max possible score
 
     public int CurLevel { get; private set; } = 1; // current level
-    public int LevelScore { get; private set; } // player's score so far for the current level
-    public int TotalScore { get; private set; } = 0; // player's total score so far
+    public float LevelScore { get; private set; } // player's score so far for the current level
+    public float TotalScore { get; private set; } = 0; // player's total score so far
 
     public GameObject Car; // the car being driven by the player
     private CarController m_carController;
@@ -68,7 +68,6 @@ public class GameSystem : MonoBehaviour
 
     public void NewGame()
     {
-        GameSystem.Instance.ResumeGame();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -146,7 +145,7 @@ public class GameSystem : MonoBehaviour
         m_firstLandmarkCrossed = false;
     }
 
-    public void SetScore(int levelScore, int totalScore)
+    public void SetScore(float levelScore, float totalScore)
     {
         LevelScore = levelScore;
         TotalScore = totalScore;

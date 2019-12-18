@@ -133,9 +133,9 @@ public class PanelManager : MonoBehaviour {
         m_goPanel = null;
 	}
 
-    public void UpdateScore(int levelScore, int totalScore)
+    public void UpdateScore(float levelScore, float totalScore)
     {
-        m_scoreText.text = String.Format(Strings.ScoreTextFormat, totalScore);
+        m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(totalScore, MidpointRounding.AwayFromZero));
     }
 
     public void LoadScene(string sceneName)

@@ -109,8 +109,8 @@ public class MapPanelHelper : MonoBehaviour
             }
 
             // Calculate and display score
-            int levelScore;
-            int totalScore = GameSystem.Instance.TotalScore;
+            float levelScore;
+            float totalScore = GameSystem.Instance.TotalScore;
 
             CalcScore(out levelScore, ref totalScore);
 
@@ -173,12 +173,12 @@ public class MapPanelHelper : MonoBehaviour
         PopupMessage.HideMessage();
     }
 
-    private void CalcScore(out int levelScore, ref int totalScore)
+    private void CalcScore(out float levelScore, ref float totalScore)
     {
-        levelScore = 0;
+        levelScore = 0f;
 
         int numLandmarksInLevel = m_goLandmarks.Length;
-        int maxLandmarkScore = GameSystem.MaxLevelScore / numLandmarksInLevel;
+        float maxLandmarkScore = (float)GameSystem.MaxLevelScore / numLandmarksInLevel;
         int maxSlopDistance = 30; // amount of slop allowed in placement of playermark
 
         // calculate and add up the score for each landmark
@@ -199,7 +199,7 @@ public class MapPanelHelper : MonoBehaviour
             double distance = Vector3.Distance(landmarkPos, tPlayermark.position);
 
             // full points if the playermark is within slop distance of the landmark
-            int landmarkScore = (distance <= maxSlopDistance) ? (int)Math.Round(maxLandmarkScore * ph.ScoreFactor / 100, MidpointRounding.AwayFromZero) : 0;
+            float landmarkScore = (distance <= maxSlopDistance) ? (maxLandmarkScore * ph.ScoreFactor / 100f) : 0f;
 
             ph.OnUpdateScore(landmarkScore);
 
@@ -227,7 +227,7 @@ public class MapPanelHelper : MonoBehaviour
     private void DisplayScore(bool isNewScore)
     {
         m_levelText.text = String.Format(Strings.LevelTextFormat, GameSystem.Instance.CurLevel);
-        m_totalScoreText.text = String.Format(Strings.ScoreTextFormat, GameSystem.Instance.TotalScore);
+        m_totalScoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(GameSystem.Instance.TotalScore, MidpointRounding.AwayFromZero));
 
         if (isNewScore)
         {

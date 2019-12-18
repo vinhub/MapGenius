@@ -152,10 +152,10 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     }
 
     // update appearance based on score.
-    public void OnUpdateScore(int score)
+    public void OnUpdateScore(float score)
     {
         InitMembers();
 
-        m_playermarkImage.color = m_emptyPlayermarkImage.color = m_playermarkText.color = (score > 0) ? m_green : m_red;
+        m_playermarkImage.color = m_emptyPlayermarkImage.color = m_playermarkText.color = (score > 0.01) ? m_green : m_red;
     }
 }
