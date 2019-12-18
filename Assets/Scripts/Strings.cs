@@ -28,6 +28,8 @@ public static class Strings
     public const string TotalScoreTextPath = "Window/MapPanel/PlayermarksPanel/Score/TotalScoreText";
     public const string PlayermarksPath = "Window/MapPanel/PlayermarksPanel/Playermarks";
     public const string ShowLandmarksTogglePath = "Window/MapPanel/PlayermarksPanel/Hint/Toggle";
+    public const string ShowLandmarksBackgroundPath = "Window/MapPanel/PlayermarksPanel/Hint/Toggle/Background";
+    public const string ShowLandmarksLabelPath = "Window/MapPanel/PlayermarksPanel/Hint/Toggle/Label";
     public const string PopupWindowPath = "Window";
     public const string PopupMessageTextPath = "Window/Popup/Background/MessageText";
     public const string LandmarkOnMap = "LandmarkOnMap";

@@ -15,7 +15,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     public PlayermarkState State { get; private set; } = PlayermarkState.Unvisited;
 
     private bool m_isDropped = false; // whether the marker has been drag/dropped at least once
-    public int ScoreFactor { get; private set; } = 100; // percentage to multiply the score by
+    public float ScoreFactor { get; private set; } = 100f; // percentage to multiply the score by
 
     private Color32 m_unvisitedColor = new Color32(0, 160, 0, 255);
     private Color32 m_currentlyVisitingColor = new Color32(0, 255, 0, 255);
@@ -124,7 +124,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
     }
 
-    public void SetScoreFactor(int factor)
+    public void SetScoreFactor(float factor)
     {
         ScoreFactor = factor;
     }

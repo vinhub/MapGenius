@@ -157,6 +157,10 @@ public class MapPanelHelper : MonoBehaviour
             // disable the toggle
             Transform tToggle = m_tMapPanel.Find(Strings.ShowLandmarksTogglePath);
             tToggle.GetComponent<Toggle>().enabled = false;
+            Transform tBackground = m_tMapPanel.Find(Strings.ShowLandmarksBackgroundPath);
+            tBackground.GetComponent<Image>().color = new Color32(192, 192, 192, 255);
+            Transform tLabel = m_tMapPanel.Find(Strings.ShowLandmarksLabelPath);
+            tLabel.GetComponent<Text>().color = new Color32(192, 192, 192, 255);
         }
     }
 
@@ -195,7 +199,7 @@ public class MapPanelHelper : MonoBehaviour
             double distance = Vector3.Distance(landmarkPos, tPlayermark.position);
 
             // full points if the playermark is within slop distance of the landmark
-            int landmarkScore = (distance <= maxSlopDistance) ? (maxLandmarkScore * ph.ScoreFactor / 100) : 0;
+            int landmarkScore = (distance <= maxSlopDistance) ? (int)Math.Round(maxLandmarkScore * ph.ScoreFactor / 100, MidpointRounding.AwayFromZero) : 0;
 
             ph.OnUpdateScore(landmarkScore);
 
