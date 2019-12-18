@@ -332,7 +332,7 @@ public class MapPanelHelper : MonoBehaviour
         if (m_phCur != null)
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.Visited);
-            m_phCur.SetScoreFactor(m_revealedLandmarksOnMap ? 75 : 100);
+            m_phCur.SetScoreFactor(m_revealedLandmarksOnMap ? 50 : 100);
         }
 
         // check if level is complete
