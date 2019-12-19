@@ -68,6 +68,7 @@ public class GameSystem : MonoBehaviour
 
     public void NewGame()
     {
+        ResumeGame();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
