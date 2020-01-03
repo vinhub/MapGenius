@@ -15,6 +15,9 @@ public static class Strings
     public const string PlayermarkName = "Playermark";
     public const string PlayermarkTextName = "PlayermarkText";
     public const string EmptyPlayermarkName = "PlayermarkEmpty";
+    public const string PlayermarkIndexEmptyPath = "PlayermarkEmpty/PlayermarkIndexEmpty";
+    public const string PlayermarkIndexPath = "Playermark/PlayermarkIndex";
+    public const string PlayermarkTextPath = "PlayermarkText";
     public const string MainMenuName = "MainMenu";
     public const string PanelsName = "Panels";
     public const string PanelManagerPath = "PanelManager";
@@ -34,14 +37,22 @@ public static class Strings
     public const string PopupMessageTextPath = "Window/Popup/Background/MessageText";
     public const string LandmarkOnMap = "LandmarkOnMap";
     public const string ButtonClickAudioSourceName = "ButtonClickAudioSource";
+    public const string LandmarksPath = "Landmarks";
+    public const string LandmarkName = "Name";
+    public const string LandmarkName2 = "Name2";
+    public const string NodeHolderPath = "CiDyGraph/NodeHolder";
+    public const string RoadHolderPath = "CiDyGraph/RoadHolder";
 
     // tag names
-    public const string StartTag = "Start";
     public const string MainMenuUITag = "MainMenuUI";
     public const string LandmarkTag = "Landmark";
+    public const string PlayermarkTag = "Playermark";
 
     // level names
     public const string Springfield = "Springfield";
+
+    // landmark names
+    public static readonly string[] LandmarkNames = { "School", "Library", "Museum", "City Hall", "Post Office" };
 
     // localizable strings
 
