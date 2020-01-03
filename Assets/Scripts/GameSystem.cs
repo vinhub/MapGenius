@@ -24,6 +24,7 @@ public class GameSystem : MonoBehaviour
     public float TotalScore { get; private set; } = 0; // player's total score so far
 
     public GameObject Car; // the car being driven by the player
+    public GameObject CarCameraRig; // the car camera rig
     private CarController m_carController;
 
     public GameObject LandmarkPrefab; // prefab for landmarks
@@ -70,12 +71,22 @@ public class GameSystem : MonoBehaviour
         // init score and level
         SetScore(0, 0);
 
+        Vector3 carPos;
+        Quaternion carRotation;
+
         // init landmarks
-        InitLandmarks(m_numLandmarks);
+        InitLandmarks(m_numLandmarks, out carPos, out carRotation);
+
+        // place car some distance from the first landmark
+        Car.transform.position = CarCameraRig.transform.position = carPos;
+        Car.transform.rotation = CarCameraRig.transform.rotation = carRotation;
     }
 
-    private void InitLandmarks(int numLandmarks)
+    private void InitLandmarks(int numLandmarks, out Vector3 carPos, out Quaternion carRotation)
     {
+        carPos = Vector3.forward;
+        carRotation = Quaternion.identity;
+
         // select required number of roads from the road network making sure they are reasonably placed
         Transform[] tNodesSelected = new Transform[numLandmarks];
 
@@ -107,8 +118,6 @@ public class GameSystem : MonoBehaviour
         // add landmarks corresponding to the selected nodes
         for (int iLandmark = 0; iLandmark < numLandmarks; iLandmark++)
         {
-            // select an end of road corresponding to the selected node, making sure they are different from each other
-
             // collect all roads that end in the selected node
             List<CiDyRoad> roads = new List<CiDyRoad>();
             foreach (Transform tRoad in m_tRoadHolder)
@@ -125,7 +134,7 @@ public class GameSystem : MonoBehaviour
             // calculate a point about halfway along the road and orient it so it faces the road
             Vector3 landmarkPos = roads[iRoadSelected].origPoints[roads[iRoadSelected].origPoints.Length / 2];
             Vector3 nextPos = roads[iRoadSelected].origPoints[roads[iRoadSelected].origPoints.Length / 2 + 1];
-            Quaternion rotation = Quaternion.LookRotation(nextPos - landmarkPos, Vector3.up); 
+            Quaternion rotation = Quaternion.LookRotation(landmarkPos - nextPos, Vector3.up); 
 
             // add a landmark to the area using the landmark prefab and place it at the above location
             GameObject goLandmark = Instantiate(LandmarkPrefab, landmarkPos, rotation);
@@ -148,6 +157,13 @@ public class GameSystem : MonoBehaviour
             goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexEmptyPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
             goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
             goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<Text>().text = landmarkName;
+
+            // for the first landmark, use the other origPoint as the car position, looking towards the first origPoint
+            if (iLandmark == 0)
+            {
+                carPos = nextPos;
+                carRotation = rotation;
+            }
         }
     }
 
