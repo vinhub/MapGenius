@@ -43,15 +43,15 @@ public class GameSystem : MonoBehaviour
     private void Awake()
     {
         m_instance = this;
-
-        m_carController = Car.GetComponent<CarController>();
-        m_tNodeHolder = GameObject.Find(Strings.NodeHolderPath).transform;
-        m_tRoadHolder = GameObject.Find(Strings.RoadHolderPath).transform;
-        m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
     }
 
     private void Start()
     {
+        m_carController = Car.GetComponent<CarController>();
+        m_tNodeHolder = GameObject.Find(Strings.NodeHolderPath).transform;
+        m_tRoadHolder = GameObject.Find(Strings.RoadHolderPath).transform;
+        m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
+
         GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
         m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
         m_tPlayermarksList = mainMenuUI.transform.Find(Strings.MapPanelPath).Find(Strings.PlayermarksPath);
