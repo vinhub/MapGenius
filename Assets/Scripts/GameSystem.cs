@@ -105,9 +105,10 @@ public class GameSystem : MonoBehaviour
         int rangeMin = 0, rangeMax;
         for (int iLandmark = 0; iLandmark < numLandmarks; iLandmark++)
         {
-            rangeMax = rangeMin + (tNodes.Count / numLandmarks);
-            if (rangeMax > numLandmarks - (tNodes.Count / numLandmarks))
+            if (iLandmark == numLandmarks - 1)
                 rangeMax = numLandmarks;
+            else 
+                rangeMax = rangeMin + (tNodes.Count / numLandmarks);
 
             int iNode = UnityEngine.Random.Range(rangeMin, rangeMax);
             tNodesSelected[iLandmark] = tNodes[iNode];
@@ -115,16 +116,20 @@ public class GameSystem : MonoBehaviour
             rangeMin = rangeMax;
         }
 
+        int iLandmarkStart = UnityEngine.Random.Range(0, numLandmarks); // select one of the landmarks to be the first one
+
         // add landmarks corresponding to the selected nodes
         for (int iLandmark = 0; iLandmark < numLandmarks; iLandmark++)
         {
             // collect all roads that end in the selected node
+            string nodeIndex = tNodesSelected[iLandmark].name.Split(new char[] { 'V' }, StringSplitOptions.RemoveEmptyEntries)[0];
             List<CiDyRoad> roads = new List<CiDyRoad>();
             foreach (Transform tRoad in m_tRoadHolder)
             {
                 CiDyRoad road = tRoad.GetComponent<CiDyRoad>();
-                string nodeA = road.gameObject.name.Substring(0, 2), nodeB = road.gameObject.name.Substring(2, 2); // TODO: Ideally this should not be based on road name
-                if (road && ((nodeA == tNodesSelected[iLandmark].name) || (nodeB == tNodesSelected[iLandmark].name)))
+                string[] nodeIndices = road.gameObject.name.Split(new char[] { 'V' }, StringSplitOptions.RemoveEmptyEntries);
+                Debug.Assert(nodeIndices.Length == 2);
+                if (road && ((nodeIndices[0] == nodeIndex) || (nodeIndices[1] == nodeIndex)))
                     roads.Add(road);
             }
 
@@ -158,11 +163,11 @@ public class GameSystem : MonoBehaviour
             goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
             goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<Text>().text = landmarkName;
 
-            // for the first landmark, use the other origPoint as the car position, looking towards the first origPoint
-            if (iLandmark == 0)
+            // for the start landmark, use a position about 1/3 of the way along the road as the car position, looking along the road
+            if (iLandmark == iLandmarkStart)
             {
-                carPos = nextPos;
-                carRotation = rotation;
+                carPos = roads[iRoadSelected].origPoints[roads[iRoadSelected].origPoints.Length / 3];
+                carRotation = Quaternion.LookRotation(roads[iRoadSelected].origPoints[roads[iRoadSelected].origPoints.Length / 3 + 1] - carPos, Vector3.up);
             }
         }
     }
