@@ -87,31 +87,31 @@ public class GameSystem : MonoBehaviour
         carPos = Vector3.forward;
         carRotation = Quaternion.identity;
 
-        // select required number of roads from the road network making sure they are reasonably placed
-        Transform[] tNodesSelected = new Transform[numLandmarks];
+        // select required number of roads from the road network making sure they are geographically distributed 
+        CiDyRoad[] roadsSelected = new CiDyRoad[numLandmarks];
 
-        // collect all nodes
-        List<Transform> tNodes = new List<Transform>();
+        // collect all roads
+        List<CiDyRoad> roads = new List<CiDyRoad>();
 
-        foreach (Transform tNode in m_tNodeHolder)
+        foreach (Transform tRoad in m_tRoadHolder)
         {
-            tNodes.Add(tNode);
+            roads.Add(tRoad.GetComponent<CiDyRoad>());
         }
 
-        // sort nodes geographically
-        tNodes.Sort((n1, n2) => (n1.position.x * n1.position.z).CompareTo(n2.position.x * n2.position.z));
+        // sort roads geographically
+        roads.Sort((r1, r2) => (r1.origPoints[0].x * r1.origPoints[0].z).CompareTo(r2.origPoints[0].x * r2.origPoints[0].z));
 
-        // select required number of nodes so they are reasonably apart from each other by selecting them from different ranges from the sorted list
+        // select required number of roads so they are reasonably apart from each other by selecting them from different ranges from the sorted list
         int rangeMin = 0, rangeMax;
         for (int iLandmark = 0; iLandmark < numLandmarks; iLandmark++)
         {
             if (iLandmark == numLandmarks - 1)
                 rangeMax = numLandmarks;
             else 
-                rangeMax = rangeMin + (tNodes.Count / numLandmarks);
+                rangeMax = rangeMin + (roads.Count / numLandmarks);
 
-            int iNode = UnityEngine.Random.Range(rangeMin, rangeMax);
-            tNodesSelected[iLandmark] = tNodes[iNode];
+            int iRoad = UnityEngine.Random.Range(rangeMin, rangeMax);
+            roadsSelected[iLandmark] = roads[iRoad];
 
             rangeMin = rangeMax;
         }
@@ -121,24 +121,11 @@ public class GameSystem : MonoBehaviour
         // add landmarks corresponding to the selected nodes
         for (int iLandmark = 0; iLandmark < numLandmarks; iLandmark++)
         {
-            // collect all roads that end in the selected node
-            string nodeIndex = tNodesSelected[iLandmark].name.Split(new char[] { 'V' }, StringSplitOptions.RemoveEmptyEntries)[0];
-            List<CiDyRoad> roads = new List<CiDyRoad>();
-            foreach (Transform tRoad in m_tRoadHolder)
-            {
-                CiDyRoad road = tRoad.GetComponent<CiDyRoad>();
-                string[] nodeIndices = road.gameObject.name.Split(new char[] { 'V' }, StringSplitOptions.RemoveEmptyEntries);
-                Debug.Assert(nodeIndices.Length == 2);
-                if (road && ((nodeIndices[0] == nodeIndex) || (nodeIndices[1] == nodeIndex)))
-                    roads.Add(road);
-            }
-
-            // select one of them
-            int iRoadSelected = UnityEngine.Random.Range(0, roads.Count);
-
             // calculate a point about halfway along the road and orient it so it faces the road
-            Vector3 landmarkPos = roads[iRoadSelected].origPoints[roads[iRoadSelected].origPoints.Length / 2];
-            Vector3 nextPos = roads[iRoadSelected].origPoints[roads[iRoadSelected].origPoints.Length / 2 + 1];
+            CiDyRoad road = roads[iLandmark];
+
+            Vector3 landmarkPos = road.origPoints[road.origPoints.Length / 2];
+            Vector3 nextPos = road.origPoints[road.origPoints.Length / 2 + 1];
             Quaternion rotation = Quaternion.LookRotation(landmarkPos - nextPos, Vector3.up); 
 
             // add a landmark to the area using the landmark prefab and place it at the above location
@@ -166,8 +153,8 @@ public class GameSystem : MonoBehaviour
             // for the start landmark, use a position about 1/3 of the way along the road as the car position, looking along the road
             if (iLandmark == iLandmarkStart)
             {
-                carPos = roads[iRoadSelected].origPoints[roads[iRoadSelected].origPoints.Length / 3];
-                carRotation = Quaternion.LookRotation(roads[iRoadSelected].origPoints[roads[iRoadSelected].origPoints.Length / 3 + 1] - carPos, Vector3.up);
+                carPos = road.origPoints[road.origPoints.Length / 3];
+                carRotation = Quaternion.LookRotation(road.origPoints[road.origPoints.Length / 3 + 1] - carPos, Vector3.up);
             }
         }
     }
