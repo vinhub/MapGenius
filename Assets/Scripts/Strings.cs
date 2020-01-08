@@ -25,7 +25,10 @@ public static class Strings
     public const string MapPanelPath = "Panels/Map";
     public const string MenuScoreTextPath = "OpenMenuButton/ScoreText";
     public const string MenuTimeTextPath = "OpenMenuButton/TimeText";
-    public const string PanelCloseButtonPath = "Window/Close/Background/Label";
+    public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
+    public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
+    public const string ActionButton1LabelPath = "Window/ButtonBar/ActionButton1/Background/Label";
+    public const string ActionButton2LabelPath = "Window/ButtonBar/ActionButton2/Background/Label";
     public const string MapImagePath = "Window/MapPanel/MapBackground/MapImage";
     public const string LevelTextPath = "Window/MapPanel/PlayermarksPanel/Score/LevelText";
     public const string TotalScoreTextPath = "Window/MapPanel/PlayermarksPanel/Score/TotalScoreText";
@@ -59,8 +62,9 @@ public static class Strings
     // text field values
     public const string StartGame = "Start Game";
     public const string Back = "Back";
-    public const string SaveAndContinue = "Continue Game";
-    public const string MoveToNextLevel = "Play Again";
+    public const string ContinueGame = "Continue Game";
+    public const string NewGame = "New Game";
+    public const string RetryGame = "Try Again";
     public const string CheckScore = "Check Score";
 
     // format strings

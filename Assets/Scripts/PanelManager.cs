@@ -80,11 +80,19 @@ public class PanelManager : MonoBehaviour {
 
         OpenPanel(m_instructionsPanel);
 
-        Text closePanelText = m_instructionsPanel.transform.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
+        Text closePanelText = m_instructionsPanel.transform.Find(Strings.ActionButton1Path).GetComponent<Text>();
         closePanelText.text = isGameStarting ? Strings.StartGame : Strings.Back;
     }
 
-    public void CloseCurrentPanel()
+    // called when the ActoinButton1 is clicked
+    public void Action1()
+    {
+        // currently this is always retry game
+        m_mpHelper.RetryGame();
+    }
+
+    // called when the ActoinButton2 is clicked
+    public void Action2()
 	{
 		if (m_goPanel == null)
 			return;
@@ -100,7 +108,7 @@ public class PanelManager : MonoBehaviour {
         }
         else if (m_goPanel == m_mapPanel) // map panel was being shown
         {
-            if (!m_mpHelper.Close()) // don't close it if the panel helper disallows it (used when game is over and we need to show results instead of closing the panel)
+            if (!m_mpHelper.CloseOrContinue()) // don't close it if the panel helper disallows it (used when game is over and we need to show results instead of closing the panel)
                 return;
 
             if (String.IsNullOrEmpty(CurLandmarkName))
@@ -122,8 +130,8 @@ public class PanelManager : MonoBehaviour {
             m_mainMenu.SetActive(true);
         }
 
-        Text closePanelText = m_goPanel.transform.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
-        closePanelText.text = Strings.Back;
+        Text actionButton2Text = m_goPanel.transform.Find(Strings.ActionButton2LabelPath).GetComponent<Text>();
+        actionButton2Text.text = Strings.Back;
 
         EventSystem.current.SetSelectedGameObject(null);
 

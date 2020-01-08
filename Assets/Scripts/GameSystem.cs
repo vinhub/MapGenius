@@ -226,6 +226,13 @@ public class GameSystem : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    // retry the same level without changing anything
+    public void RetryGame()
+    {
+        ResumeGame();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     public void LoadScene(string sceneName)
     {
         GameSystem.Instance.ResumeGame();

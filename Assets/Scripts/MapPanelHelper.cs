@@ -14,7 +14,8 @@ public class MapPanelHelper : MonoBehaviour
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
     private bool m_isScoreUpdated = false; // has score been updated after player has completed the level?
 
-    private Text m_closePanelText; // text object for the "continue game" button
+    private Transform m_tActionButton1, m_tActionButton2; // action buttons
+    private Text m_actionButton1Text, m_actionButton2Text; // text for the action buttons
     private Transform m_tMapImage;
     private Camera m_skyCamera;
 
@@ -34,7 +35,10 @@ public class MapPanelHelper : MonoBehaviour
         m_firstLandmarkCrossed = firstLandmarkCrossed;
 
         m_isLevelComplete = m_isScoreUpdated = false;
-        m_closePanelText = m_tMapPanel.Find(Strings.PanelCloseButtonPath).GetComponent<Text>();
+        m_tActionButton1 = m_tMapPanel.Find(Strings.ActionButton1Path);
+        m_tActionButton2 = m_tMapPanel.Find(Strings.ActionButton2Path);
+        m_actionButton1Text = m_tMapPanel.Find(Strings.ActionButton1LabelPath).GetComponent<Text>();
+        m_actionButton2Text = m_tMapPanel.Find(Strings.ActionButton2LabelPath).GetComponent<Text>();
 
         if (!m_isMapPanelInitialized)
         {
@@ -56,10 +60,12 @@ public class MapPanelHelper : MonoBehaviour
         // display current score
         DisplayScore(false);
 
+        m_tActionButton1.gameObject.SetActive(false);
+
         if (String.IsNullOrEmpty(landmarkName))
-            m_closePanelText.text = Strings.Back;
+            m_actionButton2Text.text = Strings.Back;
         else
-            m_closePanelText.text = Strings.SaveAndContinue;
+            m_actionButton2Text.text = Strings.ContinueGame;
 
         // mark the current playermark as currently visiting
         if (m_phCur != null)
@@ -74,8 +80,15 @@ public class MapPanelHelper : MonoBehaviour
         }
     }
 
-    // called in response to player clicking the "save and continu" button on the panel. Returns true if panel can be closed. False if not (when showing results instead of closing down)
-    public bool Close()
+    // called in response to player clicking the "ActionButton1" button on the panel. Currently this is always retry game.
+    public void RetryGame()
+    {
+        GameSystem.Instance.RetryGame();
+    }
+
+    // Called in response to player clicking the "ActionButton2" button on the panel. It can mean either "Close" or "Continue".
+    // Returns true if panel can be closed. False if not (when showing results instead of closing down)
+    public bool CloseOrContinue()
     {
         if (m_tMapPanel == null)
             return true;
@@ -122,7 +135,10 @@ public class MapPanelHelper : MonoBehaviour
 
             m_isScoreUpdated = true;
 
-            m_closePanelText.text = Strings.MoveToNextLevel;
+            m_tActionButton1.gameObject.SetActive(true);
+            m_actionButton1Text.text = Strings.RetryGame;
+
+            m_actionButton2Text.text = Strings.NewGame;
 
             return false;
         }
@@ -339,7 +355,7 @@ public class MapPanelHelper : MonoBehaviour
         m_isLevelComplete = CheckLevelComplete();
 
         if (m_isLevelComplete)
-            m_closePanelText.text = Strings.CheckScore;
+            m_actionButton1Text.text = Strings.CheckScore;
     }
 
     // if all playermarks have been finalized i.e. drag-dropped and locked, then the level is complete
