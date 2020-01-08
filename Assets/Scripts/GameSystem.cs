@@ -98,8 +98,15 @@ public class GameSystem : MonoBehaviour
             roads.Add(tRoad.GetComponent<CiDyRoad>());
         }
 
-        // sort roads geographically
-        roads.Sort((r1, r2) => (r1.origPoints[0].x * r1.origPoints[0].z).CompareTo(r2.origPoints[0].x * r2.origPoints[0].z));
+        // determine the dimensions of the road network (not the whole map)
+        float roadNetworkMinX, roadNetworkMinZ, roadNetworkWidth, roadNetworkHeight;
+
+        CalcRoadNetworkDimensions(out roadNetworkMinX, out roadNetworkMinZ, out roadNetworkWidth, out roadNetworkHeight);
+
+        // sort roads so they are spread out along the map
+        int numSectionsX = 3, numSectionsZ = 3;
+        roads.Sort((r1, r2) => 
+            (CalcPosWeight(r1.origPoints[0], roadNetworkMinX, roadNetworkMinZ, roadNetworkWidth, roadNetworkHeight, numSectionsX, numSectionsZ).CompareTo(CalcPosWeight(r2.origPoints[0], roadNetworkMinX, roadNetworkMinZ, roadNetworkWidth, roadNetworkHeight, numSectionsX, numSectionsZ))));
 
         // select required number of roads so they are reasonably apart from each other by selecting them from different ranges from the sorted list
         int rangeMin = 0, rangeMax;
@@ -110,7 +117,15 @@ public class GameSystem : MonoBehaviour
             else 
                 rangeMax = rangeMin + (roads.Count / numLandmarks);
 
-            int iRoad = UnityEngine.Random.Range(rangeMin, rangeMax);
+            // select a road within this range, making sure we haven't selected it already
+            int iRoad = rangeMin, cTries = 10;
+            while (cTries-- > 0)
+            {
+                iRoad = UnityEngine.Random.Range(rangeMin, rangeMax);
+                if (Array.FindIndex(roadsSelected, 0, iLandmark, road => road == roads[iRoad]) < 0)
+                    break;
+            }
+
             roadsSelected[iLandmark] = roads[iRoad];
 
             rangeMin = rangeMax;
@@ -118,12 +133,13 @@ public class GameSystem : MonoBehaviour
 
         int iLandmarkStart = UnityEngine.Random.Range(0, numLandmarks); // select one of the landmarks to be the first one
 
-        // add landmarks corresponding to the selected nodes
+        // add landmarks corresponding to the selected roads
         for (int iLandmark = 0; iLandmark < numLandmarks; iLandmark++)
         {
-            // calculate a point about halfway along the road and orient it so it faces the road
-            CiDyRoad road = roads[iLandmark];
+            // get the selected road
+            CiDyRoad road = roadsSelected[iLandmark];
 
+            // calculate a point about halfway along the road and orient it so it faces the road
             Vector3 landmarkPos = road.origPoints[road.origPoints.Length / 2];
             Vector3 nextPos = road.origPoints[road.origPoints.Length / 2 + 1];
             Quaternion rotation = Quaternion.LookRotation(landmarkPos - nextPos, Vector3.up); 
@@ -157,6 +173,36 @@ public class GameSystem : MonoBehaviour
                 carRotation = Quaternion.LookRotation(road.origPoints[road.origPoints.Length / 3 + 1] - carPos, Vector3.up);
             }
         }
+    }
+
+    // divide the whole map into numSectionsX x numSectionsZ sections, calc which section the point belongs to, calc its weight based on that
+    private float CalcPosWeight(Vector3 pos, float roadNetworkMinX, float roadNetworkMinZ, float roadNetworkWidth, float roadNetworkHeight, int numSectionsX, int numSectionsZ)
+    {
+        float weightX, weightZ;
+
+        weightX = (pos.x - roadNetworkMinX) / (roadNetworkWidth / numSectionsX);
+        weightZ = (pos.z - roadNetworkMinZ) / (roadNetworkHeight / numSectionsZ);
+
+        return weightX * numSectionsX + weightZ;
+    }
+
+    // calculate dimensions of the road network by taking the min and max positions of the nodes
+    private void CalcRoadNetworkDimensions(out float roadNetworkMinX, out float roadNetworkMinZ, out float roadNetworkWidth, out float roadNetworkHeight)
+    {
+        float nodeXMin = float.MaxValue, nodeXMax = float.MinValue, nodeZMin = float.MaxValue, nodeZMax = float.MinValue;
+
+        foreach (Transform tNode in m_tNodeHolder)
+        {
+            nodeXMin = Mathf.Min(tNode.position.x, nodeXMin);
+            nodeXMax = Mathf.Max(tNode.position.x, nodeXMax);
+            nodeZMin = Mathf.Min(tNode.position.z, nodeZMin);
+            nodeZMax = Mathf.Max(tNode.position.z, nodeZMax);
+        }
+
+        roadNetworkMinX = nodeXMin;
+        roadNetworkMinZ = nodeZMin;
+        roadNetworkWidth = nodeXMax - nodeXMin;
+        roadNetworkHeight = nodeZMax - nodeZMin;
     }
 
     private void OnDestroy()
