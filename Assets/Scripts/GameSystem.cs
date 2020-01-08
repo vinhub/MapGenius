@@ -40,6 +40,10 @@ public class GameSystem : MonoBehaviour
     private Transform m_tPlayermarksList;
     private bool m_firstLandmarkCrossed = true;
 
+    // starting loation for the car
+    Vector3 m_carPosStart;
+    Quaternion m_carRotationStart;
+
     private void Awake()
     {
         m_instance = this;
@@ -71,24 +75,28 @@ public class GameSystem : MonoBehaviour
         // init score and level
         SetScore(0, 0);
 
-        Vector3 carPos;
-        Quaternion carRotation;
-
-        // init landmarks
-        InitLandmarks(m_numLandmarks, out carPos, out carRotation);
+        if (StaticGlobals.SavedInitStateExists)
+        {
+            ReInitGameState();
+        }
+        else
+        {
+            // init landmarks
+            InitGameState();
+        }
 
         // place car some distance from the first landmark
-        Car.transform.position = CarCameraRig.transform.position = carPos;
-        Car.transform.rotation = CarCameraRig.transform.rotation = carRotation;
+        Car.transform.position = CarCameraRig.transform.position = m_carPosStart;
+        Car.transform.rotation = CarCameraRig.transform.rotation = m_carRotationStart;
     }
 
-    private void InitLandmarks(int numLandmarks, out Vector3 carPos, out Quaternion carRotation)
+    private void InitGameState()
     {
-        carPos = Vector3.forward;
-        carRotation = Quaternion.identity;
+        m_carPosStart = Vector3.forward;
+        m_carRotationStart = Quaternion.identity;
 
         // select required number of roads from the road network making sure they are geographically distributed 
-        CiDyRoad[] roadsSelected = new CiDyRoad[numLandmarks];
+        CiDyRoad[] roadsSelected = new CiDyRoad[m_numLandmarks];
 
         // collect all roads
         List<CiDyRoad> roads = new List<CiDyRoad>();
@@ -110,12 +118,12 @@ public class GameSystem : MonoBehaviour
 
         // select required number of roads so they are reasonably apart from each other by selecting them from different ranges from the sorted list
         int rangeMin = 0, rangeMax;
-        for (int iLandmark = 0; iLandmark < numLandmarks; iLandmark++)
+        for (int iLandmark = 0; iLandmark < m_numLandmarks; iLandmark++)
         {
-            if (iLandmark == numLandmarks - 1)
-                rangeMax = numLandmarks;
+            if (iLandmark == m_numLandmarks - 1)
+                rangeMax = roads.Count;
             else 
-                rangeMax = rangeMin + (roads.Count / numLandmarks);
+                rangeMax = rangeMin + (roads.Count / m_numLandmarks);
 
             // select a road within this range, making sure we haven't selected it already
             int iRoad = rangeMin, cTries = 10;
@@ -131,10 +139,10 @@ public class GameSystem : MonoBehaviour
             rangeMin = rangeMax;
         }
 
-        int iLandmarkStart = UnityEngine.Random.Range(0, numLandmarks); // select one of the landmarks to be the first one
+        int iLandmarkStart = UnityEngine.Random.Range(0, m_numLandmarks); // select one of the landmarks to be the first one
 
         // add landmarks corresponding to the selected roads
-        for (int iLandmark = 0; iLandmark < numLandmarks; iLandmark++)
+        for (int iLandmark = 0; iLandmark < m_numLandmarks; iLandmark++)
         {
             // get the selected road
             CiDyRoad road = roadsSelected[iLandmark];
@@ -142,37 +150,47 @@ public class GameSystem : MonoBehaviour
             // calculate a point about halfway along the road and orient it so it faces the road
             Vector3 landmarkPos = road.origPoints[road.origPoints.Length / 2];
             Vector3 nextPos = road.origPoints[road.origPoints.Length / 2 + 1];
-            Quaternion rotation = Quaternion.LookRotation(landmarkPos - nextPos, Vector3.up); 
+            Quaternion rotation = Quaternion.LookRotation(landmarkPos - nextPos, Vector3.up);
 
             // add a landmark to the area using the landmark prefab and place it at the above location
-            GameObject goLandmark = Instantiate(LandmarkPrefab, landmarkPos, rotation);
-
-            // set up the landmark correctly
-            string landmarkName = Strings.LandmarkNames[iLandmark];
-            goLandmark.name = landmarkName;
-            goLandmark.transform.parent = m_tLandmarks;
-            goLandmark.tag = Strings.LandmarkTag;
-            goLandmark.layer = m_landmarksLayerIndex;
-
-            // init landmark sign
-            goLandmark.transform.Find(Strings.LandmarkName).GetComponent<TextMesh>().text = landmarkName;
-            goLandmark.transform.Find(Strings.LandmarkName2).GetComponent<TextMesh>().text = landmarkName;
-
-            // add playermark list item
-            GameObject goPlayermarkListItem = Instantiate(PlayermarksListItemPrefab, m_tPlayermarksList);
-            goPlayermarkListItem.tag = Strings.PlayermarkTag;
-            goPlayermarkListItem.layer = m_UILayerIndex;
-            goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexEmptyPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
-            goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
-            goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<Text>().text = landmarkName;
+            CreateLandmark(iLandmark, landmarkPos, rotation);
 
             // for the start landmark, use a position about 1/3 of the way along the road as the car position, looking along the road
             if (iLandmark == iLandmarkStart)
             {
-                carPos = road.origPoints[road.origPoints.Length / 3];
-                carRotation = Quaternion.LookRotation(road.origPoints[road.origPoints.Length / 3 + 1] - carPos, Vector3.up);
+                CalcCarPos(road);
             }
         }
+    }
+
+    private void CreateLandmark(int iLandmark, Vector3 landmarkPos, Quaternion rotation)
+    {
+        GameObject goLandmark = Instantiate(LandmarkPrefab, landmarkPos, rotation);
+
+        // set up the landmark correctly
+        string landmarkName = Strings.LandmarkNames[iLandmark];
+        goLandmark.name = landmarkName;
+        goLandmark.transform.parent = m_tLandmarks;
+        goLandmark.tag = Strings.LandmarkTag;
+        goLandmark.layer = m_landmarksLayerIndex;
+
+        // init landmark sign
+        goLandmark.transform.Find(Strings.LandmarkName).GetComponent<TextMesh>().text = landmarkName;
+        goLandmark.transform.Find(Strings.LandmarkName2).GetComponent<TextMesh>().text = landmarkName;
+
+        // add playermark list item
+        GameObject goPlayermarkListItem = Instantiate(PlayermarksListItemPrefab, m_tPlayermarksList);
+        goPlayermarkListItem.tag = Strings.PlayermarkTag;
+        goPlayermarkListItem.layer = m_UILayerIndex;
+        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexEmptyPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
+        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
+        goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<Text>().text = landmarkName;
+    }
+
+    private void CalcCarPos(CiDyRoad road)
+    {
+        m_carPosStart = road.origPoints[road.origPoints.Length / 3];
+        m_carRotationStart = Quaternion.LookRotation(road.origPoints[road.origPoints.Length / 3 + 1] - m_carPosStart, Vector3.up);
     }
 
     // divide the whole map into numSectionsX x numSectionsZ sections, calc which section the point belongs to, calc its weight based on that
@@ -230,6 +248,8 @@ public class GameSystem : MonoBehaviour
     public void RetryGame()
     {
         ResumeGame();
+        SaveGameInitState();
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -314,4 +334,46 @@ public class GameSystem : MonoBehaviour
 
         m_mainPanelManager.UpdateScore(levelScore, totalScore);
     }
+
+    private void SaveGameInitState()
+    {
+        if (StaticGlobals.SavedLandmarks != null)
+            StaticGlobals.SavedLandmarks.Clear();
+
+        StaticGlobals.SavedLandmarks = new List<SavedLandmark>();
+
+        foreach(Transform tLandmark in m_tLandmarks)
+        {
+            GameObject goLandmark = tLandmark.gameObject;
+
+            SavedLandmark sl = new SavedLandmark();
+            sl.name = goLandmark.name;
+            sl.pos = tLandmark.position;
+            sl.rotation = tLandmark.rotation;
+
+            StaticGlobals.SavedLandmarks.Add(sl);
+        }
+
+        StaticGlobals.SavedCarPosStart = m_carPosStart;
+        StaticGlobals.SavedCarRotationStart = m_carRotationStart;
+
+        StaticGlobals.SavedInitStateExists = true;
+    }
+
+    private void ReInitGameState()
+    {
+        for (int iLandmark = 0; iLandmark < StaticGlobals.SavedLandmarks.Count; iLandmark++)
+        {
+            CreateLandmark(iLandmark, StaticGlobals.SavedLandmarks[iLandmark].pos, StaticGlobals.SavedLandmarks[iLandmark].rotation);
+        }
+
+        m_carPosStart = StaticGlobals.SavedCarPosStart;
+        m_carRotationStart = StaticGlobals.SavedCarRotationStart;
+
+        StaticGlobals.SavedLandmarks.Clear();
+        StaticGlobals.SavedLandmarks = null;
+        StaticGlobals.SavedInitStateExists = false;
+    }
+
+
 }
