@@ -27,6 +27,13 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private bool m_isMoving = false;
     private Vector3 m_newPosition;
 
+    private void Awake()
+    {
+        m_playermarkImage = this.GetComponent<Image>();
+        m_playermarkText = this.transform.parent.Find(Strings.PlayermarkTextName).GetComponent<Text>();
+        m_emptyPlayermarkImage = this.transform.parent.Find(Strings.EmptyPlayermarkName).GetComponent<Image>();
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         // we can drag-drop only while currently visiting
@@ -84,8 +91,6 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public void SetState(PlayermarkState state)
     {
-        InitMembers();
-
         // Debug.Log(m_playermarkText.text + ": Setstate: " + state);
 
         this.State = state;
@@ -129,16 +134,6 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         ScoreFactor = factor;
     }
 
-    private void InitMembers()
-    {
-        if (m_playermarkImage == null)
-        {
-            m_playermarkImage = this.GetComponent<Image>();
-            m_playermarkText = this.gameObject.transform.parent.Find(Strings.PlayermarkTextName).GetComponent<Text>();
-            m_emptyPlayermarkImage = this.gameObject.transform.parent.Find(Strings.EmptyPlayermarkName).GetComponent<Image>();
-        }
-    }
-
     private IEnumerator Blink(int blinkCount)
     {
         for (int i = 0; i < blinkCount; i++)
@@ -154,8 +149,6 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     // update appearance based on score.
     public void OnUpdateScore(float score)
     {
-        InitMembers();
-
         m_playermarkImage.color = m_emptyPlayermarkImage.color = m_playermarkText.color = (score > 0.01) ? m_green : m_red;
     }
 }
