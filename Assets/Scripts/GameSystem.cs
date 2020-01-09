@@ -19,7 +19,6 @@ public class GameSystem : MonoBehaviour
     private const int m_landmarksLayerIndex = 11; // TODO: remove this hardcoding
     private const int m_UILayerIndex = 5; // TODO: remove this hardcoding
 
-    public int CurLevel { get; private set; } = 1; // current level
     public float LevelScore { get; private set; } // player's score so far for the current level
     public float TotalScore { get; private set; } = 0; // player's total score so far
 
@@ -47,6 +46,8 @@ public class GameSystem : MonoBehaviour
     private void Awake()
     {
         m_instance = this;
+
+        StaticGlobals.CurGameLevel = GameLevel.Beginner;
     }
 
     private void Start()

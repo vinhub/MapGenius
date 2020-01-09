@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// generic stuff
+public enum GameLevel { Beginner, Intermediate, Advanced };
+
+// saved as a part of the game state
 public struct SavedLandmark
 {
     public string name;
@@ -11,6 +15,10 @@ public struct SavedLandmark
 
 public static class StaticGlobals
 {
+    // general globals
+    public static GameLevel CurGameLevel { get; set; }
+
+    // saved game state related items
     public static bool SavedInitStateExists { get; set; }
     public static List<SavedLandmark> SavedLandmarks { get; set; }
     public static Vector3 SavedCarPosStart { get; set; }

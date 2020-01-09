@@ -54,7 +54,14 @@ public class MapPanelHelper : MonoBehaviour
             // add landmarks to the map help player know where they are (without telling them which landmark is which)
             AddLandmarksToMap();
 
-            ToggleHint(true); // TODO: For now, we will always show hint
+            if (StaticGlobals.CurGameLevel == GameLevel.Beginner)
+            {
+                // for beginner level, always show hint
+                Transform tHint = m_tMapPanel.Find(Strings.HintPath);
+                tHint.gameObject.SetActive(false);
+
+                ToggleHint(true);
+            }
         }
 
         m_phCur = PlayermarkFromLandmark(m_landmarkName);
@@ -249,7 +256,7 @@ public class MapPanelHelper : MonoBehaviour
 
     private void DisplayScore(bool isNewScore)
     {
-        m_levelText.text = String.Format(Strings.LevelTextFormat, GameSystem.Instance.CurLevel);
+        m_levelText.text = String.Format(Strings.LevelTextFormat, StaticGlobals.CurGameLevel);
         m_totalScoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(GameSystem.Instance.TotalScore, MidpointRounding.AwayFromZero));
 
         if (isNewScore)
