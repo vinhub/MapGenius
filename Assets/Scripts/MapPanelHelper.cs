@@ -53,6 +53,8 @@ public class MapPanelHelper : MonoBehaviour
 
             // add landmarks to the map help player know where they are (without telling them which landmark is which)
             AddLandmarksToMap();
+
+            ToggleHint(true); // TODO: For now, we will always show hint
         }
 
         m_phCur = PlayermarkFromLandmark(m_landmarkName);
@@ -152,6 +154,11 @@ public class MapPanelHelper : MonoBehaviour
     }
 
     public void OnHintToggleChange(bool showLandmarksOnMap)
+    {
+        ToggleHint(showLandmarksOnMap);
+    }
+
+    public void ToggleHint(bool showLandmarksOnMap)
     {
         if (!m_isMapPanelInitialized)
             return;
