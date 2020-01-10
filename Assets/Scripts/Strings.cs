@@ -9,7 +9,7 @@ public static class Strings
 
     // general non-localizable strings
     public static readonly string[] CarColliderNames = { "ColliderBody" }; // TODO: Do we need them all? { "ColliderBody", "ColliderFront", "ColliderBottom" };
-    public const string ShowInstructionsAtStart = "ShowInstructionsAtStart";
+    public const string HideInstructionsAtStart = "HideInstructionsAtStart";
 
     // object names and paths
     public const string PlayermarkName = "Playermark";
@@ -29,6 +29,7 @@ public static class Strings
     public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
     public const string ActionButton1LabelPath = "Window/ButtonBar/ActionButton1/Background/Label";
     public const string ActionButton2LabelPath = "Window/ButtonBar/ActionButton2/Background/Label";
+    public const string ButtonBarTogglePath = "Window/ButtonBar/Toggle";
     public const string MapImagePath = "Window/MapPanel/MapBackground/MapImage";
     public const string LevelTextPath = "Window/MapPanel/PlayermarksPanel/Score/LevelText";
     public const string TotalScoreTextPath = "Window/MapPanel/PlayermarksPanel/Score/TotalScoreText";

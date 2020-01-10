@@ -80,8 +80,14 @@ public class PanelManager : MonoBehaviour {
 
         OpenPanel(m_instructionsPanel);
 
-        Text closePanelText = m_instructionsPanel.transform.Find(Strings.ActionButton1Path).GetComponent<Text>();
+        Text closePanelText = m_instructionsPanel.transform.Find(Strings.ActionButton2LabelPath).GetComponent<Text>();
         closePanelText.text = isGameStarting ? Strings.StartGame : Strings.Back;
+
+        Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
+        hideInstructionsToggle.GetComponent<Toggle>().isOn = (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 1);
+
+        // show the "don't show this again" toggle only when starting the game
+        hideInstructionsToggle.gameObject.SetActive(isGameStarting);
     }
 
     // called when the ActoinButton1 is clicked
@@ -100,6 +106,13 @@ public class PanelManager : MonoBehaviour {
         if (m_gameStartInstructions) // instructions panel is being shown at the start of the game
         {
             Debug.Assert(m_goPanel == m_instructionsPanel);
+
+            Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
+            if (hideInstructionsToggle.gameObject.activeInHierarchy)
+            {
+                bool hideInstructionsAtStart = hideInstructionsToggle.GetComponent<Toggle>().isOn;
+                PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, hideInstructionsAtStart ? 1 : 0);
+            }
 
             // we will resume the game directly instead of going back to the main menu as is the usual case
             GameSystem.Instance.ResumeGame();

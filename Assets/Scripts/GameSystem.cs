@@ -66,11 +66,10 @@ public class GameSystem : MonoBehaviour
 
     private void InitGame()
     {
-        // show game instructions at start once
-        if (PlayerPrefs.GetInt(Strings.ShowInstructionsAtStart, 1) == 1)
+        // show game instructions at start unless user has asked to hide them
+        if (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0)
         {
             m_mainPanelManager.OpenInstructionsPanel(true);
-            PlayerPrefs.SetInt(Strings.ShowInstructionsAtStart, 0);
         }
 
         // init score and level
