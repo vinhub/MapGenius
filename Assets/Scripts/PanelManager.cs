@@ -180,21 +180,21 @@ public class PanelManager : MonoBehaviour {
     }
 
     // --------------- helper methods ------------------
-    private static GameObject FindFirstEnabledSelectable(GameObject gameObject)
-    {
-        GameObject go = null;
-        var selectables = gameObject.GetComponentsInChildren<Selectable>(true);
-        foreach (var selectable in selectables)
-        {
-            if (selectable.IsActive() && selectable.IsInteractable())
-            {
-                go = selectable.gameObject;
-                break;
-            }
-        }
+    //private static GameObject FindFirstEnabledSelectable(GameObject gameObject)
+    //{
+    //    GameObject go = null;
+    //    var selectables = gameObject.GetComponentsInChildren<Selectable>(true);
+    //    foreach (var selectable in selectables)
+    //    {
+    //        if (selectable.IsActive() && selectable.IsInteractable())
+    //        {
+    //            go = selectable.gameObject;
+    //            break;
+    //        }
+    //    }
 
-        return go;
-    }
+    //    return go;
+    //}
 
     // Map panel methods
 }

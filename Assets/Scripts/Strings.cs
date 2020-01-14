@@ -19,6 +19,7 @@ public static class Strings
     public const string PlayermarkIndexPath = "Playermark/PlayermarkIndex";
     public const string PlayermarkTextPath = "PlayermarkText";
     public const string MainMenuName = "MainMenu";
+    public const string ContinueGameButtonPath = "MainMenu/Window/ContinueGame";
     public const string PanelsName = "Panels";
     public const string PanelManagerPath = "PanelManager";
     public const string InstructionsPanelPath = "Panels/Instructions";
