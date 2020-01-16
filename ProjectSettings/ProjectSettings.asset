@@ -625,6 +625,7 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
+    Build: 1
     UNet: 1
   luminIcon:
     m_Name: 
@@ -645,10 +646,10 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: d6fc44a9-af4a-4876-b9b8-694177a1fcce
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: MapGenius
+  organizationId: unity_kwxij5v6knyhsg
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
