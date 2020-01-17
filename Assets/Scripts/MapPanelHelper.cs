@@ -54,7 +54,7 @@ public class MapPanelHelper : MonoBehaviour
             // add landmarks to the map help player know where they are (without telling them which landmark is which)
             AddLandmarksToMap();
 
-            if (StaticGlobals.CurGameLevel == GameLevel.Beginner)
+            if (StaticGlobals.CurGameLevel <= GameLevel.Beginner)
             {
                 // for beginner level, always show hint
                 Transform tHint = m_tMapPanel.Find(Strings.HintPath);

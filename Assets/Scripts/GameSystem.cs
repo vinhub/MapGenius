@@ -25,11 +25,11 @@ public class GameSystem : MonoBehaviour
     public GameObject Car; // the car being driven by the player
     public GameObject CarCameraRig; // the car camera rig
     private CarController m_carController;
-
     public GameObject LandmarkPrefab; // prefab for landmarks
     public GameObject PlayermarksListItemPrefab; // prefab for playermarks list item in the map panel
 
     private Transform m_tRoadHolder, m_tNodeHolder, m_tLandmarks;
+    private GameObject m_graph;
 
     // for pausing / resuming game
     private float m_timeScaleSav = 1f;
@@ -46,13 +46,12 @@ public class GameSystem : MonoBehaviour
     private void Awake()
     {
         m_instance = this;
-
-        StaticGlobals.CurGameLevel = GameLevel.Beginner;
     }
 
     private void Start()
     {
         m_carController = Car.GetComponent<CarController>();
+        m_graph = GameObject.Find(Strings.GraphPath);
         m_tNodeHolder = GameObject.Find(Strings.NodeHolderPath).transform;
         m_tRoadHolder = GameObject.Find(Strings.RoadHolderPath).transform;
         m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
@@ -81,6 +80,15 @@ public class GameSystem : MonoBehaviour
         }
         else
         {
+            if (StaticGlobals.CurGameLevel >= GameLevel.Beginner) // for all non-demo levels, we create the graph instad of simply loading one 
+            {
+                GraphHandler.Instance.CreateGraph(m_graph.GetComponent<CiDyGraph>());
+
+                // reinit member variables that depend upon the graph
+                m_tNodeHolder = GameObject.Find(Strings.NodeHolderPath).transform;
+                m_tRoadHolder = GameObject.Find(Strings.RoadHolderPath).transform;
+            }
+
             // init landmarks
             InitGameState();
         }
@@ -243,6 +251,15 @@ public class GameSystem : MonoBehaviour
     public void NewGame()
     {
         ResumeGame();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void NewLevel()
+    {
+        ResumeGame();
+
+        StaticGlobals.CurGameLevel = GameLevel.Beginner;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

@@ -46,6 +46,7 @@ public static class Strings
     public const string LandmarksPath = "Landmarks";
     public const string LandmarkName = "Name";
     public const string LandmarkName2 = "Name2";
+    public const string GraphPath = "CiDyGraph";
     public const string NodeHolderPath = "CiDyGraph/NodeHolder";
     public const string RoadHolderPath = "CiDyGraph/RoadHolder";
 
