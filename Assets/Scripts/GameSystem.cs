@@ -251,7 +251,7 @@ public class GameSystem : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void NewLevel()
+    public void NextLevel()
     {
         ResumeGame();
 
@@ -262,7 +262,7 @@ public class GameSystem : MonoBehaviour
                 break;
 
             case GameLevel.Smalltown:
-                StaticGlobals.CurGameLevel = GameLevel.OldTown;
+                StaticGlobals.CurGameLevel = GameLevel.Oldtown;
                 break;
         }
 

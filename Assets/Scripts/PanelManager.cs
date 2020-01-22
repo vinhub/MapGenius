@@ -174,9 +174,9 @@ public class PanelManager : MonoBehaviour {
         GameSystem.Instance.NewGame();
     }
 
-    public void NewLevel()
+    public void NextLevel()
     {
-        GameSystem.Instance.NewLevel();
+        GameSystem.Instance.NextLevel();
     }
 
     public void QuitGame()

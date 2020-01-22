@@ -35652,7 +35652,7 @@ PrefabInstance:
     - target: {fileID: 2931114270116281413, guid: 39fd0658dd648324cbfb6e65cb6806be,
         type: 3}
       propertyPath: m_Name
-      value: OldTown
+      value: Oldtown
       objectReference: {fileID: 0}
     - target: {fileID: 2931114270116281413, guid: 39fd0658dd648324cbfb6e65cb6806be,
         type: 3}

@@ -3389,7 +3389,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Level
+  m_Text: Next Level
 --- !u!1 &4481828575502722298
 GameObject:
   m_ObjectHideFlags: 0
@@ -14129,7 +14129,7 @@ GameObject:
   - component: {fileID: 459691914066063067}
   - component: {fileID: 2923808550523363857}
   m_Layer: 5
-  m_Name: NewLevel
+  m_Name: NextLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14207,7 +14207,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5736685844750866035}
-        m_MethodName: NewLevel
+        m_MethodName: NextLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
