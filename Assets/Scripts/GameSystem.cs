@@ -67,13 +67,11 @@ public class GameSystem : MonoBehaviour
             m_mainPanelManager.OpenInstructionsPanel(true);
         }
 
-        // TODO: the other graphs should be in resources
         CiDyGraph[] graphs = Resources.FindObjectsOfTypeAll<CiDyGraph>();
 
         m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == StaticGlobals.CurGameLevel.ToString()).gameObject;
-
         m_graph.SetActive(true);
-
+ 
         // now that we have a graph, we can gather some frequently needed references
         m_tNodeHolder = m_graph.transform.Find(Strings.NodeHolderPath).transform;
         m_tRoadHolder = m_graph.transform.Find(Strings.RoadHolderPath).transform;
@@ -257,7 +255,16 @@ public class GameSystem : MonoBehaviour
     {
         ResumeGame();
 
-        StaticGlobals.CurGameLevel = GameLevel.Downtown;
+        switch (StaticGlobals.CurGameLevel)
+        {
+            case GameLevel.Downtown:
+                StaticGlobals.CurGameLevel = GameLevel.Smalltown;
+                break;
+
+            case GameLevel.Smalltown:
+                StaticGlobals.CurGameLevel = GameLevel.OldTown;
+                break;
+        }
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
