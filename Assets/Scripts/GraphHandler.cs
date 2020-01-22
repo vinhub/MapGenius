@@ -13,24 +13,20 @@ public class GraphHandler : MonoBehaviour
         m_instance = this;
     }
 
-    public void CreateGraph(CiDyGraph graph)
-    {
-        //StartCoroutine(CreateGraphCoroutine(graph));
-    }
-
-    private IEnumerator CreateGraphCoroutine(CiDyGraph graph)
-    {
-        yield return StartCoroutine(ClearGraph(graph));
-
-        yield return StartCoroutine(_CreateGraph(graph));
-    }
-
-    private IEnumerator ClearGraph(CiDyGraph graph)
+    public IEnumerator CreateGraph(CiDyGraph graph)
     {
         yield return graph.ClearGraph();
+
+        // load previously created terrain
+
+        // create graph
+        yield return CreateRoadNetwork(graph);
+
+        // adjust graph for terrain
+        
     }
 
-    private IEnumerator _CreateGraph(CiDyGraph graph)
+    private IEnumerator CreateRoadNetwork(CiDyGraph graph)
     { 
         CiDyNode node1 = graph.NewMasterNode(new Vector3(0, 0, 0), 1f);
         CiDyNode node2 = graph.NewMasterNode(new Vector3(10, 0, 0), 1f);
@@ -42,6 +38,6 @@ public class GraphHandler : MonoBehaviour
         graph.ConnectNodes(node2, node4, 12f, 6, 8);
         graph.ConnectNodes(node3, node4, 12f, 6, 8);
 
-        yield break;
+        yield return null;
     }
 }

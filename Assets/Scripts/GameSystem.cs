@@ -51,10 +51,6 @@ public class GameSystem : MonoBehaviour
     private void Start()
     {
         m_carController = Car.GetComponent<CarController>();
-        m_graph = GameObject.Find(Strings.GraphPath);
-        m_tNodeHolder = GameObject.Find(Strings.NodeHolderPath).transform;
-        m_tRoadHolder = GameObject.Find(Strings.RoadHolderPath).transform;
-        m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
 
         GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
         m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
@@ -71,8 +67,33 @@ public class GameSystem : MonoBehaviour
             m_mainPanelManager.OpenInstructionsPanel(true);
         }
 
-        // init score and level
-        SetScore(0, 0);
+        CiDyGraph[] graphs = Resources.FindObjectsOfTypeAll<CiDyGraph>();
+
+        switch (StaticGlobals.CurGameLevel)
+        {
+            case GameLevel.Demo:
+                m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == Strings.DemoGraphName).gameObject;
+                break;
+
+            case GameLevel.Beginner:
+                m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == Strings.BeginnerGraphName).gameObject;
+                break;
+
+            case GameLevel.Intermediate:
+                m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == Strings.IntermediateGraphName).gameObject;
+                break;
+
+            case GameLevel.Advanced:
+                m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == Strings.AdvancedGraphName).gameObject;
+                break;
+        }
+
+        m_graph.SetActive(true);
+
+        // now that we have a graph, we can gather some frequently needed references
+        m_tNodeHolder = m_graph.transform.Find(Strings.NodeHolderPath).transform;
+        m_tRoadHolder = m_graph.transform.Find(Strings.RoadHolderPath).transform;
+        m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
 
         if (StaticGlobals.SavedInitStateExists)
         {
@@ -80,15 +101,6 @@ public class GameSystem : MonoBehaviour
         }
         else
         {
-            if (StaticGlobals.CurGameLevel >= GameLevel.Beginner) // for all non-demo levels, we create the graph instad of simply loading one 
-            {
-                GraphHandler.Instance.CreateGraph(m_graph.GetComponent<CiDyGraph>());
-
-                // reinit member variables that depend upon the graph
-                m_tNodeHolder = GameObject.Find(Strings.NodeHolderPath).transform;
-                m_tRoadHolder = GameObject.Find(Strings.RoadHolderPath).transform;
-            }
-
             // init landmarks
             InitGameState();
         }
@@ -96,6 +108,9 @@ public class GameSystem : MonoBehaviour
         // place car some distance from the first landmark
         Car.transform.position = CarCameraRig.transform.position = m_carPosStart;
         Car.transform.rotation = CarCameraRig.transform.rotation = m_carRotationStart;
+
+        // init score and level
+        SetScore(0, 0);
     }
 
     private void InitGameState()
