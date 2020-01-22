@@ -67,26 +67,10 @@ public class GameSystem : MonoBehaviour
             m_mainPanelManager.OpenInstructionsPanel(true);
         }
 
+        // TODO: the other graphs should be in resources
         CiDyGraph[] graphs = Resources.FindObjectsOfTypeAll<CiDyGraph>();
 
-        switch (StaticGlobals.CurGameLevel)
-        {
-            case GameLevel.Demo:
-                m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == Strings.DemoGraphName).gameObject;
-                break;
-
-            case GameLevel.Beginner:
-                m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == Strings.BeginnerGraphName).gameObject;
-                break;
-
-            case GameLevel.Intermediate:
-                m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == Strings.IntermediateGraphName).gameObject;
-                break;
-
-            case GameLevel.Advanced:
-                m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == Strings.AdvancedGraphName).gameObject;
-                break;
-        }
+        m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == StaticGlobals.CurGameLevel.ToString()).gameObject;
 
         m_graph.SetActive(true);
 
@@ -273,7 +257,7 @@ public class GameSystem : MonoBehaviour
     {
         ResumeGame();
 
-        StaticGlobals.CurGameLevel = GameLevel.Beginner;
+        StaticGlobals.CurGameLevel = GameLevel.Downtown;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // generic stuff
-public enum GameLevel { Demo = 0, Beginner = 1, Intermediate = 2, Advanced = 3 };
+public enum GameLevel { Downtown = 0, Smalltown = 1, OldTown = 2 };
 
 // saved as a part of the game state
 public struct SavedLandmark
@@ -16,7 +16,7 @@ public struct SavedLandmark
 public static class StaticGlobals
 {
     // general globals
-    public static GameLevel CurGameLevel { get; set; } = GameLevel.Demo;
+    public static GameLevel CurGameLevel { get; set; } = GameLevel.Downtown;
 
     // saved game state related items
     public static bool SavedInitStateExists { get; set; }
