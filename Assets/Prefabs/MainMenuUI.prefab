@@ -2971,11 +2971,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 7cb2912222469634ba17a77055919ea8, type: 3}
-    m_FontSize: 40
+    m_FontSize: 42
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 3
-    m_MaxSize: 40
+    m_MinSize: 4
+    m_MaxSize: 42
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2985,15 +2985,13 @@ MonoBehaviour:
   m_Text: 'MapGenius is a game of exploration and mapping.
 
 
-    - Explore the town.
+    1. Use W, A, S, D, or arrow keys to drive the car.
 
-    - Whenever you cross a landmark, you will need to locate it on the map and mark
-    it there.
+    2. Whenever you cross a landmark, you will be shown a map of the town. You will
+    need to mark the location of the landmark on the map.
 
-    - Your score will be updated after you have visited all the landmarks.
-
-    - The score will depend upon how close your markings are to the real landmarks
-    and your timing.
+    3. Your score will be updated after you have visited all the landmarks. The score
+    will depend upon how close your markings are to the real landmarks and your timing.
 
 
     OK? Let''s get ready to rumble!'
