@@ -2982,19 +2982,25 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'MapGenius is a game of exploration and mapping.
+  m_Text: 'MapGenius helps you recover the navigation and mapping skills you lost
+    when you started using Google Maps.
 
 
-    1. Use W, A, S, D, or arrow keys to drive the car.
-
-    2. Whenever you cross a landmark, you will be shown a map of the town. You will
-    need to mark the location of the landmark on the map.
-
-    3. Your score will be updated after you have visited all the landmarks. The score
-    will depend upon how close your markings are to the real landmarks and your timing.
+    1. Drive the car using the W, A, S,
+    D, or arrow keys.
 
 
-    OK? Let''s get ready to rumble!'
+    2. Whenever you cross a landmark, you will be shown a
+    map of the area wherein you will need to mark the location of that landmark.
+
+
+    3.
+    Your score will be updated after you have visited all the landmarks. The score
+    will depend upon how close your guesses are to the real landmarks and your timing.
+
+
+    OK?
+    Let''s get ready to rumble!'
 --- !u!1 &3544753253850635089
 GameObject:
   m_ObjectHideFlags: 0

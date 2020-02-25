@@ -79,7 +79,7 @@ public static class Strings
     public const string ScoreTextFormat = "Score: {0:d3}";
     public const string TimeTextFormat = "Time: {0:d3}";
     public const string LevelTextFormat = "Level: {0}";
-    public const string LandmarkCrossedMessageFormat = "You just crossed the \"{0}\" landmark!";
+    public const string LandmarkCrossedMessageFormat = "You just crossed the <i><color=#00ff00ff>\"{0}\"</color></i> landmark!";
     public const string FirstLandmarkCrossedMessage = "\r\n\r\nWe will now demonstrate how to mark its position on the map.";
     public const string OtherLandmarkCrossedMessage = "\r\n\r\nDrag and drop the blinking marker to the appropriate position on the map.";
     public const string LevelCompleteMessageFormat = "Congratulations! Level completed!\r\n\r\nYou scored {0} points in {1} seconds!";
