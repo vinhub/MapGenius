@@ -97,6 +97,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -4287,6 +4288,31 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8919022187193277170, guid: 6e3354790eba7e84ca0af4c4ff1eb275,
+        type: 3}
+      propertyPath: m_Target
+      value: 
+      objectReference: {fileID: 512039712}
+    - target: {fileID: 8919022187193277170, guid: 6e3354790eba7e84ca0af4c4ff1eb275,
+        type: 3}
+      propertyPath: m_UpdateType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919022187193277170, guid: 6e3354790eba7e84ca0af4c4ff1eb275,
+        type: 3}
+      propertyPath: m_TurnSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919022187193277170, guid: 6e3354790eba7e84ca0af4c4ff1eb275,
+        type: 3}
+      propertyPath: m_MoveSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8919022187193277170, guid: 6e3354790eba7e84ca0af4c4ff1eb275,
+        type: 3}
+      propertyPath: m_RollSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8919022187193277171, guid: 6e3354790eba7e84ca0af4c4ff1eb275,
         type: 3}
       propertyPath: m_Name
@@ -8403,6 +8429,12 @@ Mesh:
 --- !u!1 &512039711 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100042, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 442902714}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &512039712 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400050, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
     type: 3}
   m_PrefabInstance: {fileID: 442902714}
   m_PrefabAsset: {fileID: 0}
@@ -20657,8 +20689,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1396805958}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.9647059, b: 0.9137255, a: 1}
   m_Intensity: 1
   m_Range: 10
