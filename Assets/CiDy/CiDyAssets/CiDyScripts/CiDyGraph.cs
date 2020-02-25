@@ -242,8 +242,8 @@ public class CiDyGraph : MonoBehaviour {
         }
         if (terrain)
         {
-            hmWidth = terrain.terrainData.heightmapWidth;
-            hmHeight = terrain.terrainData.heightmapHeight;
+            hmWidth = terrain.terrainData.heightmapResolution;
+            hmHeight = terrain.terrainData.heightmapResolution;
             //Debug.Log("HeightMapWidth " + hmWidth + " HeightMapHeight " + hmHeight + " TerrainDataSize XYZ: " + terrain.terrainData.size + " TerrainWorldPos " + terrain.transform.position);
             float[,] tmpHeights = terrain.terrainData.GetHeights(0, 0, hmWidth, hmHeight);
             originalHeights = new float[hmWidth * hmHeight];
@@ -1618,11 +1618,11 @@ public class CiDyGraph : MonoBehaviour {
             //Get Stored Heights
             float[,] terrHeights = ReturnHeights();
             //Grab Area around Point in Terrain for Height Samples
-            int mWidth = terrain.terrainData.heightmapWidth;
-            int mHeight = terrain.terrainData.heightmapHeight;
+            int mWidth = terrain.terrainData.heightmapResolution;
+            int mHeight = terrain.terrainData.heightmapResolution;
             // we set an offset so that all the raising terrain is under this game object
-            int xDetail = Mathf.RoundToInt((terrain.terrainData.heightmapWidth / terrain.terrainData.size.x) * 2);
-            int zDetail = Mathf.RoundToInt((terrain.terrainData.heightmapHeight / terrain.terrainData.size.z) * 2);
+            int xDetail = Mathf.RoundToInt((terrain.terrainData.heightmapResolution / terrain.terrainData.size.x) * 2);
+            int zDetail = Mathf.RoundToInt((terrain.terrainData.heightmapResolution / terrain.terrainData.size.z) * 2);
             Vector3 tSize = terrain.terrainData.size;
             Vector3 terrPos = terrain.transform.position;
             Vector3 mapScale = terrain.terrainData.heightmapScale;
@@ -1967,8 +1967,8 @@ public class CiDyGraph : MonoBehaviour {
             //Get Stored Heights
             float[,] terrHeights = ReturnHeights();
             //Grab Area around Point in Terrain for Height Samples
-            int mWidth = terrain.terrainData.heightmapWidth;
-            int mHeight = terrain.terrainData.heightmapHeight;
+            int mWidth = terrain.terrainData.heightmapResolution;
+            int mHeight = terrain.terrainData.heightmapResolution;
             Vector3 tSize = terrain.terrainData.size;
             Vector3 terrPos = terrain.transform.position;
             Vector3 mapScale = terrain.terrainData.heightmapScale;
@@ -2062,11 +2062,11 @@ public class CiDyGraph : MonoBehaviour {
             //Get Stored Heights
             float[,] terrHeights = ReturnHeights();
             //Grab Area around Point in Terrain for Height Samples
-            int mWidth = terrain.terrainData.heightmapWidth;
-            int mHeight = terrain.terrainData.heightmapHeight;
+            int mWidth = terrain.terrainData.heightmapResolution;
+            int mHeight = terrain.terrainData.heightmapResolution;
             // we set an offset so that all the raising terrain is under this game object
-            int xDetail = Mathf.RoundToInt((terrain.terrainData.heightmapWidth / terrain.terrainData.size.x) * 2);
-            int zDetail = Mathf.RoundToInt((terrain.terrainData.heightmapHeight / terrain.terrainData.size.z) * 2);
+            int xDetail = Mathf.RoundToInt((terrain.terrainData.heightmapResolution / terrain.terrainData.size.x) * 2);
+            int zDetail = Mathf.RoundToInt((terrain.terrainData.heightmapResolution / terrain.terrainData.size.z) * 2);
             Vector3 tSize = terrain.terrainData.size;
             Vector3 terrPos = terrain.transform.position;
             Vector3 mapScale = terrain.terrainData.heightmapScale;
@@ -2171,11 +2171,11 @@ public class CiDyGraph : MonoBehaviour {
         //Get Stored Heights
         float[,] terrHeights = ReturnHeights();
         //Grab Area around Point in Terrain for Height Samples
-        int mWidth = terrain.terrainData.heightmapWidth;
-        int mHeight = terrain.terrainData.heightmapHeight;
+        int mWidth = terrain.terrainData.heightmapResolution;
+        int mHeight = terrain.terrainData.heightmapResolution;
         // we set an offset so that all the raising terrain is under this game object
-        int xDetail = Mathf.RoundToInt((terrain.terrainData.heightmapWidth / terrain.terrainData.size.x) * 2);
-        int zDetail = Mathf.RoundToInt((terrain.terrainData.heightmapHeight / terrain.terrainData.size.z) * 2);
+        int xDetail = Mathf.RoundToInt((terrain.terrainData.heightmapResolution / terrain.terrainData.size.x) * 2);
+        int zDetail = Mathf.RoundToInt((terrain.terrainData.heightmapResolution / terrain.terrainData.size.z) * 2);
         Vector3 tSize = terrain.terrainData.size;
         Vector3 terrPos = terrain.transform.position;
         Vector3 mapScale = terrain.terrainData.heightmapScale;
@@ -3594,8 +3594,8 @@ public class CiDyGraph : MonoBehaviour {
                 return;
             }
 		}
-		hmWidth = terrain.terrainData.heightmapWidth;
-		hmHeight = terrain.terrainData.heightmapHeight;
+		hmWidth = terrain.terrainData.heightmapResolution;
+		hmHeight = terrain.terrainData.heightmapResolution;
 		//Debug.Log ("HeightMapWidth " + hmWidth+" HeightMapHeight "+hmHeight+" TerrainDataSize XYZ: "+terrain.terrainData.size+" TerrainWorldPos "+terrain.transform.position);
 		float[,] tmpHeights = terrain.terrainData.GetHeights(0,0,hmWidth,hmHeight);
 		originalHeights = new float[hmWidth*hmHeight];
@@ -3799,8 +3799,8 @@ public class CiDyGraph : MonoBehaviour {
 			center.y = meshPoly[0].y;
 		}
 		radius = radius*2;
-		int hmWidth = terrain.terrainData.heightmapWidth;
-		int hmHeight = terrain.terrainData.heightmapHeight;
+		int hmWidth = terrain.terrainData.heightmapResolution;
+		int hmHeight = terrain.terrainData.heightmapResolution;
 		Vector3 terrPos = terrain.GetPosition ();
 		Vector3 tSize = terrain.terrainData.size;
 		int heightRes = terrain.terrainData.heightmapResolution;
@@ -3999,8 +3999,8 @@ public class CiDyGraph : MonoBehaviour {
 		//Create Centroid for Proper Radius Calculations
 		Vector3 center = CiDyUtils.FindCentroid (poly,1);
 		radius = radius*2;
-		int hmWidth = terrain.terrainData.heightmapWidth;
-		int hmHeight = terrain.terrainData.heightmapHeight;
+		int hmWidth = terrain.terrainData.heightmapResolution;
+		int hmHeight = terrain.terrainData.heightmapResolution;
 		Vector3 terrPos = terrain.GetPosition ();
 		Vector3 tSize = terrain.terrainData.size;
 		int heightRes = terrain.terrainData.heightmapResolution;
@@ -4269,8 +4269,8 @@ public class CiDyGraph : MonoBehaviour {
 
     //Terrain Blending Function Requires SideWalkMesh
     void BlendSideWalk(Vector3 transformPos, Mesh blendMesh, float roadWidth, int radius, float zBuffer, float edgeOffset, float smoothBorder){
-		int hmWidth = terrain.terrainData.heightmapWidth;
-		int hmHeight = terrain.terrainData.heightmapHeight;
+		int hmWidth = terrain.terrainData.heightmapResolution;
+		int hmHeight = terrain.terrainData.heightmapResolution;
 		Vector3 terrPos = terrain.GetPosition ();
 		Vector3 tSize = terrain.terrainData.size;
 		int heightRes = terrain.terrainData.heightmapResolution;
@@ -4411,8 +4411,8 @@ public class CiDyGraph : MonoBehaviour {
         int smoothBorder = radius * 2;
         int scaledRadius = (radius * 4) + smoothBorder;
         //Debug.Log("Blending Terrain Under Object, Border: "+smoothBorder+" Radius: "+radius);
-        int mWidth = t.terrainData.heightmapWidth;
-        int mHeight = t.terrainData.heightmapHeight;
+        int mWidth = t.terrainData.heightmapResolution;
+        int mHeight = t.terrainData.heightmapResolution;
         Vector3 tSize = t.terrainData.size;
         Vector3 terrPos = t.transform.position;
         Vector3 coord = GetNormalizedPositionRelativeToTerrain(center, terrPos, tSize);
@@ -4567,8 +4567,8 @@ public class CiDyGraph : MonoBehaviour {
         int smoothBorder = radius * 2;
         int scaledRadius = (radius * 4) + smoothBorder;
         Debug.Log("Blending Terrain Under Object, Border: "+smoothBorder+" Radius: "+radius);
-        int mWidth = t.terrainData.heightmapWidth;
-        int mHeight = t.terrainData.heightmapHeight;
+        int mWidth = t.terrainData.heightmapResolution;
+        int mHeight = t.terrainData.heightmapResolution;
         Vector3 tSize = t.terrainData.size;
         Vector3 terrPos = t.transform.position;
         Vector3 coord = GetNormalizedPositionRelativeToTerrain(center, terrPos, tSize);
@@ -4802,8 +4802,8 @@ public class CiDyGraph : MonoBehaviour {
         int smoothBorder = radius * 3;
         int scaledRadius = (radius * 4) + smoothBorder;
         //Debug.Log("Blending Terrain Under Object, Border: "+smoothBorder+" Radius: "+radius);
-        int mWidth = t.terrainData.heightmapWidth;
-        int mHeight = t.terrainData.heightmapHeight;
+        int mWidth = t.terrainData.heightmapResolution;
+        int mHeight = t.terrainData.heightmapResolution;
         //Debug.Log(coord.x + ", " + coord.z);
         Vector3 tSize = t.terrainData.size;
         Vector3 terrPos = t.transform.position;
@@ -4812,8 +4812,8 @@ public class CiDyGraph : MonoBehaviour {
         int posXInTerrain = (int)(coord.x * mWidth);
         int posYInTerrain = (int)(coord.z * mHeight);
         // we set an offset so that all the raising terrain is under this game object
-        int xDetail = Mathf.RoundToInt((t.terrainData.heightmapWidth / t.terrainData.size.x) * scaledRadius);
-        int zDetail = Mathf.RoundToInt((t.terrainData.heightmapHeight / t.terrainData.size.z) * scaledRadius);
+        int xDetail = Mathf.RoundToInt((t.terrainData.heightmapResolution / t.terrainData.size.x) * scaledRadius);
+        int zDetail = Mathf.RoundToInt((t.terrainData.heightmapResolution / t.terrainData.size.z) * scaledRadius);
         int offsetX = posXInTerrain - (xDetail / 2);
         int offsetZ = posYInTerrain - (zDetail / 2);
         //Make sure Offset is in Bounds
@@ -4955,8 +4955,8 @@ public class CiDyGraph : MonoBehaviour {
         int smoothBorder = radius;
         int scaledRadius = (radius * 4) + smoothBorder;
         //Debug.Log("Blending Terrain Under Object, Border: "+smoothBorder+" Radius: "+radius);
-        int mWidth = t.terrainData.heightmapWidth;
-        int mHeight = t.terrainData.heightmapHeight;
+        int mWidth = t.terrainData.heightmapResolution;
+        int mHeight = t.terrainData.heightmapResolution;
         Vector3 tSize = t.terrainData.size;
         Vector3 terrPos = t.transform.position;
         Vector3 mapScale = t.terrainData.heightmapScale;
@@ -4965,8 +4965,8 @@ public class CiDyGraph : MonoBehaviour {
         int posXInTerrain = (int)(coord.x * mWidth);
         int posYInTerrain = (int)(coord.z * mHeight);
         // we set an offset so that all the raising terrain is under this game object
-        int xDetail = Mathf.RoundToInt((t.terrainData.heightmapWidth / t.terrainData.size.x) * scaledRadius);
-        int zDetail = Mathf.RoundToInt((t.terrainData.heightmapHeight / t.terrainData.size.z) * scaledRadius);
+        int xDetail = Mathf.RoundToInt((t.terrainData.heightmapResolution / t.terrainData.size.x) * scaledRadius);
+        int zDetail = Mathf.RoundToInt((t.terrainData.heightmapResolution / t.terrainData.size.z) * scaledRadius);
         int offset = xDetail / 2;
         //Debug.Log("Terrain Width: " + t.terrainData.heightmapWidth + " TerrainSize.x: " + t.terrainData.size.x + " XDetail: " + xDetail + " ZDetail: " + zDetail);
         // get the grass map of the terrain under this game object
@@ -5035,8 +5035,8 @@ public class CiDyGraph : MonoBehaviour {
     
     //Terrain Blending Function Requires Road Mesh
     public void BlendRoad(Mesh blendMesh, float roadWidth, int radius, float zBuffer, float edgeOffset, float smoothBorder){
-		int hmWidth = terrain.terrainData.heightmapWidth;
-		int hmHeight = terrain.terrainData.heightmapHeight;
+		int hmWidth = terrain.terrainData.heightmapResolution;
+		int hmHeight = terrain.terrainData.heightmapResolution;
 		Vector3 terrPos = terrain.GetPosition ();
 		Vector3 tSize = terrain.terrainData.size;
 		int heightRes = terrain.terrainData.heightmapResolution;
