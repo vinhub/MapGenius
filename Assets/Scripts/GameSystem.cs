@@ -12,15 +12,11 @@ public class GameSystem : MonoBehaviour
     private static GameSystem m_instance;
     public static GameSystem Instance { get { return m_instance; } }
 
-    public const int MaxLevelScore = 100; // max score for a level
-    public const int NumLevels = 10; // total number of levels
-    public const int MaxScore = MaxLevelScore * NumLevels; // max possible score
     private const int m_numLandmarks = 5;
     private const int m_landmarksLayerIndex = 11; // TODO: remove this hardcoding
     private const int m_UILayerIndex = 5; // TODO: remove this hardcoding
 
     public float LevelScore { get; private set; } // player's score so far for the current level
-    public float TotalScore { get; private set; } = 0; // player's total score so far
 
     public GameObject Car; // the car being driven by the player
     public GameObject CarCameraRig; // the car camera rig
@@ -91,8 +87,8 @@ public class GameSystem : MonoBehaviour
         Car.transform.position = CarCameraRig.transform.position = m_carPosStart;
         Car.transform.rotation = CarCameraRig.transform.rotation = m_carRotationStart;
 
-        // init score and level
-        SetScore(0, 0);
+        // init score
+        SetScore(0);
     }
 
     private void InitGameState()
@@ -249,6 +245,7 @@ public class GameSystem : MonoBehaviour
     {
         ResumeGame();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        StaticGlobals.TotalNumGames++;
     }
 
     public void NextLevel()
@@ -267,6 +264,7 @@ public class GameSystem : MonoBehaviour
         }
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        StaticGlobals.TotalNumGames++;
     }
 
     // retry the same level without changing anything
@@ -352,12 +350,12 @@ public class GameSystem : MonoBehaviour
         m_firstLandmarkCrossed = false;
     }
 
-    public void SetScore(float levelScore, float totalScore)
+    public void SetScore(float levelScore)
     {
-        LevelScore = levelScore;
-        TotalScore = totalScore;
+        GameSystem.Instance.LevelScore = levelScore;
+        StaticGlobals.TotalScore += levelScore;
 
-        m_mainPanelManager.UpdateScore(levelScore, totalScore);
+        m_mainPanelManager.UpdateScore();
     }
 
     private void SaveGameInitState()

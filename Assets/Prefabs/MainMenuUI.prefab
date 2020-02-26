@@ -1765,8 +1765,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 350, y: 0}
-  m_SizeDelta: {x: 350, y: 30}
+  m_AnchoredPosition: {x: 450, y: 0}
+  m_SizeDelta: {x: 450, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &945492903014931177
 CanvasRenderer:
@@ -2981,24 +2981,24 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'MapGenius helps you recover the navigation and mapping skills you lost
-    when you started using Google Maps.
+    when you started using Google Maps. Here''s how:
 
 
-    1. Drive the car using the W, A, S,
-    D, or arrow keys.
+    1. Drive the car using
+    the W, A, S, D, or arrow keys.
 
 
-    2. Whenever you cross a landmark, you will be shown a
-    map of the level wherein you will need to mark the location of that landmark.
+    2. Whenever you cross a landmark, you will
+    be shown a map of the level wherein you will need to mark the location of that
+    landmark.
 
 
-    3.
-    Your score will be updated after you have visited all the landmarks. The score
-    will depend upon how close your guesses are to the real landmarks and your timing.
+    3. Your score will be updated after you have visited all the
+    landmarks. The score will depend upon how close your guesses are to the real
+    landmarks and your timing.
 
 
-    OK?
-    Let''s get ready to rumble!'
+    OK? Let''s get ready to rumble!'
 --- !u!1 &3544753253850635089
 GameObject:
   m_ObjectHideFlags: 0
@@ -4421,8 +4421,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -65, y: -100}
-  m_SizeDelta: {x: 120, y: 70}
+  m_AnchoredPosition: {x: -60, y: -70}
+  m_SizeDelta: {x: 110, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2146821810938949568
 CanvasRenderer:
@@ -4452,7 +4452,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 7cb2912222469634ba17a77055919ea8, type: 3}
-    m_FontSize: 32
+    m_FontSize: 28
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
@@ -4463,9 +4463,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Menu
-
-    (Esc)'
+  m_Text: Menu [Esc]
 --- !u!1 &5663286916128861752
 GameObject:
   m_ObjectHideFlags: 0
@@ -14660,7 +14658,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MapGenius
+  m_Text: <color=#ff0000ff>MapGenius</color>
 --- !u!1 &7437929637235414864
 GameObject:
   m_ObjectHideFlags: 0
@@ -14770,8 +14768,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -15}
-  m_SizeDelta: {x: 180, y: 40}
+  m_AnchoredPosition: {x: 300, y: -15}
+  m_SizeDelta: {x: 300, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &316320993211508100
 CanvasRenderer:
@@ -14812,7 +14810,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Score: 000'
+  m_Text: 'Score: 0000 / 0000'
 --- !u!1 &7533525963118122176
 GameObject:
   m_ObjectHideFlags: 0

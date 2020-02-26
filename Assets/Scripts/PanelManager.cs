@@ -154,9 +154,11 @@ public class PanelManager : MonoBehaviour {
         m_goPanel = null;
 	}
 
-    public void UpdateScore(float levelScore, float totalScore)
+    public void UpdateScore()
     {
-        m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(totalScore, MidpointRounding.AwayFromZero));
+        m_scoreText.text = String.Format(Strings.ScoreTextFormat,
+            (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero),
+            (int)Math.Round(StaticGlobals.TotalScoreMax, MidpointRounding.AwayFromZero));
     }
 
     public void LoadScene(string sceneName)

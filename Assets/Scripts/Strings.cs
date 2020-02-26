@@ -71,7 +71,7 @@
     public const string CheckScore = "Check Score";
 
     // format strings
-    public const string ScoreTextFormat = "Score: {0:d3}";
+    public const string ScoreTextFormat = "Score: {0:d4} / {0:d4}";
     public const string TimeTextFormat = "Time: {0:d3}";
     public const string LevelTextFormat = "Level: {0}";
     public const string LandmarkCrossedMessageFormat = "You just crossed the  <i><color=#00ff00ff>\"{0}\"</color></i>  landmark!";
