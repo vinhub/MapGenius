@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Springfield.unity
-    guid: 05c02290cbde3c44389ee065e36a2dcf
+    path: Assets/Scenes/Main.unity
+    guid: 9202520199ea1d44dbe65655526190b8
   m_configObjects: {}

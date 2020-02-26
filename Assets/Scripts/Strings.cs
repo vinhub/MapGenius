@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class Strings
+﻿public static class Strings
 {
     // non-localizable
 
@@ -24,8 +19,8 @@ public static class Strings
     public const string PanelManagerPath = "PanelManager";
     public const string InstructionsPanelPath = "Panels/Instructions";
     public const string MapPanelPath = "Panels/Map";
-    public const string MenuScoreTextPath = "OpenMenuButton/ScoreText";
-    public const string MenuTimeTextPath = "OpenMenuButton/TimeText";
+    public const string GameStatusScoreTextPath = "GameStatus/ScoreText";
+    public const string GameStatusTimeTextPath = "GameStatus/TimeText";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
     public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
     public const string ActionButton1LabelPath = "Window/ButtonBar/ActionButton1/Background/Label";
@@ -46,8 +41,13 @@ public static class Strings
     public const string LandmarksPath = "Landmarks";
     public const string LandmarkName = "Name";
     public const string LandmarkName2 = "Name2";
-    public const string NodeHolderPath = "CiDyGraph/NodeHolder";
-    public const string RoadHolderPath = "CiDyGraph/RoadHolder";
+    public const string GraphPath = "CiDyGraph";
+    public const string NodeHolderPath = "NodeHolder";
+    public const string RoadHolderPath = "RoadHolder";
+    public const string DemoGraphName = "DemoGraph";
+    public const string BeginnerGraphName = "BeginnerGraph";
+    public const string IntermediateGraphName = "IntermediateGraph";
+    public const string AdvancedGraphName = "AdvancedGraph";
 
     // tag names
     public const string MainMenuUITag = "MainMenuUI";
@@ -74,7 +74,7 @@ public static class Strings
     public const string ScoreTextFormat = "Score: {0:d3}";
     public const string TimeTextFormat = "Time: {0:d3}";
     public const string LevelTextFormat = "Level: {0}";
-    public const string LandmarkCrossedMessageFormat = "You just crossed the \"{0}\" landmark!";
+    public const string LandmarkCrossedMessageFormat = "You just crossed the  <i><color=#00ff00ff>\"{0}\"</color></i>  landmark!";
     public const string FirstLandmarkCrossedMessage = "\r\n\r\nWe will now demonstrate how to mark its position on the map.";
     public const string OtherLandmarkCrossedMessage = "\r\n\r\nDrag and drop the blinking marker to the appropriate position on the map.";
     public const string LevelCompleteMessageFormat = "Congratulations! Level completed!\r\n\r\nYou scored {0} points in {1} seconds!";

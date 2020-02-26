@@ -25,11 +25,11 @@ public class GameSystem : MonoBehaviour
     public GameObject Car; // the car being driven by the player
     public GameObject CarCameraRig; // the car camera rig
     private CarController m_carController;
-
     public GameObject LandmarkPrefab; // prefab for landmarks
     public GameObject PlayermarksListItemPrefab; // prefab for playermarks list item in the map panel
 
     private Transform m_tRoadHolder, m_tNodeHolder, m_tLandmarks;
+    private GameObject m_graph;
 
     // for pausing / resuming game
     private float m_timeScaleSav = 1f;
@@ -46,16 +46,11 @@ public class GameSystem : MonoBehaviour
     private void Awake()
     {
         m_instance = this;
-
-        StaticGlobals.CurGameLevel = GameLevel.Beginner;
     }
 
     private void Start()
     {
         m_carController = Car.GetComponent<CarController>();
-        m_tNodeHolder = GameObject.Find(Strings.NodeHolderPath).transform;
-        m_tRoadHolder = GameObject.Find(Strings.RoadHolderPath).transform;
-        m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
 
         GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
         m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
@@ -72,8 +67,15 @@ public class GameSystem : MonoBehaviour
             m_mainPanelManager.OpenInstructionsPanel(true);
         }
 
-        // init score and level
-        SetScore(0, 0);
+        CiDyGraph[] graphs = Resources.FindObjectsOfTypeAll<CiDyGraph>();
+
+        m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == StaticGlobals.CurGameLevel.ToString()).gameObject;
+        m_graph.SetActive(true);
+ 
+        // now that we have a graph, we can gather some frequently needed references
+        m_tNodeHolder = m_graph.transform.Find(Strings.NodeHolderPath).transform;
+        m_tRoadHolder = m_graph.transform.Find(Strings.RoadHolderPath).transform;
+        m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
 
         if (StaticGlobals.SavedInitStateExists)
         {
@@ -88,6 +90,9 @@ public class GameSystem : MonoBehaviour
         // place car some distance from the first landmark
         Car.transform.position = CarCameraRig.transform.position = m_carPosStart;
         Car.transform.rotation = CarCameraRig.transform.rotation = m_carRotationStart;
+
+        // init score and level
+        SetScore(0, 0);
     }
 
     private void InitGameState()
@@ -243,6 +248,24 @@ public class GameSystem : MonoBehaviour
     public void NewGame()
     {
         ResumeGame();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void NextLevel()
+    {
+        ResumeGame();
+
+        switch (StaticGlobals.CurGameLevel)
+        {
+            case GameLevel.Downtown:
+                StaticGlobals.CurGameLevel = GameLevel.Smalltown;
+                break;
+
+            case GameLevel.Smalltown:
+                StaticGlobals.CurGameLevel = GameLevel.Oldtown;
+                break;
+        }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

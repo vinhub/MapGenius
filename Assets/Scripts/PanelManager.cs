@@ -25,8 +25,8 @@ public class PanelManager : MonoBehaviour {
         m_instructionsPanel = mainMenuUI.transform.Find(Strings.InstructionsPanelPath).gameObject;
         m_mapPanel = mainMenuUI.transform.Find(Strings.MapPanelPath).gameObject;
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
-        m_scoreText = mainMenuUI.transform.Find(Strings.MenuScoreTextPath).GetComponent<Text>();
-        m_timeText = mainMenuUI.transform.Find(Strings.MenuTimeTextPath).GetComponent<Text>();
+        m_scoreText = mainMenuUI.transform.Find(Strings.GameStatusScoreTextPath).GetComponent<Text>();
+        m_timeText = mainMenuUI.transform.Find(Strings.GameStatusTimeTextPath).GetComponent<Text>();
     }
 
     private void Update()
@@ -172,6 +172,11 @@ public class PanelManager : MonoBehaviour {
     public void NewGame()
     {
         GameSystem.Instance.NewGame();
+    }
+
+    public void NextLevel()
+    {
+        GameSystem.Instance.NextLevel();
     }
 
     public void QuitGame()
