@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class Strings
+﻿public static class Strings
 {
     // non-localizable
 
@@ -24,8 +19,8 @@ public static class Strings
     public const string PanelManagerPath = "PanelManager";
     public const string InstructionsPanelPath = "Panels/Instructions";
     public const string MapPanelPath = "Panels/Map";
-    public const string MenuScoreTextPath = "OpenMenuButton/ScoreText";
-    public const string MenuTimeTextPath = "OpenMenuButton/TimeText";
+    public const string GameStatusScoreTextPath = "GameStatus/ScoreText";
+    public const string GameStatusTimeTextPath = "GameStatus/TimeText";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
     public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
     public const string ActionButton1LabelPath = "Window/ButtonBar/ActionButton1/Background/Label";
