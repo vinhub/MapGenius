@@ -1223,7 +1223,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5736685844750866035}
       - m_Target: {fileID: 3906382736307349077}
         m_MethodName: Play
         m_Mode: 1
@@ -1807,7 +1806,6 @@ GameObject:
   - component: {fileID: 3115793142228532176}
   - component: {fileID: 4121920690563770996}
   m_Layer: 5
-  m_Name: ActionButton2
   m_Name: CloseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
