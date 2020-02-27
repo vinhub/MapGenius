@@ -129,8 +129,14 @@ public class PanelManager : MonoBehaviour {
         m_mpHelper.Setup(this, m_mapPanel.transform, landmarkName, firstLandmarkCrossed);
     }
 
-    private void CloseMapPanel()
+    private bool CloseMapPanel(bool fCheckOkToClose)
     {
+        if (m_goPanel == null)
+            return false;
+
+        if (!m_mpHelper.CloseOrContinue(fCheckOkToClose)) // don't close it if the panel helper disallows it (used when game is over and we need to show results instead of closing the panel)
+            return false;
+
         CurLandmarkName = null;
 
         EventSystem.current.SetSelectedGameObject(null);
@@ -139,47 +145,38 @@ public class PanelManager : MonoBehaviour {
         m_panels.SetActive(false);
 
         m_goPanel = null;
+
+        return true;
     }
 
     public void OnClickBack()
     {
-        if (m_goPanel == null)
+        if (!CloseMapPanel(false))
             return;
-
-        CloseMapPanel();
 
         m_mainMenu.SetActive(true);
     }
 
     public void OnClickContinueGame()
     {
-        if (m_goPanel == null)
+        if (!CloseMapPanel(true))
             return;
-
-        if (!m_mpHelper.CloseOrContinue()) // don't close it if the panel helper disallows it (used when game is over and we need to show results instead of closing the panel)
-            return;
-
-        CloseMapPanel();
 
         ContinueGame();
     }
 
     public void OnClickRetryGame()
     {
-        if (m_goPanel == null)
+        if (!CloseMapPanel(false))
             return;
-
-        CloseMapPanel();
 
         RetryGame();
     }
 
     public void OnClickVictoryLap()
     {
-        if (m_goPanel == null)
+        if (!CloseMapPanel(false))
             return;
-
-        CloseMapPanel();
 
         ContinueGame();
 
@@ -188,10 +185,8 @@ public class PanelManager : MonoBehaviour {
 
     public void OnClickNewGame()
     {
-        if (m_goPanel == null)
+        if (!CloseMapPanel(false))
             return;
-
-        CloseMapPanel();
 
         NewGame();
     }

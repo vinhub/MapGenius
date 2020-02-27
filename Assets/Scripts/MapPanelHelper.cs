@@ -75,11 +75,13 @@ public class MapPanelHelper : MonoBehaviour
         if (String.IsNullOrEmpty(landmarkName)) // panel invoked from menu?
         {
             m_actionButton2Text.text = Strings.Back;
+            m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
             m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickBack);
         }
         else // panel invoked as a result of crossing a landmark
         {
             m_actionButton2Text.text = Strings.ContinueGame;
+            m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
             m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickContinueGame);
         }
 
@@ -97,7 +99,7 @@ public class MapPanelHelper : MonoBehaviour
     }
 
     // Returns true if panel can be closed. False if not (when showing results instead of closing down)
-    public bool CloseOrContinue()
+    public bool CloseOrContinue(bool fCheckOkToClose)
     {
         if (m_tMapPanel == null)
             return true;
@@ -119,7 +121,7 @@ public class MapPanelHelper : MonoBehaviour
         SavePlayermarkChanges();
 
         // if level is complete, we should not close the panel but show the results
-        if (m_isLevelComplete)
+        if (fCheckOkToClose && m_isLevelComplete)
         {
             // Calculate and display score
             float levelScore = CalcLevelScore();
@@ -134,16 +136,19 @@ public class MapPanelHelper : MonoBehaviour
             if (levelScore == StaticGlobals.MaxLevelScore) // max score achieved
             {
                 m_actionButton1Text.text = Strings.VictoryLap;
+                m_tActionButton1.GetComponent<Button>().onClick.RemoveAllListeners();
                 m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickVictoryLap);
             }
             else
             {
                 m_actionButton1Text.text = Strings.RetryGame;
+                m_tActionButton1.GetComponent<Button>().onClick.RemoveAllListeners();
                 m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
             }
 
 
             m_actionButton2Text.text = Strings.NewGame;
+            m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
             m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickNewGame);
 
             return false;
