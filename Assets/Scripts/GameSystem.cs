@@ -12,7 +12,7 @@ public class GameSystem : MonoBehaviour
     private static GameSystem m_instance;
     public static GameSystem Instance { get { return m_instance; } }
 
-    private const int m_numLandmarks = 5;
+    private const int m_numLandmarks = 2;
     private const int m_landmarksLayerIndex = 11; // TODO: remove this hardcoding
     private const int m_UILayerIndex = 5; // TODO: remove this hardcoding
 
@@ -243,14 +243,14 @@ public class GameSystem : MonoBehaviour
 
     public void NewGame()
     {
-        ResumeGame();
+        ResumeGame(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         StaticGlobals.TotalNumGames++;
     }
 
     public void NextLevel()
     {
-        ResumeGame();
+        ResumeGame(false);
 
         switch (StaticGlobals.CurGameLevel)
         {
@@ -270,7 +270,7 @@ public class GameSystem : MonoBehaviour
     // retry the same level without changing anything
     public void RetryGame()
     {
-        ResumeGame();
+        ResumeGame(false);
         SaveGameInitState();
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -278,7 +278,7 @@ public class GameSystem : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
-        GameSystem.Instance.ResumeGame();
+        GameSystem.Instance.ResumeGame(false);
         SceneManager.LoadScene(sceneName);
     }
 
@@ -295,10 +295,17 @@ public class GameSystem : MonoBehaviour
         m_paused = true;
     }
 
-    public void ResumeGame()
+    public void ResumeGame(bool fVictoryLap)
     {
         if (!m_paused)
             return;
+
+        if (fVictoryLap)
+        {
+            // play victory music
+            AudioSource victoryLapAudioSource = GetComponent<AudioSource>();
+            victoryLapAudioSource.Play();
+        }
 
         Time.timeScale = m_timeScaleSav;
         m_paused = false;

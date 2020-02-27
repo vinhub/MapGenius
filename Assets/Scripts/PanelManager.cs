@@ -89,7 +89,7 @@ public class PanelManager : MonoBehaviour {
             }
 
             // we will resume the game directly instead of going back to the main menu as is the usual case
-            GameSystem.Instance.ResumeGame();
+            GameSystem.Instance.ResumeGame(false);
 
             m_gameStartInstructions = false;
         }
@@ -162,7 +162,7 @@ public class PanelManager : MonoBehaviour {
         if (!CloseMapPanel(true))
             return;
 
-        ContinueGame();
+        ContinueGame(false);
     }
 
     public void OnClickRetryGame()
@@ -178,7 +178,7 @@ public class PanelManager : MonoBehaviour {
         if (!CloseMapPanel(false))
             return;
 
-        ContinueGame();
+        ContinueGame(true);
 
         //TODO: Celebration
     }
@@ -203,9 +203,9 @@ public class PanelManager : MonoBehaviour {
         GameSystem.Instance.LoadScene(sceneName);
     }
 
-    public void ContinueGame()
+    public void ContinueGame(bool fVictoryLap)
     {
-        GameSystem.Instance.ResumeGame();
+        GameSystem.Instance.ResumeGame(fVictoryLap);
     }
 
     public void RetryGame()

@@ -26,7 +26,7 @@ public class PauseMenu : MonoBehaviour
     
     private void MenuOff()
     {
-        GameSystem.Instance.ResumeGame();
+        GameSystem.Instance.ResumeGame(false);
     }
     
     public void OnMenuStatusChange()
