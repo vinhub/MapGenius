@@ -21,8 +21,10 @@
     public const string MapPanelPath = "Panels/Map";
     public const string GameStatusScoreTextPath = "GameStatus/ScoreText";
     public const string GameStatusTimeTextPath = "GameStatus/TimeText";
+    public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
     public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
+    public const string CloseButtonLabelPath = "Window/ButtonBar/CloseButton/Background/Label";
     public const string ActionButton1LabelPath = "Window/ButtonBar/ActionButton1/Background/Label";
     public const string ActionButton2LabelPath = "Window/ButtonBar/ActionButton2/Background/Label";
     public const string ButtonBarTogglePath = "Window/ButtonBar/Toggle";

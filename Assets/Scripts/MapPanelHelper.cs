@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MapPanelHelper : MonoBehaviour
 {
+    private PanelManager m_panelManager;
     private Transform m_tMapPanel = null; // whether / which panel is being shown right now
     private string m_landmarkName;
     private bool m_firstLandmarkCrossed = false;
@@ -12,7 +13,6 @@ public class MapPanelHelper : MonoBehaviour
     private PlayermarkHandler m_phCur = null; // playmark handler correspoding to the landmark that the player just crossed
 
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
-    private bool m_isScoreUpdated = false; // has score been updated after player has completed the level?
 
     private Transform m_tActionButton1, m_tActionButton2; // action buttons
     private Text m_actionButton1Text, m_actionButton2Text; // text for the action buttons
@@ -25,16 +25,17 @@ public class MapPanelHelper : MonoBehaviour
     private Transform m_tPlayermarkList;
     private bool m_revealedLandmarksOnMap = false;
 
-    public void Setup(Transform tMapPanel, string landmarkName, bool firstLandmarkCrossed)
+    public void Setup(PanelManager panelManager, Transform tMapPanel, string landmarkName, bool firstLandmarkCrossed)
     {
         if (m_tMapPanel != null)
             return;
 
+        m_panelManager = panelManager;
         m_tMapPanel = tMapPanel;
         m_landmarkName = landmarkName;
         m_firstLandmarkCrossed = firstLandmarkCrossed;
 
-        m_isLevelComplete = m_isScoreUpdated = false;
+        m_isLevelComplete = false;
         m_tActionButton1 = m_tMapPanel.Find(Strings.ActionButton1Path);
         m_tActionButton2 = m_tMapPanel.Find(Strings.ActionButton2Path);
         m_actionButton1Text = m_tMapPanel.Find(Strings.ActionButton1LabelPath).GetComponent<Text>();
@@ -71,10 +72,16 @@ public class MapPanelHelper : MonoBehaviour
 
         m_tActionButton1.gameObject.SetActive(false);
 
-        if (String.IsNullOrEmpty(landmarkName))
+        if (String.IsNullOrEmpty(landmarkName)) // panel invoked from menu?
+        {
             m_actionButton2Text.text = Strings.Back;
-        else
+            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickBack);
+        }
+        else // panel invoked as a result of crossing a landmark
+        {
             m_actionButton2Text.text = Strings.ContinueGame;
+            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickContinueGame);
+        }
 
         // mark the current playermark as currently visiting
         if (m_phCur != null)
@@ -89,13 +96,6 @@ public class MapPanelHelper : MonoBehaviour
         }
     }
 
-    // called in response to player clicking the "ActionButton1" button on the panel. Currently this is always retry game.
-    public void RetryGame()
-    {
-        GameSystem.Instance.RetryGame();
-    }
-
-    // Called in response to player clicking the "ActionButton2" button on the panel. It can mean either "Close" or "Continue".
     // Returns true if panel can be closed. False if not (when showing results instead of closing down)
     public bool CloseOrContinue()
     {
@@ -121,15 +121,6 @@ public class MapPanelHelper : MonoBehaviour
         // if level is complete, we should not close the panel but show the results
         if (m_isLevelComplete)
         {
-            // if the score was already shown, we can move to the next level
-            if (m_isScoreUpdated)
-            {
-                // TODO: load next level
-                GameSystem.Instance.LoadScene(Strings.Springfield);
-
-                return true;
-            }
-
             // Calculate and display score
             float levelScore = CalcLevelScore();
 
@@ -139,12 +130,12 @@ public class MapPanelHelper : MonoBehaviour
 
             DisplayScore(true);
 
-            m_isScoreUpdated = true;
-
             m_tActionButton1.gameObject.SetActive(true);
             m_actionButton1Text.text = Strings.RetryGame;
+            m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
 
             m_actionButton2Text.text = Strings.NewGame;
+            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickNewGame);
 
             return false;
         }

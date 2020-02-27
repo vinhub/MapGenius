@@ -52,6 +52,64 @@ public class PanelManager : MonoBehaviour {
         m_goPanel = goPanel;
 	}
 
+    // this is called when game is started
+    public void OpenInstructionsPanel(bool isGameStarting)
+    {
+        m_gameStartInstructions = isGameStarting;
+
+        GameSystem.Instance.PauseGame();
+
+        OpenPanel(m_instructionsPanel);
+
+        Text closePanelText = m_instructionsPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<Text>();
+        closePanelText.text = isGameStarting ? Strings.StartGame : Strings.Back;
+
+        Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
+        hideInstructionsToggle.GetComponent<Toggle>().isOn = (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 1);
+
+        // show the "don't show this again" toggle only when starting the game
+        hideInstructionsToggle.gameObject.SetActive(isGameStarting);
+    }
+
+    // called when the CloseButton is clicked on the Instructions panel
+    public void CloseInstructionsPanel()
+	{
+		if (m_goPanel == null)
+			return;
+
+        Debug.Assert(m_goPanel == m_instructionsPanel);
+
+        if (m_gameStartInstructions) // instructions panel is being shown at the start of the game
+        {
+            Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
+            if (hideInstructionsToggle.gameObject.activeInHierarchy)
+            {
+                bool hideInstructionsAtStart = hideInstructionsToggle.GetComponent<Toggle>().isOn;
+                PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, hideInstructionsAtStart ? 1 : 0);
+            }
+
+            // we will resume the game directly instead of going back to the main menu as is the usual case
+            GameSystem.Instance.ResumeGame();
+
+            m_gameStartInstructions = false;
+        }
+        else
+        {
+            // back to the main menu
+            m_mainMenu.SetActive(true);
+        }
+
+        Text closeButtonText = m_goPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<Text>();
+        closeButtonText.text = Strings.Back;
+
+        EventSystem.current.SetSelectedGameObject(null);
+
+        m_goPanel.SetActive(false);
+        m_panels.SetActive(false);
+
+        m_goPanel = null;
+	}
+
     // called from menu
     public void OpenMapPanel()
     {
@@ -68,83 +126,12 @@ public class PanelManager : MonoBehaviour {
         OpenPanel(m_mapPanel);
 
         // set up map panel
-        m_mpHelper.Setup(m_mapPanel.transform, landmarkName, firstLandmarkCrossed);
+        m_mpHelper.Setup(this, m_mapPanel.transform, landmarkName, firstLandmarkCrossed);
     }
 
-    // this is called when game is started
-    public void OpenInstructionsPanel(bool isGameStarting)
+    private void CloseMapPanel()
     {
-        m_gameStartInstructions = isGameStarting;
-
-        GameSystem.Instance.PauseGame();
-
-        OpenPanel(m_instructionsPanel);
-
-        Text closePanelText = m_instructionsPanel.transform.Find(Strings.ActionButton2LabelPath).GetComponent<Text>();
-        closePanelText.text = isGameStarting ? Strings.StartGame : Strings.Back;
-
-        Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
-        hideInstructionsToggle.GetComponent<Toggle>().isOn = (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 1);
-
-        // show the "don't show this again" toggle only when starting the game
-        hideInstructionsToggle.gameObject.SetActive(isGameStarting);
-    }
-
-    // called when the ActoinButton1 is clicked
-    public void Action1()
-    {
-        // currently this is always retry game
-        m_mpHelper.RetryGame();
-    }
-
-    // called when the ActoinButton2 is clicked
-    public void Action2()
-	{
-		if (m_goPanel == null)
-			return;
-
-        if (m_gameStartInstructions) // instructions panel is being shown at the start of the game
-        {
-            Debug.Assert(m_goPanel == m_instructionsPanel);
-
-            Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
-            if (hideInstructionsToggle.gameObject.activeInHierarchy)
-            {
-                bool hideInstructionsAtStart = hideInstructionsToggle.GetComponent<Toggle>().isOn;
-                PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, hideInstructionsAtStart ? 1 : 0);
-            }
-
-            // we will resume the game directly instead of going back to the main menu as is the usual case
-            GameSystem.Instance.ResumeGame();
-
-            m_gameStartInstructions = false;
-        }
-        else if (m_goPanel == m_mapPanel) // map panel was being shown
-        {
-            if (!m_mpHelper.CloseOrContinue()) // don't close it if the panel helper disallows it (used when game is over and we need to show results instead of closing the panel)
-                return;
-
-            if (String.IsNullOrEmpty(CurLandmarkName))
-            {
-                // if the map panel was invoked from the main menu, we handle it like any other menu
-                m_mainMenu.SetActive(true);
-            }
-            else
-            {
-                // if map panel was invoked in response to landmark crossing, we return directly back to the game 
-                GameSystem.Instance.ResumeGame();
-
-                CurLandmarkName = null;
-            }
-        }
-        else
-        {
-            // back to the main menu
-            m_mainMenu.SetActive(true);
-        }
-
-        Text actionButton2Text = m_goPanel.transform.Find(Strings.ActionButton2LabelPath).GetComponent<Text>();
-        actionButton2Text.text = Strings.Back;
+        CurLandmarkName = null;
 
         EventSystem.current.SetSelectedGameObject(null);
 
@@ -152,7 +139,50 @@ public class PanelManager : MonoBehaviour {
         m_panels.SetActive(false);
 
         m_goPanel = null;
-	}
+    }
+
+    public void OnClickBack()
+    {
+        if (m_goPanel == null)
+            return;
+
+        CloseMapPanel();
+
+        m_mainMenu.SetActive(true);
+    }
+
+    public void OnClickContinueGame()
+    {
+        if (m_goPanel == null)
+            return;
+
+        if (!m_mpHelper.CloseOrContinue()) // don't close it if the panel helper disallows it (used when game is over and we need to show results instead of closing the panel)
+            return;
+
+        CloseMapPanel();
+
+        ContinueGame();
+    }
+
+    public void OnClickRetryGame()
+    {
+        if (m_goPanel == null)
+            return;
+
+        CloseMapPanel();
+
+        RetryGame();
+    }
+
+    public void OnClickNewGame()
+    {
+        if (m_goPanel == null)
+            return;
+
+        CloseMapPanel();
+
+        NewGame();
+    }
 
     public void UpdateScore()
     {
@@ -169,6 +199,11 @@ public class PanelManager : MonoBehaviour {
     public void ContinueGame()
     {
         GameSystem.Instance.ResumeGame();
+    }
+
+    public void RetryGame()
+    {
+        GameSystem.Instance.RetryGame();
     }
 
     public void NewGame()
