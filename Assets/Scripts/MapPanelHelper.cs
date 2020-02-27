@@ -131,8 +131,17 @@ public class MapPanelHelper : MonoBehaviour
             DisplayScore(true);
 
             m_tActionButton1.gameObject.SetActive(true);
-            m_actionButton1Text.text = Strings.RetryGame;
-            m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
+            if (levelScore == StaticGlobals.MaxLevelScore) // max score achieved
+            {
+                m_actionButton1Text.text = Strings.VictoryLap;
+                m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickVictoryLap);
+            }
+            else
+            {
+                m_actionButton1Text.text = Strings.RetryGame;
+                m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
+            }
+
 
             m_actionButton2Text.text = Strings.NewGame;
             m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickNewGame);
@@ -184,7 +193,9 @@ public class MapPanelHelper : MonoBehaviour
 
     private IEnumerator ShowLevelCompleteMessage()
     {
-        PopupMessage.ShowMessage(String.Format(Strings.LevelCompleteMessageFormat, GameSystem.Instance.LevelScore, (int)Time.fixedTime));
+        PopupMessage.ShowMessage(String.Format(
+            (GameSystem.Instance.LevelScore == StaticGlobals.MaxLevelScore) ? Strings.GoodLevelCompleteMessageFormat : Strings.BadLevelCompleteMessageFormat,
+            GameSystem.Instance.LevelScore, StaticGlobals.MaxLevelScore, (int)Time.fixedTime));
 
         yield return new WaitForSecondsRealtime(5f);
 
@@ -352,7 +363,7 @@ public class MapPanelHelper : MonoBehaviour
         if (m_phCur != null)
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.Visited);
-            m_phCur.SetScoreFactor(m_revealedLandmarksOnMap ? 50 : 100);
+            m_phCur.SetScoreFactor(((StaticGlobals.CurGameLevel > GameLevel.Smalltown) && m_revealedLandmarksOnMap) ? 50f : 100f);
         }
 
         // check if level is complete

@@ -70,6 +70,7 @@
     public const string ContinueGame = "Continue Game";
     public const string NewGame = "New Game";
     public const string RetryGame = "Try Again";
+    public const string VictoryLap = "Take a Victory Lap!";
     public const string CheckScore = "Check Score";
 
     // format strings
@@ -79,5 +80,6 @@
     public const string LandmarkCrossedMessageFormat = "You just crossed the  <i><color=#00ff00ff>\"{0}\"</color></i>  landmark!";
     public const string FirstLandmarkCrossedMessage = "\r\n\r\nWe will now demonstrate how to mark its position on the map.";
     public const string OtherLandmarkCrossedMessage = "\r\n\r\nDrag and drop the blinking marker to the appropriate position on the map.";
-    public const string LevelCompleteMessageFormat = "Congratulations! Level completed!\r\n\r\nYou scored {0} points in {1} seconds!";
+    public const string GoodLevelCompleteMessageFormat = "Congratulations! Level completed!\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
+    public const string BadLevelCompleteMessageFormat = "Level completed, but with some mistakes.\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
 }

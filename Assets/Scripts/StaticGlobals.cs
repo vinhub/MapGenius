@@ -17,7 +17,7 @@ public static class StaticGlobals
 {
     // general globals
     public const int MaxLevelScore = 100; // max score for a level
-    public static GameLevel CurGameLevel { get; set; } = GameLevel.Downtown;
+    public static GameLevel CurGameLevel { get; set; } = GameLevel.Smalltown;
     public static int TotalNumGames { get; set; } = 1; // total number of games attempted by the player so far
     public static float TotalScore { get; set; } = 0f; // player's total score so far
     public static float TotalScoreMax = StaticGlobals.MaxLevelScore * StaticGlobals.TotalNumGames;

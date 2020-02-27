@@ -174,6 +174,18 @@ public class PanelManager : MonoBehaviour {
         RetryGame();
     }
 
+    public void OnClickVictoryLap()
+    {
+        if (m_goPanel == null)
+            return;
+
+        CloseMapPanel();
+
+        ContinueGame();
+
+        //TODO: Celebration
+    }
+
     public void OnClickNewGame()
     {
         if (m_goPanel == null)
