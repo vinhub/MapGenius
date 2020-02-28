@@ -899,7 +899,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 864, y: -692.96436}
+  m_AnchoredPosition: {x: 864, y: -375}
   m_SizeDelta: {x: 1000, y: 610}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1480637309289242970
@@ -963,7 +963,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_Spacing: 10
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -1958,8 +1958,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -40}
-  m_SizeDelta: {x: 80, y: 50}
+  m_AnchoredPosition: {x: 120, y: -40}
+  m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &51350842703945289
 CanvasRenderer:
@@ -2000,7 +2000,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Map:'
+  m_Text: 'Level Map:'
 --- !u!1 &2680131351582972585
 GameObject:
   m_ObjectHideFlags: 0
@@ -2114,7 +2114,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 864, y: -145.98813}
+  m_AnchoredPosition: {x: 864, y: -40}
   m_SizeDelta: {x: 1200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4661947941704255184
@@ -2229,7 +2229,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MapGenius - from Redmond Labs - Level Map
+  m_Text: MapGenius - from Redmond Labs
 --- !u!1 &3065238231517818868
 GameObject:
   m_ObjectHideFlags: 0
@@ -2306,7 +2306,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MapGenius - from Redmond Labs - Instructions
+  m_Text: MapGenius - from Redmond Labs
 --- !u!1 &3238975835449005795
 GameObject:
   m_ObjectHideFlags: 0
@@ -2854,7 +2854,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -20}
   m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9012696034980776648
@@ -2969,25 +2969,12 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'MapGenius helps you recover the navigation and mapping skills you lost
-    when you started using Google Maps. Here''s how:
-
-
-    1. Drive the car using
-    the W, A, S, D, or arrow keys.
-
-
-    2. Whenever you cross a landmark, you will
-    be shown a map of the level wherein you will need to mark the location of that
-    landmark.
-
-
-    3. Your score will be updated after you have visited all the
-    landmarks. The score will depend upon how close your guesses are to the real
-    landmarks and your timing.
-
-
-    OK? Let''s get ready to rumble!'
+  m_Text: "MapGenius helps us recover mapping skills that were lost to apps. \n\nInstructions:\n\n1.
+    Drive the car using the W, A, S, D, or arrow keys.\n\n2. Whenever you cross a
+    landmark, you will be shown a map of the level wherein you will need to mark
+    the location of that landmark.\n\n3. Your score will be updated after you have
+    visited all the landmarks. The score will depend upon how close your guesses
+    are to the real landmarks and your timing.\n\nOK? Let's get ready to rumble!"
 --- !u!1 &3544753253850635089
 GameObject:
   m_ObjectHideFlags: 0
@@ -3023,7 +3010,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 864, y: -1239.9407}
+  m_AnchoredPosition: {x: 864, y: -710}
   m_SizeDelta: {x: 1000, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5261118922541630059
@@ -4055,7 +4042,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 864, y: -147.65479}
+  m_AnchoredPosition: {x: 864, y: -40}
   m_SizeDelta: {x: 1200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6227055970711878518
@@ -14209,7 +14196,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &761855679609666639
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14908,7 +14895,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 864, y: -1238.2739}
+  m_AnchoredPosition: {x: 864, y: -700}
   m_SizeDelta: {x: 1000, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &599592141155353067
@@ -15356,7 +15343,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 864, y: -692.96436}
+  m_AnchoredPosition: {x: 864, y: -370}
   m_SizeDelta: {x: 1600, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5760674818396098837

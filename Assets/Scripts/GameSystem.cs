@@ -12,7 +12,7 @@ public class GameSystem : MonoBehaviour
     private static GameSystem m_instance;
     public static GameSystem Instance { get { return m_instance; } }
 
-    private const int m_numLandmarks = 2;
+    private const int m_numLandmarks = 5;
     private const int m_landmarksLayerIndex = 11; // TODO: remove this hardcoding
     private const int m_UILayerIndex = 5; // TODO: remove this hardcoding
 
