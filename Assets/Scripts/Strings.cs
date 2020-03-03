@@ -21,6 +21,8 @@
     public const string MapPanelPath = "Panels/Map";
     public const string GameStatusScoreTextPath = "GameStatus/ScoreText";
     public const string GameStatusTimeTextPath = "GameStatus/TimeText";
+    public const string CarStatusSpeedTextPath = "CarStatus/SpeedText";
+    public const string CarStatusRevsTextPath = "CarStatus/RevsText";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
     public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
@@ -82,4 +84,6 @@
     public const string OtherLandmarkCrossedMessage = "\r\n\r\nDrag and drop the blinking marker to the appropriate position on the map.";
     public const string GoodLevelCompleteMessageFormat = "Congratulations! Level completed!\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
     public const string BadLevelCompleteMessageFormat = "Level completed, but with some mistakes.\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
+    public const string CarSpeedStatusFormat = "Speed: {0:F0}";
+    public const string CarRevsStatusFormat = "Revs: {0:F3}";
 }

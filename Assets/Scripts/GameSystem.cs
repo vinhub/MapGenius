@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Vehicles.Car;
 
 public class GameSystem : MonoBehaviour
@@ -24,6 +25,11 @@ public class GameSystem : MonoBehaviour
     public GameObject LandmarkPrefab; // prefab for landmarks
     public GameObject PlayermarksListItemPrefab; // prefab for playermarks list item in the map panel
 
+    // car status
+    private Text m_carSpeedText, m_carRevsText;
+    private float m_carStuckTime = 0f;
+    private int m_carMoveAttempts = 0;
+
     private Transform m_tRoadHolder, m_tNodeHolder, m_tLandmarks;
     private GameObject m_graph;
 
@@ -36,8 +42,8 @@ public class GameSystem : MonoBehaviour
     private bool m_firstLandmarkCrossed = true;
 
     // starting loation for the car
-    Vector3 m_carPosStart;
-    Quaternion m_carRotationStart;
+    private Vector3 m_carPosStart;
+    private Quaternion m_carRotationStart;
 
     private void Awake()
     {
@@ -51,6 +57,9 @@ public class GameSystem : MonoBehaviour
         GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
         m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
         m_tPlayermarksList = mainMenuUI.transform.Find(Strings.MapPanelPath).Find(Strings.PlayermarksPath);
+
+        m_carSpeedText = mainMenuUI.transform.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
+        m_carRevsText = mainMenuUI.transform.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
 
         InitGame();
     }
@@ -234,6 +243,25 @@ public class GameSystem : MonoBehaviour
     private void Update()
     {
         // global game update logic goes here
+        UpdateCarStatus();
+
+        // detect if car is stuck and show option to get it unstuck
+        if (IsCarStuck())
+            ShowOptionToGetCarUnstuck();
+
+        HandleHotkeys();
+    }
+
+    private void HandleHotkeys()
+    {
+        float getUnstuck = CrossPlatformInputManager.GetAxis("GetUnstuck");
+        float showMap = CrossPlatformInputManager.GetAxis("ShowMap");
+
+        Mathf.Clamp(getUnstuck, 0, 1);
+        Mathf.Clamp(showMap, 0, 1);
+
+        if (getUnstuck > 0f)
+            GetCarUnstuck();
     }
 
     private void OnGui()
@@ -405,5 +433,43 @@ public class GameSystem : MonoBehaviour
         StaticGlobals.SavedInitStateExists = false;
     }
 
+    private void UpdateCarStatus()
+    {
+        m_carSpeedText.text = String.Format(Strings.CarSpeedStatusFormat, m_carController.CurrentSpeed);
+        m_carRevsText.text = String.Format(Strings.CarRevsStatusFormat, m_carController.Revs);
+    }
 
+    private bool IsCarStuck()
+    {
+        // if car isn't moving, check if it may be stuck.
+        if (m_carController.CurrentSpeed < 0.1f)
+        {
+            if (m_carStuckTime < 0f)
+                m_carStuckTime = Time.time;
+
+            if (m_carController.AccelInput > 0f)
+                m_carMoveAttempts++;
+
+            // If player has made many attempts to get unstuck and it's stuck for a while then report it as stuck.
+            return (m_carMoveAttempts > 25) && (Time.time - m_carStuckTime >= 0.1f);
+        }
+        else
+        {
+            m_carStuckTime = -1f;
+            m_carMoveAttempts = 0;
+        }
+
+        return false;
+    }
+
+    private void ShowOptionToGetCarUnstuck()
+    {
+        Debug.Log("Car is stuck: Speed: " + m_carController.CurrentSpeed + ", Revs: " + m_carController.Revs);
+        // TODO: Alert.ShowAlert();
+    }
+
+    private void GetCarUnstuck()
+    {
+        m_carController.transform.Translate(new Vector3(10, 0, 10));
+    }
 }
