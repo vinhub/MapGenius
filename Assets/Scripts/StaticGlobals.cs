@@ -25,6 +25,6 @@ public static class StaticGlobals
     // saved game state related items
     public static bool SavedInitStateExists { get; set; }
     public static List<SavedLandmark> SavedLandmarks { get; set; }
-    public static Vector3 SavedCarPosStart { get; set; }
-    public static Quaternion SavedCarRotationStart { get; set; }
+    public static Vector3 SavedCarPos  { get; set; }
+    public static Quaternion SavedCarRotation  { get; set; }
 }

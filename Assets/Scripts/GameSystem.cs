@@ -41,9 +41,11 @@ public class GameSystem : MonoBehaviour
     private Transform m_tPlayermarksList;
     private bool m_firstLandmarkCrossed = true;
 
-    // starting loation for the car
-    private Vector3 m_carPosStart;
-    private Quaternion m_carRotationStart;
+    // current car location
+    private Vector3 m_carPosCur;
+    private Quaternion m_carRotationCur;
+    private CiDyRoad m_roadCur;
+    private int m_iOrigPointCur;
 
     private void Awake()
     {
@@ -93,8 +95,8 @@ public class GameSystem : MonoBehaviour
         }
 
         // place car some distance from the first landmark
-        Car.transform.position = CarCameraRig.transform.position = m_carPosStart;
-        Car.transform.rotation = CarCameraRig.transform.rotation = m_carRotationStart;
+        Car.transform.position = CarCameraRig.transform.position = m_carPosCur;
+        Car.transform.rotation = CarCameraRig.transform.rotation = m_carRotationCur;
 
         // init score
         SetScore(0);
@@ -102,8 +104,8 @@ public class GameSystem : MonoBehaviour
 
     private void InitGameState()
     {
-        m_carPosStart = Vector3.forward;
-        m_carRotationStart = Quaternion.identity;
+        m_carPosCur = Vector3.forward;
+        m_carRotationCur = Quaternion.identity;
 
         // select required number of roads from the road network making sure they are geographically distributed 
         CiDyRoad[] roadsSelected = new CiDyRoad[m_numLandmarks];
@@ -167,10 +169,10 @@ public class GameSystem : MonoBehaviour
             // add a landmark to the area using the landmark prefab and place it at the above location
             CreateLandmark(iLandmark, landmarkPos, rotation);
 
-            // for the start landmark, use a position about 1/3 of the way along the road as the car position, looking along the road
+            // use the start landmark to calculate starting car position
             if (iLandmark == iLandmarkStart)
             {
-                CalcCarPos(road);
+                CalcStartingCarLocation(road);
             }
         }
     }
@@ -199,10 +201,12 @@ public class GameSystem : MonoBehaviour
         goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<Text>().text = landmarkName;
     }
 
-    private void CalcCarPos(CiDyRoad road)
+    private void CalcStartingCarLocation(CiDyRoad road)
     {
-        m_carPosStart = road.origPoints[road.origPoints.Length / 3];
-        m_carRotationStart = Quaternion.LookRotation(road.origPoints[road.origPoints.Length / 3 + 1] - m_carPosStart, Vector3.up);
+        // use a position about 1/3 of the way along the road as the car position, looking along the road
+        m_carPosCur = road.origPoints[road.origPoints.Length / 3];
+        m_carRotationCur = Quaternion.LookRotation(road.origPoints[road.origPoints.Length / 3 + 1] - m_carPosCur, Vector3.up);
+        m_roadCur = road;
     }
 
     // divide the whole map into numSectionsX x numSectionsZ sections, calc which section the point belongs to, calc its weight based on that
@@ -412,8 +416,8 @@ public class GameSystem : MonoBehaviour
             StaticGlobals.SavedLandmarks.Add(sl);
         }
 
-        StaticGlobals.SavedCarPosStart = m_carPosStart;
-        StaticGlobals.SavedCarRotationStart = m_carRotationStart;
+        StaticGlobals.SavedCarPos = m_carPosCur;
+        StaticGlobals.SavedCarRotation = m_carRotationCur;
 
         StaticGlobals.SavedInitStateExists = true;
     }
@@ -425,8 +429,8 @@ public class GameSystem : MonoBehaviour
             CreateLandmark(iLandmark, StaticGlobals.SavedLandmarks[iLandmark].pos, StaticGlobals.SavedLandmarks[iLandmark].rotation);
         }
 
-        m_carPosStart = StaticGlobals.SavedCarPosStart;
-        m_carRotationStart = StaticGlobals.SavedCarRotationStart;
+        m_carPosCur = StaticGlobals.SavedCarPos;
+        m_carRotationCur = StaticGlobals.SavedCarRotation;
 
         StaticGlobals.SavedLandmarks.Clear();
         StaticGlobals.SavedLandmarks = null;
@@ -437,6 +441,49 @@ public class GameSystem : MonoBehaviour
     {
         m_carSpeedText.text = String.Format(Strings.CarSpeedStatusFormat, m_carController.CurrentSpeed);
         m_carRevsText.text = String.Format(Strings.CarRevsStatusFormat, m_carController.Revs);
+
+        // we need to remember the origPoint closest to the car at all times. That way, when we go offroad and car gets stuck, the player can hit
+        // the GetUnstuck hotkey and we can bring them back to the last origPoint they were at before they left the road.
+
+        // determine origPoint closest to the car
+        // check distance from the current origPoint
+        // do
+        // check distance from the next origPoint
+        // if we have run out of origPoints on this road, go to the first origPoint on the adjacent road.
+        // while (distance from next origPoint is smaller than current origPoint)
+        // if distance was increasing, go in the other direction and do the same.
+        // if distance was still increasing, it means car has gone off road
+        // otherwise, remember the road and the origPoint and the current car location
+        CiDyRoad road = m_roadCur;
+        int iOrigPoint = m_iOrigPointCur;
+
+        m_roadCur = road;
+        m_iOrigPointCur = iOrigPoint;
+        m_carPosCur = Car.transform.position;
+        m_carRotationCur = Car.transform.rotation;
+
+        // if car isn on the current road, calculate which road it is on
+        if (!IsCarOnRoad(m_roadCur))
+        {
+            CiDyRoad roadT = CalcCarRoad();
+
+            // remember road if car is still on the road (otherwise it has gone off road)
+            if (roadT != null)
+                m_roadCur = roadT;
+        }
+    }
+
+    // is the car on the given road
+    private bool IsCarOnRoad(CiDyRoad road)
+    {
+        bool isCarOnRoad = false;
+
+        return isCarOnRoad;
+    }
+
+    private CiDyRoad CalcCarRoad()
+    {
+        throw new NotImplementedException();
     }
 
     private bool IsCarStuck()
@@ -470,6 +517,13 @@ public class GameSystem : MonoBehaviour
 
     private void GetCarUnstuck()
     {
+        // find the road closest to the car and move the car there
+        foreach (Transform tRoad in m_tRoadHolder)
+        {
+            //tRoad.GetComponent<CiDyRoad>().;
+        }
+
+
         m_carController.transform.Translate(new Vector3(10, 0, 10));
     }
 }
