@@ -450,20 +450,18 @@ public class GameSystem : MonoBehaviour
         m_carSpeedText.text = String.Format(Strings.CarSpeedStatusFormat, m_carController.CurrentSpeed);
         m_carRevsText.text = String.Format(Strings.CarRevsStatusFormat, m_carController.Revs);
 
-        // we need to remember the origPoint closest to the car at all times. That way, when we go offroad and car gets stuck, the player can hit
-        // the GetUnstuck hotkey and we can bring them back to the last origPoint they were at before they left the road.
-
         // determine road and origPoint closest to the car
         UpdateOnTrackInfo();
     }
 
+    // we need to remember the origPoint closest to the car at all times. That way, when we go offroad and car gets stuck, the player can hit
+    // the GetUnstuck hotkey and we can bring them back to the last origPoint they were at before they left the road.
     private void UpdateOnTrackInfo()
     {
-        // If the car is off the road, we should not update the roadCur and iOrigPointCur.
-        // This is an optimization as well as because, 
-        // when the player wants to bring the car back on track, we want to bring them to where they left the road.
+        // If the car is off track, we should not update the roadCur and iOrigPointCur.
+        // This is an optimization as well as because when the player wants to bring the car back on track, we want to bring them to where they left the road.
         // We don't want to bring them to the closest origPoint at that time (which could be in unfamiliar territory because they may have wandered off quite a bit.)
-        if (IsCarOffRoad())
+        if (IsCarOffTrack())
             return;
 
         CiDyRoad roadNext = m_roadOnTrack;
@@ -523,6 +521,7 @@ public class GameSystem : MonoBehaviour
     {
         float distNext;
 
+        // TODO: connectedRoads has nulls.
         foreach (CiDyRoad road in node.connectedRoads)
         {
             float dist1 = CarDistanceFromOrigPoint(road, 0);
@@ -550,14 +549,19 @@ public class GameSystem : MonoBehaviour
 
     private float CarDistanceFromOrigPoint(CiDyRoad road, int iOrigPoint)
     {
+        Debug.Assert(road != null);
         return Vector3.Distance(Car.transform.position, road.origPoints[iOrigPoint]);
     }
 
-    private bool IsCarOffRoad()
+    private bool IsCarOffTrack()
     {
         // the car is off road if the distance from the car to its "on track" position is more than half the width of the road.
         Vector3 positionOnTrack = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
-        return Vector3.Cross(m_rotationOnTrack * positionOnTrack, Car.transform.position - positionOnTrack).magnitude > (m_roadOnTrack.width * 1.1f / 2f);
+        float distFromTrack = Vector3.Cross(m_rotationOnTrack * positionOnTrack, Car.transform.position - positionOnTrack).magnitude;
+
+        Debug.Log("Distance from track: " + distFromTrack.ToString() + ", width: " + m_roadOnTrack.width.ToString());
+
+        return distFromTrack > (m_roadOnTrack.width * 1.1f / 2f);
     }
 
     private bool IsCarStuck()
