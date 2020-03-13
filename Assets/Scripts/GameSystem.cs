@@ -42,17 +42,16 @@ public class GameSystem : MonoBehaviour
     private bool m_firstLandmarkCrossed = true;
 
     // current car location
-    private Vector3 m_carPosCur = Vector3.forward;
-    private Quaternion m_carRotationCur = Quaternion.identity;
-    private CiDyRoad m_roadCur;
-    private int m_iOrigPointCur = 0;
-    private Transform m_tCarLocator;
+    private Quaternion m_rotationOnTrack = Quaternion.identity;
+    private CiDyRoad m_roadOnTrack;
+    private int m_iOrigPointOnTrack = 0;
+    private Transform m_tOnTrackLocator;
 
     private void Awake()
     {
         m_instance = this;
 
-        m_tCarLocator = GameObject.Find(Strings.CarLocatorPath).transform;
+        m_tOnTrackLocator = GameObject.Find(Strings.CarLocatorPath).transform;
     }
 
     private void Start()
@@ -98,8 +97,8 @@ public class GameSystem : MonoBehaviour
         }
 
         // place car some distance from the first landmark
-        Car.transform.position = CarCameraRig.transform.position = m_carPosCur;
-        Car.transform.rotation = CarCameraRig.transform.rotation = m_carRotationCur;
+        Car.transform.position = CarCameraRig.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
+        Car.transform.rotation = CarCameraRig.transform.rotation = m_rotationOnTrack;
 
         // init score
         SetScore(0);
@@ -204,10 +203,10 @@ public class GameSystem : MonoBehaviour
     private void CalcStartingCarLocation(CiDyRoad road)
     {
         // use a position about 1/3 of the way along the road as the car position, looking along the road
-        m_roadCur = road;
-        m_iOrigPointCur = road.origPoints.Length / 3;
-        m_carPosCur = road.origPoints[m_iOrigPointCur];
-        m_carRotationCur = Quaternion.LookRotation(road.origPoints[road.origPoints.Length / 3 + 1] - m_carPosCur, Vector3.up);
+        m_roadOnTrack = road;
+        m_iOrigPointOnTrack = road.origPoints.Length / 3;
+        Debug.Assert(road.origPoints.Length >= 3);
+        m_rotationOnTrack = Quaternion.LookRotation(road.origPoints[m_iOrigPointOnTrack + 1] - road.origPoints[m_iOrigPointOnTrack], Vector3.up);
     }
 
     // divide the whole map into numSectionsX x numSectionsZ sections, calc which section the point belongs to, calc its weight based on that
@@ -256,8 +255,11 @@ public class GameSystem : MonoBehaviour
 
         HandleHotkeys();
 
-        if (m_roadCur)
-            m_tCarLocator.transform.position = m_roadCur.origPoints[m_iOrigPointCur];
+        if (m_roadOnTrack)
+        {
+            m_tOnTrackLocator.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
+            m_tOnTrackLocator.transform.rotation = m_rotationOnTrack;
+        }
     }
 
     private void HandleHotkeys()
@@ -420,10 +422,9 @@ public class GameSystem : MonoBehaviour
             StaticGlobals.SavedLandmarks.Add(sl);
         }
 
-        StaticGlobals.SavedCarPos = m_carPosCur;
-        StaticGlobals.SavedCarRotation = m_carRotationCur;
-        StaticGlobals.SavedRoad = m_roadCur;
-        StaticGlobals.SavedOrigPointIndex = m_iOrigPointCur;
+        StaticGlobals.SavedRoadOnTrack = m_roadOnTrack;
+        StaticGlobals.SavedOrigPointIndexOnTrack = m_iOrigPointOnTrack;
+        StaticGlobals.SavedRotationOnTrack = m_rotationOnTrack;
 
         StaticGlobals.SavedInitStateExists = true;
     }
@@ -435,10 +436,9 @@ public class GameSystem : MonoBehaviour
             CreateLandmark(iLandmark, StaticGlobals.SavedLandmarks[iLandmark].pos, StaticGlobals.SavedLandmarks[iLandmark].rotation);
         }
 
-        m_carPosCur = StaticGlobals.SavedCarPos;
-        m_carRotationCur = StaticGlobals.SavedCarRotation;
-        m_roadCur = StaticGlobals.SavedRoad;
-        m_iOrigPointCur = StaticGlobals.SavedOrigPointIndex;
+        m_roadOnTrack = StaticGlobals.SavedRoadOnTrack;
+        m_iOrigPointOnTrack = StaticGlobals.SavedOrigPointIndexOnTrack;
+        m_rotationOnTrack = StaticGlobals.SavedRotationOnTrack;
 
         StaticGlobals.SavedLandmarks.Clear();
         StaticGlobals.SavedLandmarks = null;
@@ -453,14 +453,11 @@ public class GameSystem : MonoBehaviour
         // we need to remember the origPoint closest to the car at all times. That way, when we go offroad and car gets stuck, the player can hit
         // the GetUnstuck hotkey and we can bring them back to the last origPoint they were at before they left the road.
 
-        m_carPosCur = Car.transform.position;
-        m_carRotationCur = Car.transform.rotation;
-
         // determine road and origPoint closest to the car
-        UpdateRoadAndOrigPoint();
+        UpdateOnTrackInfo();
     }
 
-    private void UpdateRoadAndOrigPoint()
+    private void UpdateOnTrackInfo()
     {
         // If the car is off the road, we should not update the roadCur and iOrigPointCur.
         // This is an optimization as well as because, 
@@ -469,12 +466,12 @@ public class GameSystem : MonoBehaviour
         if (IsCarOffRoad())
             return;
 
-        CiDyRoad roadNext = m_roadCur;
-        int iOrigPointNext = m_iOrigPointCur;
+        CiDyRoad roadNext = m_roadOnTrack;
+        int iOrigPointNext = m_iOrigPointOnTrack;
         float distNext = int.MaxValue;
 
         // check distance from the current origPoint
-        float dist = CarDistanceFromOrigPoint(m_roadCur, m_iOrigPointCur);
+        float dist = CarDistanceFromOrigPoint(m_roadOnTrack, m_iOrigPointOnTrack);
 
         // do
         // check distance from the next origPoint
@@ -485,35 +482,37 @@ public class GameSystem : MonoBehaviour
         // otherwise, the road and the origPoint get updated
         do
         {
-            m_roadCur = roadNext;
-            m_iOrigPointCur = iOrigPointNext;
+            m_roadOnTrack = roadNext;
+            m_iOrigPointOnTrack = iOrigPointNext;
+            m_rotationOnTrack = Car.transform.rotation;
 
             ++iOrigPointNext;
 
-            if (iOrigPointNext >= m_roadCur.origPoints.Length)
+            if (iOrigPointNext >= m_roadOnTrack.origPoints.Length)
             {
                 // ran out of the road, find next road
-                CalcNextRoad(dist, m_roadCur.nodeB, ref roadNext, ref iOrigPointNext);
+                CalcNextRoad(dist, m_roadOnTrack.nodeB, ref roadNext, ref iOrigPointNext);
             }
 
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
         } while (distNext < dist);
 
         // go in reverse direction and do the same thing
-        roadNext = m_roadCur;
-        iOrigPointNext = m_iOrigPointCur;
+        roadNext = m_roadOnTrack;
+        iOrigPointNext = m_iOrigPointOnTrack;
 
         do
         {
-            m_roadCur = roadNext;
-            m_iOrigPointCur = iOrigPointNext;
+            m_roadOnTrack = roadNext;
+            m_iOrigPointOnTrack = iOrigPointNext;
+            m_rotationOnTrack = Car.transform.rotation;
 
             --iOrigPointNext;
 
             if (iOrigPointNext < 0)
             {
                 // ran out of the road, find prev road
-                CalcNextRoad(dist, m_roadCur.nodeA, ref roadNext, ref iOrigPointNext);
+                CalcNextRoad(dist, m_roadOnTrack.nodeA, ref roadNext, ref iOrigPointNext);
             }
 
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
@@ -551,14 +550,14 @@ public class GameSystem : MonoBehaviour
 
     private float CarDistanceFromOrigPoint(CiDyRoad road, int iOrigPoint)
     {
-        return Vector3.Distance(m_carPosCur, road.origPoints[iOrigPoint]);
+        return Vector3.Distance(Car.transform.position, road.origPoints[iOrigPoint]);
     }
 
     private bool IsCarOffRoad()
     {
-        // the car is off road if the distance from the car to the center of the road is more than half the width of the road.
-        // we will approximate that as: if the distance from the car to the closest origPoint is more than the full width of the road.
-        return (CarDistanceFromOrigPoint(m_roadCur, m_iOrigPointCur) > m_roadCur.width);
+        // the car is off road if the distance from the car to its "on track" position is more than half the width of the road.
+        Vector3 positionOnTrack = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
+        return Vector3.Cross(m_rotationOnTrack * positionOnTrack, Car.transform.position - positionOnTrack).magnitude > (m_roadOnTrack.width * 1.1f / 2f);
     }
 
     private bool IsCarStuck()
@@ -592,13 +591,8 @@ public class GameSystem : MonoBehaviour
 
     private void GetBackOnTrack()
     {
-        // find the road closest to the car and move the car there
-        foreach (Transform tRoad in m_tRoadHolder)
-        {
-            //tRoad.GetComponent<CiDyRoad>().;
-        }
-
-        m_carController.transform.position = m_roadCur.origPoints[m_iOrigPointCur];
-        m_carController.transform.rotation = m_carRotationCur;
+        m_carController.StopCar();
+        m_carController.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
+        m_carController.transform.rotation = m_rotationOnTrack;
     }
 }
