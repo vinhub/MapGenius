@@ -27,4 +27,6 @@ public static class StaticGlobals
     public static List<SavedLandmark> SavedLandmarks { get; set; }
     public static Vector3 SavedCarPos  { get; set; }
     public static Quaternion SavedCarRotation  { get; set; }
+    public static CiDyRoad SavedRoad { get; set; }
+    public static int SavedOrigPointIndex { get; set; }
 }
