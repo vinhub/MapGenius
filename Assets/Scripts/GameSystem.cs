@@ -30,6 +30,11 @@ public class GameSystem : MonoBehaviour
     private float m_carStuckTime = 0f;
     private int m_carMoveAttempts = 0;
 
+#if DEBUG
+    // debug info
+    private Text m_debugText;
+#endif
+
     private Transform m_tRoadHolder, m_tNodeHolder, m_tLandmarks;
     private GameObject m_graph;
 
@@ -64,6 +69,10 @@ public class GameSystem : MonoBehaviour
 
         m_carSpeedText = mainMenuUI.transform.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
         m_carRevsText = mainMenuUI.transform.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
+
+#if DEBUG
+        m_debugText = mainMenuUI.transform.Find(Strings.DebugTextPath).GetComponent<Text>();
+#endif 
 
         InitGame();
     }
@@ -244,7 +253,7 @@ public class GameSystem : MonoBehaviour
         m_instance = null;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         // global game update logic goes here
         UpdateCarStatus();
@@ -464,12 +473,12 @@ public class GameSystem : MonoBehaviour
         if (IsCarOffTrack())
             return;
 
-        CiDyRoad roadNext = m_roadOnTrack;
-        int iOrigPointNext = m_iOrigPointOnTrack;
-        float distNext = int.MaxValue;
-
         // check distance from the current origPoint
         float dist = CarDistanceFromOrigPoint(m_roadOnTrack, m_iOrigPointOnTrack);
+
+        CiDyRoad roadNext = m_roadOnTrack;
+        int iOrigPointNext = m_iOrigPointOnTrack;
+        float distNext = dist;
 
         // do
         // check distance from the next origPoint
@@ -480,6 +489,7 @@ public class GameSystem : MonoBehaviour
         // otherwise, the road and the origPoint get updated
         do
         {
+            dist = distNext;
             m_roadOnTrack = roadNext;
             m_iOrigPointOnTrack = iOrigPointNext;
             m_rotationOnTrack = Car.transform.rotation;
@@ -492,15 +502,20 @@ public class GameSystem : MonoBehaviour
                 CalcNextRoad(dist, m_roadOnTrack.nodeB, ref roadNext, ref iOrigPointNext);
             }
 
+            if ((roadNext == null) || (iOrigPointNext < 0) || (iOrigPointNext >= roadNext.origPoints.Length))
+                break;
+
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
         } while (distNext < dist);
 
         // go in reverse direction and do the same thing
+        distNext = dist;
         roadNext = m_roadOnTrack;
         iOrigPointNext = m_iOrigPointOnTrack;
 
         do
         {
+            dist = distNext;
             m_roadOnTrack = roadNext;
             m_iOrigPointOnTrack = iOrigPointNext;
             m_rotationOnTrack = Car.transform.rotation;
@@ -513,17 +528,24 @@ public class GameSystem : MonoBehaviour
                 CalcNextRoad(dist, m_roadOnTrack.nodeA, ref roadNext, ref iOrigPointNext);
             }
 
+            if ((roadNext == null) || (iOrigPointNext < 0) || (iOrigPointNext >= roadNext.origPoints.Length))
+                break;
+
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
         } while (distNext <= dist);
+
+        ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
     }
 
     private void CalcNextRoad(float dist, CiDyNode node, ref CiDyRoad roadNext, ref int iOrigPointNext)
     {
         float distNext;
 
-        // TODO: connectedRoads has nulls.
         foreach (CiDyRoad road in node.connectedRoads)
         {
+            if ((road == null) || (road.origPoints == null) || (road.origPoints.Length == 0))
+                continue;
+
             float dist1 = CarDistanceFromOrigPoint(road, 0);
             float dist2 = CarDistanceFromOrigPoint(road, road.origPoints.Length - 1);
             int iOrigPoint;
@@ -557,9 +579,14 @@ public class GameSystem : MonoBehaviour
     {
         // the car is off road if the distance from the car to its "on track" position is more than half the width of the road.
         Vector3 positionOnTrack = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
-        float distFromTrack = Vector3.Cross(m_rotationOnTrack * positionOnTrack, Car.transform.position - positionOnTrack).magnitude;
+        Vector3 directionOnTrack = (m_iOrigPointOnTrack > 0) ? (m_roadOnTrack.origPoints[m_iOrigPointOnTrack - 1] - positionOnTrack) : (positionOnTrack - m_roadOnTrack.origPoints[m_iOrigPointOnTrack + 1]);
+        //Vector3 vectorOnTrack = m_rotationOnTrack * positionOnTrack;
+        //float distFromTrack = Vector3.Cross(vectorOnTrack, Car.transform.position - positionOnTrack).magnitude / vectorOnTrack.magnitude;
 
-        Debug.Log("Distance from track: " + distFromTrack.ToString() + ", width: " + m_roadOnTrack.width.ToString());
+        Ray ray = new Ray(positionOnTrack, directionOnTrack);
+        float distFromTrack = Vector3.Cross(ray.direction, Car.transform.position - ray.origin).magnitude;
+
+        ShowDebugInfo("dist: " + distFromTrack.ToString("F2") + ", threshold: " + (m_roadOnTrack.width * 1.1f / 2f));
 
         return distFromTrack > (m_roadOnTrack.width * 1.1f / 2f);
     }
@@ -598,5 +625,14 @@ public class GameSystem : MonoBehaviour
         m_carController.StopCar();
         m_carController.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
         m_carController.transform.rotation = m_rotationOnTrack;
+    }
+
+    private void ShowDebugInfo(string info)
+    {
+#if DEBUG
+        m_debugText.text = info;
+#endif
+
+        Debug.Log(info);
     }
 }

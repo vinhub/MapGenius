@@ -23,6 +23,7 @@
     public const string GameStatusTimeTextPath = "GameStatus/TimeText";
     public const string CarStatusSpeedTextPath = "CarStatus/SpeedText";
     public const string CarStatusRevsTextPath = "CarStatus/RevsText";
+    public const string DebugTextPath = "DebugStatus/DebugText";
     public const string CarLocatorPath = "UI/CarLocator";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
