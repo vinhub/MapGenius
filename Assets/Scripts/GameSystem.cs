@@ -500,10 +500,9 @@ public class GameSystem : MonoBehaviour
             {
                 // ran out of the road, find next road
                 CalcNextRoad(dist, m_roadOnTrack.nodeB, ref roadNext, ref iOrigPointNext);
+                if ((roadNext == null) || (iOrigPointNext < 0) || (iOrigPointNext >= roadNext.origPoints.Length))
+                    break;
             }
-
-            if ((roadNext == null) || (iOrigPointNext < 0) || (iOrigPointNext >= roadNext.origPoints.Length))
-                break;
 
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
         } while (distNext < dist);
@@ -526,13 +525,12 @@ public class GameSystem : MonoBehaviour
             {
                 // ran out of the road, find prev road
                 CalcNextRoad(dist, m_roadOnTrack.nodeA, ref roadNext, ref iOrigPointNext);
+                if ((roadNext == null) || (iOrigPointNext < 0) || (iOrigPointNext >= roadNext.origPoints.Length))
+                    break;
             }
 
-            if ((roadNext == null) || (iOrigPointNext < 0) || (iOrigPointNext >= roadNext.origPoints.Length))
-                break;
-
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
-        } while (distNext <= dist);
+        } while (distNext < dist);
 
         ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
     }
