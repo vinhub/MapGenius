@@ -564,6 +564,7 @@ public class GameSystem : MonoBehaviour
             {
                 roadNext = road;
                 iOrigPointNext = iOrigPoint;
+                dist = distNext;
                 continue;
             }
         }
