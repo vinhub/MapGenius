@@ -553,24 +553,24 @@ public class GameSystem : MonoBehaviour
 
         foreach (CiDyRoad road in node.connectedRoads)
         {
-            if ((road == null) || (road.origPoints == null) || (road.origPoints.Length == 0))
+            if ((road == null) || (road.origPoints == null) || (road.origPoints.Length < 3))
                 continue;
 
             if (road.name == roadInName)
                 continue;
 
-            float dist1 = CarDistanceFromOrigPoint(road, 0);
-            float dist2 = CarDistanceFromOrigPoint(road, road.origPoints.Length - 1);
+            float dist1 = CarDistanceFromOrigPoint(road, 1);
+            float dist2 = CarDistanceFromOrigPoint(road, road.origPoints.Length - 2);
             int iOrigPoint;
             if (dist1 < dist2)
             {
                 distNext = dist1;
-                iOrigPoint = 0;
+                iOrigPoint = 1;
             }
             else
             {
                 distNext = dist2;
-                iOrigPoint = road.origPoints.Length - 1;
+                iOrigPoint = road.origPoints.Length - 2;
             }
 
             if (distNext <= dist)
