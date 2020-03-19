@@ -56,7 +56,7 @@ public class GameSystem : MonoBehaviour
     {
         m_instance = this;
 
-        m_tOnTrackLocator = GameObject.Find(Strings.CarLocatorPath).transform;
+        m_tOnTrackLocator = GameObject.Find(Strings.OnTrackrLocatorPath).transform;
     }
 
     private void Start()
@@ -591,8 +591,6 @@ public class GameSystem : MonoBehaviour
 
     private bool IsCarOffTrack()
     {
-        return false;
-
         // the car is off road if the distance from the car to its "on track" position is more than half the width of the road.
         Vector3 positionOnTrack = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
         Vector3 directionOnTrack = (m_iOrigPointOnTrack > 0) ? (m_roadOnTrack.origPoints[m_iOrigPointOnTrack - 1] - positionOnTrack) : (positionOnTrack - m_roadOnTrack.origPoints[m_iOrigPointOnTrack + 1]);
