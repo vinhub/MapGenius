@@ -70,9 +70,10 @@ public class GameSystem : MonoBehaviour
         m_carSpeedText = mainMenuUI.transform.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
         m_carRevsText = mainMenuUI.transform.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
 
-#if DEBUG
-        m_debugText = mainMenuUI.transform.Find(Strings.DebugTextPath).GetComponent<Text>();
-#endif 
+        if (Debug.isDebugBuild)
+        {
+            m_debugText = mainMenuUI.transform.Find(Strings.DebugTextPath).GetComponent<Text>();
+        }
 
         InitGame();
     }
@@ -496,12 +497,17 @@ public class GameSystem : MonoBehaviour
 
             ++iOrigPointNext;
 
-            if (iOrigPointNext >= m_roadOnTrack.origPoints.Length)
+            if (iOrigPointNext >= roadNext.origPoints.Length)
             {
                 // ran out of the road, find next road
-                CalcNextRoad(dist, m_roadOnTrack.nodeB, ref roadNext, ref iOrigPointNext);
-                if ((roadNext == null) || (iOrigPointNext < 0) || (iOrigPointNext >= roadNext.origPoints.Length))
-                    break;
+                CalcNextRoad(dist, roadNext.nodeB, ref roadNext, ref iOrigPointNext);
+                if (iOrigPointNext < roadNext.origPoints.Length) // found next road
+                {
+                    m_roadOnTrack = roadNext;
+                    m_iOrigPointOnTrack = iOrigPointNext;
+                }
+
+                break;
             }
 
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
@@ -524,9 +530,14 @@ public class GameSystem : MonoBehaviour
             if (iOrigPointNext < 0)
             {
                 // ran out of the road, find prev road
-                CalcNextRoad(dist, m_roadOnTrack.nodeA, ref roadNext, ref iOrigPointNext);
-                if ((roadNext == null) || (iOrigPointNext < 0) || (iOrigPointNext >= roadNext.origPoints.Length))
-                    break;
+                CalcNextRoad(dist, roadNext.nodeA, ref roadNext, ref iOrigPointNext);
+                if (iOrigPointNext >= 0) // found prev road
+                {
+                    m_roadOnTrack = roadNext;
+                    m_iOrigPointOnTrack = iOrigPointNext;
+                }
+
+                break;
             }
 
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
@@ -538,10 +549,14 @@ public class GameSystem : MonoBehaviour
     private void CalcNextRoad(float dist, CiDyNode node, ref CiDyRoad roadNext, ref int iOrigPointNext)
     {
         float distNext;
+        string roadInName = roadNext.name;
 
         foreach (CiDyRoad road in node.connectedRoads)
         {
             if ((road == null) || (road.origPoints == null) || (road.origPoints.Length == 0))
+                continue;
+
+            if (road.name == roadInName)
                 continue;
 
             float dist1 = CarDistanceFromOrigPoint(road, 0);
@@ -558,7 +573,7 @@ public class GameSystem : MonoBehaviour
                 iOrigPoint = road.origPoints.Length - 1;
             }
 
-            if (distNext < dist)
+            if (distNext <= dist)
             {
                 roadNext = road;
                 iOrigPointNext = iOrigPoint;
@@ -576,6 +591,8 @@ public class GameSystem : MonoBehaviour
 
     private bool IsCarOffTrack()
     {
+        return false;
+
         // the car is off road if the distance from the car to its "on track" position is more than half the width of the road.
         Vector3 positionOnTrack = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
         Vector3 directionOnTrack = (m_iOrigPointOnTrack > 0) ? (m_roadOnTrack.origPoints[m_iOrigPointOnTrack - 1] - positionOnTrack) : (positionOnTrack - m_roadOnTrack.origPoints[m_iOrigPointOnTrack + 1]);
@@ -628,9 +645,10 @@ public class GameSystem : MonoBehaviour
 
     private void ShowDebugInfo(string info)
     {
-#if DEBUG
-        m_debugText.text = info;
-#endif
+        if (Debug.isDebugBuild)
+        {
+            m_debugText.text = info;
+        }
 
         Debug.Log(info);
     }
