@@ -591,18 +591,31 @@ public class GameSystem : MonoBehaviour
 
     private bool IsCarOffTrack()
     {
-        // the car is off road if the distance from the car to its "on track" position is more than half the width of the road.
-        Vector3 positionOnTrack = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
-        Vector3 directionOnTrack = (m_iOrigPointOnTrack > 0) ? (m_roadOnTrack.origPoints[m_iOrigPointOnTrack - 1] - positionOnTrack) : (positionOnTrack - m_roadOnTrack.origPoints[m_iOrigPointOnTrack + 1]);
-        //Vector3 vectorOnTrack = m_rotationOnTrack * positionOnTrack;
-        //float distFromTrack = Vector3.Cross(vectorOnTrack, Car.transform.position - positionOnTrack).magnitude / vectorOnTrack.magnitude;
+        Vector3 carPosition = Car.transform.position;
+        Collider roadCollider = m_roadOnTrack.GetComponent<Collider>();
+        Vector3 closestPoint = roadCollider.ClosestPointOnBounds(carPosition);
 
-        Ray ray = new Ray(positionOnTrack, directionOnTrack);
-        float distFromTrack = Vector3.Cross(ray.direction, Car.transform.position - ray.origin).magnitude;
+        if (Vector3.Distance(closestPoint, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so we'll say it's on track
+            return false;
 
-        ShowDebugInfo("dist: " + distFromTrack.ToString("F2") + ", threshold: " + (m_roadOnTrack.width * 1.1f / 2f));
+        // check if it is on a different road
+        foreach (Transform tRoad in m_tRoadHolder)
+        {
+            if (tRoad == m_roadOnTrack.transform)
+                continue;
 
-        return distFromTrack > (m_roadOnTrack.width * 1.1f / 2f);
+            roadCollider = tRoad.GetComponent<Collider>();
+            closestPoint = roadCollider.ClosestPointOnBounds(carPosition);
+
+            if (Vector3.Distance(closestPoint, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so it is on or close to this road
+            {
+                m_roadOnTrack = tRoad.GetComponent<CiDyRoad>();
+                m_iOrigPointOnTrack = m_roadOnTrack.origPoints.Length / 2; // just place it at half the length for now, it will get adjusted to the closest point
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private bool IsCarStuck()
