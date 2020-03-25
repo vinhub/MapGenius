@@ -42,6 +42,7 @@
     public const string ShowLandmarksLabelPath = "Window/MapPanel/PlayermarksPanel/Hint/Toggle/Label";
     public const string PopupWindowPath = "Window";
     public const string PopupMessageTextPath = "Window/Popup/Background/MessageText";
+    public const string FloatingMessageTextPath = "FloatingMessage";
     public const string LandmarkOnMap = "LandmarkOnMap";
     public const string ButtonClickAudioSourceName = "ButtonClickAudioSource";
     public const string LandmarksPath = "Landmarks";
@@ -88,4 +89,5 @@
     public const string BadLevelCompleteMessageFormat = "Level completed, but with some mistakes.\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
     public const string CarSpeedStatusFormat = "Speed: {0:F0}";
     public const string CarRevsStatusFormat = "Revs: {0:F3}";
+    public const string GetBackOnTrackMessage = "You can hit 'T' to get the car back on track.";
 }

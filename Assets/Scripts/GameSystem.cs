@@ -644,7 +644,7 @@ public class GameSystem : MonoBehaviour
     private void ShowOptionToGetBackOnTrack()
     {
         Debug.Log("Car is stuck: Speed: " + m_carController.CurrentSpeed + ", Revs: " + m_carController.Revs);
-        // TODO: Alert.ShowAlert();
+        FloatingMessage.ShowMessage(Car.transform, Strings.GetBackOnTrackMessage, 3f);
     }
 
     private void GetBackOnTrack()
