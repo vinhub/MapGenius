@@ -113,10 +113,20 @@ public class PanelManager : MonoBehaviour {
     // called from menu
     public void OpenMapPanel()
     {
-        OpenMapPanel(null, false);
+        OpenMapPanel(null, false, false);
+    }
+
+    public void OpenMapPanel(bool continueGameOnClose)
+    {
+        OpenMapPanel(null, false, true);
     }
 
     public void OpenMapPanel(string landmarkName, bool firstLandmarkCrossed)
+    {
+        OpenMapPanel(landmarkName, firstLandmarkCrossed, true);
+    }
+
+    public void OpenMapPanel(string landmarkName, bool firstLandmarkCrossed, bool continueGameOnClose)
     {
         if (!String.IsNullOrEmpty(CurLandmarkName)) // already showing the panel
             return;
@@ -126,7 +136,7 @@ public class PanelManager : MonoBehaviour {
         OpenPanel(m_mapPanel);
 
         // set up map panel
-        m_mpHelper.Setup(this, m_mapPanel.transform, landmarkName, firstLandmarkCrossed);
+        m_mpHelper.Setup(this, m_mapPanel.transform, landmarkName, firstLandmarkCrossed, continueGameOnClose);
     }
 
     private bool CloseMapPanel(bool fCheckOkToClose)

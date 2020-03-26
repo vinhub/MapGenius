@@ -25,7 +25,7 @@ public class MapPanelHelper : MonoBehaviour
     private Transform m_tPlayermarkList;
     private bool m_revealedLandmarksOnMap = false;
 
-    public void Setup(PanelManager panelManager, Transform tMapPanel, string landmarkName, bool firstLandmarkCrossed)
+    public void Setup(PanelManager panelManager, Transform tMapPanel, string landmarkName, bool firstLandmarkCrossed, bool continueGameOnClose)
     {
         if (m_tMapPanel != null)
             return;
@@ -72,17 +72,17 @@ public class MapPanelHelper : MonoBehaviour
 
         m_tActionButton1.gameObject.SetActive(false);
 
-        if (String.IsNullOrEmpty(landmarkName)) // panel invoked from menu?
-        {
-            m_actionButton2Text.text = Strings.Back;
-            m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
-            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickBack);
-        }
-        else // panel invoked as a result of crossing a landmark
+        if (continueGameOnClose) // show "continue game" button
         {
             m_actionButton2Text.text = Strings.ContinueGame;
             m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
             m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickContinueGame);
+        }
+        else // show "back" button
+        {
+            m_actionButton2Text.text = Strings.Back;
+            m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
+            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickBack);
         }
 
         // mark the current playermark as currently visiting
