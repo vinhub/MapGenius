@@ -13,7 +13,7 @@ public class FloatingMessage : MonoBehaviour
 
     private AudioSource m_audioSource;
 
-    private bool m_isAlreadyShowing = false;
+    private bool m_isShowing = false;
 
     private void Awake()
     {
@@ -24,19 +24,19 @@ public class FloatingMessage : MonoBehaviour
 
     private void _ShowMessage(Transform tTarget, string message, float duration)
     {
-        if (m_isAlreadyShowing)
+        if (m_isShowing)
             return;
 
-        m_isAlreadyShowing = true;
+        m_isShowing = true;
 
-        m_audioSource.Play();
-
-        transform.parent = tTarget;
+        transform.SetParent(tTarget, false);
         transform.localPosition = new Vector3(0f, 2.5f, -3f); // little bit above the car and towards the camera
         transform.localRotation = Quaternion.identity;
 
         transform.GetComponent<TMP_Text>().text = message;
         gameObject.SetActive(true);
+
+        m_audioSource.Play();
 
         StartCoroutine(ShowHideMessage(tTarget, message, duration));
     }
@@ -45,13 +45,23 @@ public class FloatingMessage : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(duration);
 
+        _HideMessage();
+    }
+
+    private void _HideMessage()
+    {
         gameObject.SetActive(false);
 
-        m_isAlreadyShowing = false;
+        m_isShowing = false;
     }
 
     public static void ShowMessage(Transform tTarget, string message, float duration)
     {
         Instance._ShowMessage(tTarget, message, duration);
+    }
+
+    public static void HideMessage()
+    {
+        Instance._HideMessage();
     }
 }

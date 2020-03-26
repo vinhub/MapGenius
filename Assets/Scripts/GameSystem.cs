@@ -543,7 +543,7 @@ public class GameSystem : MonoBehaviour
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
         } while (distNext < dist);
 
-        ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
+        //ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
     }
 
     private void CalcNextRoad(float dist, CiDyNode node, ref CiDyRoad roadNext, ref int iOrigPointNext)
@@ -621,13 +621,12 @@ public class GameSystem : MonoBehaviour
     private bool IsCarStuck()
     {
         // if car isn't moving, check if it may be stuck.
-        if (m_carController.CurrentSpeed < 0.1f)
+        if ((m_carController.CurrentSpeed < 0.1f) && (m_carController.AccelInput > 0f))
         {
             if (m_carStuckTime < 0f)
                 m_carStuckTime = Time.time;
 
-            if (m_carController.AccelInput > 0f)
-                m_carMoveAttempts++;
+            m_carMoveAttempts++;
 
             // If player has made many attempts to get unstuck and it's stuck for a while then report it as stuck.
             return (m_carMoveAttempts > 25) && (Time.time - m_carStuckTime >= 0.1f);
@@ -643,7 +642,7 @@ public class GameSystem : MonoBehaviour
 
     private void ShowOptionToGetBackOnTrack()
     {
-        Debug.Log("Car is stuck: Speed: " + m_carController.CurrentSpeed + ", Revs: " + m_carController.Revs);
+        //Debug.Log("Car is stuck: Speed: " + m_carController.CurrentSpeed + ", Revs: " + m_carController.Revs);
         FloatingMessage.ShowMessage(Car.transform, Strings.GetBackOnTrackMessage, 3f);
     }
 
