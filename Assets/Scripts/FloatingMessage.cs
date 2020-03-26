@@ -32,7 +32,7 @@ public class FloatingMessage : MonoBehaviour
         m_audioSource.Play();
 
         transform.parent = tTarget;
-        transform.localPosition = Vector3.up * 2.5f; // little bit above the car
+        transform.localPosition = new Vector3(0f, 2.5f, -3f); // little bit above the car and towards the camera
         transform.localRotation = Quaternion.identity;
 
         transform.GetComponent<TMP_Text>().text = message;
