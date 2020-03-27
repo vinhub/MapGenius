@@ -59,7 +59,6 @@ public class PauseMenu : MonoBehaviour
 		if(!m_mainPanelManager.IsPanelOpen() && Input.GetKeyUp(KeyCode.Escape))
 		{
 		    m_toggle.isOn = !m_toggle.isOn;
-            Cursor.visible = m_toggle.isOn; // force the cursor visible if anythign had hidden it
 		}
 	}
 #endif

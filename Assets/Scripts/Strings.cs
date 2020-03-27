@@ -71,7 +71,6 @@
 
     // text field values
     public const string StartGame = "Start Game";
-    public const string Back = "Back";
     public const string ContinueGame = "Continue Game";
     public const string NewGame = "New Game";
     public const string RetryGame = "Try Again";

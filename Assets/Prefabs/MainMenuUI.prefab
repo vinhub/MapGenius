@@ -2693,9 +2693,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5736685844750866035}
-        m_MethodName: OpenInstructionsPanel
-        m_Mode: 6
+      - m_Target: {fileID: 11400180}
+        m_MethodName: OnMenuStatusChange
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2704,9 +2704,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
-      - m_Target: {fileID: 3906382736307349077}
-        m_MethodName: Play
-        m_Mode: 1
+      - m_Target: {fileID: 5736685844750866035}
+        m_MethodName: OpenInstructionsPanel
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -15561,8 +15561,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5736685844750866035}
-        m_MethodName: OpenMapPanel
+      - m_Target: {fileID: 11400180}
+        m_MethodName: OnMenuStatusChange
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15572,8 +15572,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
-      - m_Target: {fileID: 3906382736307349077}
-        m_MethodName: Play
+      - m_Target: {fileID: 5736685844750866035}
+        m_MethodName: OpenMapPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -284,9 +284,7 @@ public class GameSystem : MonoBehaviour
             GetBackOnTrack();
 
         if (showMap > 0f)
-        {
-            m_mainPanelManager.OpenMapPanel(true);
-        }
+            m_mainPanelManager.OpenMapPanel();
     }
 
     private void OnGui()
