@@ -40,9 +40,6 @@ public class PauseMenu : MonoBehaviour
         if ((m_toggle == null) || (GameSystem.Instance == null))
             return;
 
-        if (m_mainPanelManager.IsPanelOpen())
-            return;
-
         if (m_toggle.isOn && !GameSystem.Instance.IsGamePaused())
         {
             MenuOn();
@@ -56,16 +53,14 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-
 #if !MOBILE_INPUT
 	private void Update()
 	{
-		if(Input.GetKeyUp(KeyCode.Escape))
+		if(!m_mainPanelManager.IsPanelOpen() && Input.GetKeyUp(KeyCode.Escape))
 		{
 		    m_toggle.isOn = !m_toggle.isOn;
-            Cursor.visible = m_toggle.isOn;//force the cursor visible if anythign had hidden it
+            Cursor.visible = m_toggle.isOn; // force the cursor visible if anythign had hidden it
 		}
 	}
 #endif
 }
-

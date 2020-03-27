@@ -32,6 +32,21 @@ public class PanelManager : MonoBehaviour {
     private void Update()
     {
         m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.timeSinceLevelLoad);
+
+        if (IsPanelOpen() && Input.GetKeyUp(KeyCode.Escape))
+        {
+            Cursor.visible = true; // force the cursor visible if anythign had hidden it
+
+            if (m_goPanel == m_instructionsPanel)
+                CloseInstructionsPanel();
+            else
+            {
+                if (CloseMapPanel(true))
+                {
+                    ContinueGame(false);
+                }
+            }
+        }
     }
 
     public void OpenPanel(GameObject goPanel)
