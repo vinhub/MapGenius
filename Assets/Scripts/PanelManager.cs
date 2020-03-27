@@ -159,6 +159,11 @@ public class PanelManager : MonoBehaviour {
         return true;
     }
 
+    public bool IsPanelOpen()
+    {
+        return m_goPanel != null;
+    }
+
     public void OnClickBack()
     {
         if (!CloseMapPanel(false))
