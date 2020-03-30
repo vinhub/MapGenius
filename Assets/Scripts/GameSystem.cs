@@ -311,26 +311,33 @@ public class GameSystem : MonoBehaviour
     public void NewGame()
     {
         ResumeGame(false);
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
         StaticGlobals.TotalNumGames++;
     }
 
-    public void NextLevel()
+    public void GoToLevel(string gameLevel)
     {
         ResumeGame(false);
 
-        switch (StaticGlobals.CurGameLevel)
+        switch (gameLevel)
         {
-            case GameLevel.Downtown:
+            case "Downtown":
+                StaticGlobals.CurGameLevel = GameLevel.Downtown;
+                break;
+
+            case "Smalltown":
                 StaticGlobals.CurGameLevel = GameLevel.Smalltown;
                 break;
 
-            case GameLevel.Smalltown:
+            case "Oldtown":
                 StaticGlobals.CurGameLevel = GameLevel.Oldtown;
                 break;
         }
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
         StaticGlobals.TotalNumGames++;
     }
 

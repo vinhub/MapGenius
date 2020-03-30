@@ -220,9 +220,9 @@ public class PanelManager : MonoBehaviour {
         GameSystem.Instance.NewGame();
     }
 
-    public void NextLevel()
+    public void GoToLevel(string gameLevel)
     {
-        GameSystem.Instance.NextLevel();
+        GameSystem.Instance.GoToLevel(gameLevel);
     }
 
     public void QuitGame()
