@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseMenu : MonoBehaviour
+public class MainMenuButton : MonoBehaviour
 {
     private Toggle m_toggle;
     private AudioSource m_buttonClickAudioSource;
@@ -53,13 +53,8 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-#if !MOBILE_INPUT
-	private void Update()
-	{
-		if(!m_mainPanelManager.IsPanelOpen() && Input.GetKeyUp(KeyCode.Escape))
-		{
-		    m_toggle.isOn = !m_toggle.isOn;
-		}
-	}
-#endif
+    public void Toggle()
+    {
+        m_toggle.isOn = !m_toggle.isOn;
+    }
 }

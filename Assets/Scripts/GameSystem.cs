@@ -42,6 +42,7 @@ public class GameSystem : MonoBehaviour
     private float m_timeScaleSav = 1f;
     private bool m_paused;
 
+    private MainMenuButton m_mainMenuButton;
     private PanelManager m_mainPanelManager;
     private Transform m_tPlayermarksList;
     private bool m_firstLandmarkCrossed = true;
@@ -51,6 +52,8 @@ public class GameSystem : MonoBehaviour
     private CiDyRoad m_roadOnTrack;
     private int m_iOrigPointOnTrack = 0;
     private Transform m_tOnTrackLocator;
+
+    private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
 
     private void Awake()
     {
@@ -63,16 +66,17 @@ public class GameSystem : MonoBehaviour
     {
         m_carController = Car.GetComponent<CarController>();
 
-        GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
-        m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
-        m_tPlayermarksList = mainMenuUI.transform.Find(Strings.MapPanelPath).Find(Strings.PlayermarksPath);
+        Transform tMainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag).transform;
+        m_mainPanelManager = tMainMenuUI.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
+        m_tPlayermarksList = tMainMenuUI.Find(Strings.MapPanelPath).Find(Strings.PlayermarksPath);
+        m_mainMenuButton = tMainMenuUI.Find(Strings.OpenMenuButtonPath).GetComponent<MainMenuButton>();
 
-        m_carSpeedText = mainMenuUI.transform.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
-        m_carRevsText = mainMenuUI.transform.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
+        m_carSpeedText = tMainMenuUI.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
+        m_carRevsText = tMainMenuUI.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
 
         if (Debug.isDebugBuild)
         {
-            m_debugText = mainMenuUI.transform.Find(Strings.DebugTextPath).GetComponent<Text>();
+            m_debugText = tMainMenuUI.Find(Strings.DebugTextPath).GetComponent<Text>();
         }
 
         InitGame();
@@ -254,16 +258,24 @@ public class GameSystem : MonoBehaviour
         m_instance = null;
     }
 
+    private void Update()
+    {
+        HandleHotkeys();
+    }
+
     private void LateUpdate()
     {
+        if (Time.time - m_lastUpdateTime < 0.2)
+            return;
+
+        m_lastUpdateTime = Time.time;
+
         // global game update logic goes here
         UpdateCarStatus();
 
         // detect if car is stuck and show option to get it unstuck
         if (IsCarStuck())
             ShowOptionToGetBackOnTrack();
-
-        HandleHotkeys();
 
         if (m_roadOnTrack)
         {
@@ -274,17 +286,21 @@ public class GameSystem : MonoBehaviour
 
     private void HandleHotkeys()
     {
-        float backOnTrack = CrossPlatformInputManager.GetAxis("BackOnTrack");
-        float showMap = CrossPlatformInputManager.GetAxis("ShowMap");
+        bool fBackOnTrack = Input.GetKeyUp(KeyCode.T);
+        bool fShowMap = Input.GetKeyUp(KeyCode.M);
+        bool fEscape = Input.GetKeyUp(KeyCode.Escape);
 
-        Mathf.Clamp(backOnTrack, 0, 1);
-        Mathf.Clamp(showMap, 0, 1);
-
-        if (backOnTrack > 0f)
+        if (fBackOnTrack)
             GetBackOnTrack();
-
-        if (showMap > 0f)
+        else if (fShowMap)
             m_mainPanelManager.OpenMapPanel();
+        else if (fEscape)
+        {
+            if (m_mainPanelManager.IsPanelOpen())
+                m_mainPanelManager.ClosePanel();
+            else
+                m_mainMenuButton.Toggle();
+        }
     }
 
     private void OnGui()

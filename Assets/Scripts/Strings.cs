@@ -17,6 +17,7 @@
     public const string ContinueGameButtonPath = "MainMenu/Window/ContinueGame";
     public const string PanelsName = "Panels";
     public const string PanelManagerPath = "PanelManager";
+    public const string OpenMenuButtonPath = "OpenMenuButton";
     public const string InstructionsPanelPath = "Panels/Instructions";
     public const string MapPanelPath = "Panels/Map";
     public const string GameStatusScoreTextPath = "GameStatus/ScoreText";

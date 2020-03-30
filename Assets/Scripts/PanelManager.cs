@@ -31,19 +31,6 @@ public class PanelManager : MonoBehaviour {
     private void Update()
     {
         m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.timeSinceLevelLoad);
-
-        if (IsPanelOpen() && Input.GetKeyUp(KeyCode.Escape))
-        {
-            if (m_goPanel == m_instructionsPanel)
-                CloseInstructionsPanel();
-            else
-            {
-                if (CloseMapPanel(true))
-                {
-                    ContinueGame(false);
-                }
-            }
-        }
     }
 
     public void OpenPanel(GameObject goPanel)
@@ -62,6 +49,17 @@ public class PanelManager : MonoBehaviour {
 
         m_goPanel = goPanel;
 	}
+
+    public void ClosePanel()
+    {
+        if (m_goPanel == m_instructionsPanel)
+            CloseInstructionsPanel();
+        else
+        {
+            if (CloseMapPanel(true))
+                ContinueGame(false);
+        }
+    }
 
     // this is called when game is started
     public void OpenInstructionsPanel(bool isGameStarting)
