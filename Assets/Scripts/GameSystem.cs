@@ -30,10 +30,9 @@ public class GameSystem : MonoBehaviour
     private float m_carStuckTime = 0f;
     private int m_carMoveAttempts = 0;
 
-#if DEBUG
-    // debug info
-    private Text m_debugText;
-#endif
+    // info message
+    private Text m_infoMessageText;
+    private AudioSource m_infoMessageAudioSource;
 
     private Transform m_tRoadHolder, m_tNodeHolder, m_tLandmarks;
     private GameObject m_graph;
@@ -74,10 +73,8 @@ public class GameSystem : MonoBehaviour
         m_carSpeedText = tMainMenuUI.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
         m_carRevsText = tMainMenuUI.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
 
-        if (Debug.isDebugBuild)
-        {
-            m_debugText = tMainMenuUI.Find(Strings.DebugTextPath).GetComponent<Text>();
-        }
+        m_infoMessageText = tMainMenuUI.Find(Strings.InfoMessageTextPath).GetComponent<Text>();
+        m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
 
         InitGame();
     }
@@ -275,7 +272,7 @@ public class GameSystem : MonoBehaviour
 
         // detect if car is stuck and show option to get it unstuck
         if (IsCarStuck())
-            ShowOptionToGetBackOnTrack();
+            ShowInfoMessage(Strings.GetBackOnTrackMessage, 3f);
 
         if (m_roadOnTrack)
         {
@@ -484,7 +481,7 @@ public class GameSystem : MonoBehaviour
     private void UpdateCarStatus()
     {
         m_carSpeedText.text = String.Format(Strings.CarSpeedStatusFormat, m_carController.CurrentSpeed);
-        m_carRevsText.text = String.Format(Strings.CarRevsStatusFormat, m_carController.Revs);
+        m_carRevsText.text = String.Format(Strings.CarRevsStatusFormat, Mathf.RoundToInt(m_carController.Revs * 1000f));
 
         // determine road and origPoint closest to the car
         UpdateOnTrackInfo();
@@ -666,12 +663,6 @@ public class GameSystem : MonoBehaviour
         return false;
     }
 
-    private void ShowOptionToGetBackOnTrack()
-    {
-        //Debug.Log("Car is stuck: Speed: " + m_carController.CurrentSpeed + ", Revs: " + m_carController.Revs);
-        FloatingMessage.ShowMessage(Car.transform, Strings.GetBackOnTrackMessage, 3f);
-    }
-
     private void GetBackOnTrack()
     {
         m_carController.StopCar();
@@ -679,13 +670,26 @@ public class GameSystem : MonoBehaviour
         m_carController.transform.rotation = m_rotationOnTrack;
     }
 
+    public void ShowInfoMessage(string message, float duration)
+    {
+        if (!String.IsNullOrEmpty(m_infoMessageText.text))
+            return;
+
+        m_infoMessageAudioSource.Play();
+
+        m_infoMessageText.text = message;
+        StartCoroutine(HideInfoMessage(duration));
+    }
+
+    public IEnumerator HideInfoMessage(float duration)
+    {
+        yield return new WaitForSecondsRealtime(duration);
+        m_infoMessageText.text = null;
+    }
+
     private void ShowDebugInfo(string info)
     {
-        if (Debug.isDebugBuild)
-        {
-            m_debugText.text = info;
-        }
-
         Debug.Log(info);
+        ShowInfoMessage(info, 3f);
     }
 }

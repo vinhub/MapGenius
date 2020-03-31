@@ -24,7 +24,7 @@
     public const string GameStatusTimeTextPath = "GameStatus/TimeText";
     public const string CarStatusSpeedTextPath = "CarStatus/SpeedText";
     public const string CarStatusRevsTextPath = "CarStatus/RevsText";
-    public const string DebugTextPath = "DebugStatus/DebugText";
+    public const string InfoMessageTextPath = "InfoMessage/InfoMessageText";
     public const string OnTrackrLocatorPath = "UI/OnTrackLocator";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
@@ -79,7 +79,7 @@
     public const string CheckScore = "Check Score";
 
     // format strings
-    public const string ScoreTextFormat = "Score: {0:d4} / {0:d4}";
+    public const string ScoreTextFormat = "Score: {0:d4} / {1:d4}";
     public const string TimeTextFormat = "Time: {0:d3}";
     public const string LevelTextFormat = "Level: {0}";
     public const string LandmarkCrossedMessageFormat = "You just crossed the  <i><color=#00ff00ff>\"{0}\"</color></i>  landmark!";
@@ -88,6 +88,6 @@
     public const string GoodLevelCompleteMessageFormat = "Congratulations! Level completed!\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
     public const string BadLevelCompleteMessageFormat = "Level completed, but with some mistakes.\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
     public const string CarSpeedStatusFormat = "Speed: {0:F0}";
-    public const string CarRevsStatusFormat = "Revs: {0:F3}";
+    public const string CarRevsStatusFormat = "Revs: {0:d3}";
     public const string GetBackOnTrackMessage = "Press T to get back on track.";
 }
