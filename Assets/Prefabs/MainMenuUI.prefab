@@ -967,7 +967,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 864, y: -375}
+  m_AnchoredPosition: {x: 864, y: -662.73694}
   m_SizeDelta: {x: 1000, y: 610}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1480637309289242970
@@ -2387,7 +2387,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 864, y: -40}
+  m_AnchoredPosition: {x: 864, y: -135.91232}
   m_SizeDelta: {x: 1200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4661947941704255184
@@ -3247,7 +3247,8 @@ MonoBehaviour:
     landmark, you will be shown a map of the level wherein you will need to mark
     the location of that landmark.\n\n3. Your score will be updated after you have
     visited all the landmarks. The score will depend upon how close your guesses
-    are to the real landmarks and your timing.\n\nOK? Let's get ready to rumble!"
+    are to the real landmarks and your timing.\n\n4. Hotkeys: <b>M</b> = Show <b>M</b>ap,
+    <b>T</b> = Get car back on <b>T</b>rack if stuck.\n\nOK? Let's get ready to rumble!"
 --- !u!1 &3544753253850635089
 GameObject:
   m_ObjectHideFlags: 0
@@ -3283,7 +3284,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 864, y: -710}
+  m_AnchoredPosition: {x: 864, y: -1189.5616}
   m_SizeDelta: {x: 1000, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5261118922541630059

@@ -111,6 +111,8 @@ public class PanelManager : MonoBehaviour {
         m_goPanel = null;
 
         GameSystem.Instance.ResumeGame(false);
+
+        GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
     }
 
     // called from menu

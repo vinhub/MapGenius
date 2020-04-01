@@ -54,6 +54,8 @@ public class GameSystem : MonoBehaviour
 
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
 
+    private AudioSource m_victoryLapAudioSource;
+
     private void Awake()
     {
         m_instance = this;
@@ -75,6 +77,8 @@ public class GameSystem : MonoBehaviour
 
         m_infoMessageText = tMainMenuUI.Find(Strings.InfoMessageTextPath).GetComponent<Text>();
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
+
+        m_victoryLapAudioSource = GetComponent<AudioSource>();
 
         InitGame();
     }
@@ -360,6 +364,8 @@ public class GameSystem : MonoBehaviour
 
         m_carController.StopCar();
 
+        m_victoryLapAudioSource.Stop(); // in case it was playing
+
         m_timeScaleSav = Time.timeScale;
         Time.timeScale = 0f;
 
@@ -374,8 +380,7 @@ public class GameSystem : MonoBehaviour
         if (fVictoryLap)
         {
             // play victory music
-            AudioSource victoryLapAudioSource = GetComponent<AudioSource>();
-            victoryLapAudioSource.Play();
+            m_victoryLapAudioSource.Play();
         }
 
         Time.timeScale = m_timeScaleSav;
@@ -396,6 +401,15 @@ public class GameSystem : MonoBehaviour
 #else
 		Application.Quit();
 #endif
+    }
+
+    private void StopAllAudio()
+    {
+         AudioSource[] allAudioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
+        foreach (AudioSource audio in allAudioSources)
+        {
+            audio.Stop();
+        }
     }
 
     // called when the player crosses a landmark
