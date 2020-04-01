@@ -17,12 +17,15 @@
     public const string ContinueGameButtonPath = "MainMenu/Window/ContinueGame";
     public const string PanelsName = "Panels";
     public const string PanelManagerPath = "PanelManager";
+    public const string OpenMenuButtonPath = "OpenMenuButton";
     public const string InstructionsPanelPath = "Panels/Instructions";
     public const string MapPanelPath = "Panels/Map";
     public const string GameStatusScoreTextPath = "GameStatus/ScoreText";
     public const string GameStatusTimeTextPath = "GameStatus/TimeText";
     public const string CarStatusSpeedTextPath = "CarStatus/SpeedText";
     public const string CarStatusRevsTextPath = "CarStatus/RevsText";
+    public const string InfoMessageTextPath = "InfoMessage/InfoMessageText";
+    public const string OnTrackrLocatorPath = "UI/OnTrackLocator";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
     public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
@@ -40,6 +43,7 @@
     public const string ShowLandmarksLabelPath = "Window/MapPanel/PlayermarksPanel/Hint/Toggle/Label";
     public const string PopupWindowPath = "Window";
     public const string PopupMessageTextPath = "Window/Popup/Background/MessageText";
+    public const string FloatingMessageTextPath = "FloatingMessage";
     public const string LandmarkOnMap = "LandmarkOnMap";
     public const string ButtonClickAudioSourceName = "ButtonClickAudioSource";
     public const string LandmarksPath = "Landmarks";
@@ -68,7 +72,6 @@
 
     // text field values
     public const string StartGame = "Start Game";
-    public const string Back = "Back";
     public const string ContinueGame = "Continue Game";
     public const string NewGame = "New Game";
     public const string RetryGame = "Try Again";
@@ -76,7 +79,7 @@
     public const string CheckScore = "Check Score";
 
     // format strings
-    public const string ScoreTextFormat = "Score: {0:d4} / {0:d4}";
+    public const string ScoreTextFormat = "Score: {0:d4} / {1:d4}";
     public const string TimeTextFormat = "Time: {0:d3}";
     public const string LevelTextFormat = "Level: {0}";
     public const string LandmarkCrossedMessageFormat = "You just crossed the  <i><color=#00ff00ff>\"{0}\"</color></i>  landmark!";
@@ -85,5 +88,7 @@
     public const string GoodLevelCompleteMessageFormat = "Congratulations! Level completed!\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
     public const string BadLevelCompleteMessageFormat = "Level completed, but with some mistakes.\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
     public const string CarSpeedStatusFormat = "Speed: {0:F0}";
-    public const string CarRevsStatusFormat = "Revs: {0:F3}";
+    public const string CarRevsStatusFormat = "Revs: {0:d3}";
+    public const string GetBackOnTrackMessage = "Press T to get back on track.";
+    public const string StartingInstructionsMessage = "Drive the car using the W, A, S, D, or arrow keys.";
 }

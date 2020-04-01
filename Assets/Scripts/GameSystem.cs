@@ -30,6 +30,10 @@ public class GameSystem : MonoBehaviour
     private float m_carStuckTime = 0f;
     private int m_carMoveAttempts = 0;
 
+    // info message
+    private Text m_infoMessageText;
+    private AudioSource m_infoMessageAudioSource;
+
     private Transform m_tRoadHolder, m_tNodeHolder, m_tLandmarks;
     private GameObject m_graph;
 
@@ -37,29 +41,44 @@ public class GameSystem : MonoBehaviour
     private float m_timeScaleSav = 1f;
     private bool m_paused;
 
+    private MainMenuButton m_mainMenuButton;
     private PanelManager m_mainPanelManager;
     private Transform m_tPlayermarksList;
     private bool m_firstLandmarkCrossed = true;
 
-    // starting loation for the car
-    private Vector3 m_carPosStart;
-    private Quaternion m_carRotationStart;
+    // current car location
+    private Quaternion m_rotationOnTrack = Quaternion.identity;
+    private CiDyRoad m_roadOnTrack;
+    private int m_iOrigPointOnTrack = 0;
+    private Transform m_tOnTrackLocator;
+
+    private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
+
+    private AudioSource m_victoryLapAudioSource;
 
     private void Awake()
     {
         m_instance = this;
+
+        m_tOnTrackLocator = GameObject.Find(Strings.OnTrackrLocatorPath).transform;
     }
 
     private void Start()
     {
         m_carController = Car.GetComponent<CarController>();
 
-        GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
-        m_mainPanelManager = mainMenuUI.transform.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
-        m_tPlayermarksList = mainMenuUI.transform.Find(Strings.MapPanelPath).Find(Strings.PlayermarksPath);
+        Transform tMainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag).transform;
+        m_mainPanelManager = tMainMenuUI.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
+        m_tPlayermarksList = tMainMenuUI.Find(Strings.MapPanelPath).Find(Strings.PlayermarksPath);
+        m_mainMenuButton = tMainMenuUI.Find(Strings.OpenMenuButtonPath).GetComponent<MainMenuButton>();
 
-        m_carSpeedText = mainMenuUI.transform.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
-        m_carRevsText = mainMenuUI.transform.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
+        m_carSpeedText = tMainMenuUI.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
+        m_carRevsText = tMainMenuUI.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
+
+        m_infoMessageText = tMainMenuUI.Find(Strings.InfoMessageTextPath).GetComponent<Text>();
+        m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
+
+        m_victoryLapAudioSource = GetComponent<AudioSource>();
 
         InitGame();
     }
@@ -93,8 +112,8 @@ public class GameSystem : MonoBehaviour
         }
 
         // place car some distance from the first landmark
-        Car.transform.position = CarCameraRig.transform.position = m_carPosStart;
-        Car.transform.rotation = CarCameraRig.transform.rotation = m_carRotationStart;
+        Car.transform.position = CarCameraRig.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
+        Car.transform.rotation = CarCameraRig.transform.rotation = m_rotationOnTrack;
 
         // init score
         SetScore(0);
@@ -102,9 +121,6 @@ public class GameSystem : MonoBehaviour
 
     private void InitGameState()
     {
-        m_carPosStart = Vector3.forward;
-        m_carRotationStart = Quaternion.identity;
-
         // select required number of roads from the road network making sure they are geographically distributed 
         CiDyRoad[] roadsSelected = new CiDyRoad[m_numLandmarks];
 
@@ -167,10 +183,10 @@ public class GameSystem : MonoBehaviour
             // add a landmark to the area using the landmark prefab and place it at the above location
             CreateLandmark(iLandmark, landmarkPos, rotation);
 
-            // for the start landmark, use a position about 1/3 of the way along the road as the car position, looking along the road
+            // use the start landmark to calculate starting car position
             if (iLandmark == iLandmarkStart)
             {
-                CalcCarPos(road);
+                CalcStartingCarLocation(road);
             }
         }
     }
@@ -199,10 +215,13 @@ public class GameSystem : MonoBehaviour
         goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<Text>().text = landmarkName;
     }
 
-    private void CalcCarPos(CiDyRoad road)
+    private void CalcStartingCarLocation(CiDyRoad road)
     {
-        m_carPosStart = road.origPoints[road.origPoints.Length / 3];
-        m_carRotationStart = Quaternion.LookRotation(road.origPoints[road.origPoints.Length / 3 + 1] - m_carPosStart, Vector3.up);
+        // use a position about 1/3 of the way along the road as the car position, looking along the road
+        m_roadOnTrack = road;
+        m_iOrigPointOnTrack = road.origPoints.Length / 3;
+        Debug.Assert(road.origPoints.Length >= 3);
+        m_rotationOnTrack = Quaternion.LookRotation(road.origPoints[m_iOrigPointOnTrack + 1] - road.origPoints[m_iOrigPointOnTrack], Vector3.up);
     }
 
     // divide the whole map into numSectionsX x numSectionsZ sections, calc which section the point belongs to, calc its weight based on that
@@ -242,26 +261,47 @@ public class GameSystem : MonoBehaviour
 
     private void Update()
     {
+        HandleHotkeys();
+    }
+
+    private void LateUpdate()
+    {
+        if (Time.time - m_lastUpdateTime < 0.2)
+            return;
+
+        m_lastUpdateTime = Time.time;
+
         // global game update logic goes here
         UpdateCarStatus();
 
         // detect if car is stuck and show option to get it unstuck
         if (IsCarStuck())
-            ShowOptionToGetCarUnstuck();
+            ShowInfoMessage(Strings.GetBackOnTrackMessage, 3f);
 
-        HandleHotkeys();
+        if (m_roadOnTrack)
+        {
+            m_tOnTrackLocator.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
+            m_tOnTrackLocator.transform.rotation = m_rotationOnTrack;
+        }
     }
 
     private void HandleHotkeys()
     {
-        float getUnstuck = CrossPlatformInputManager.GetAxis("GetUnstuck");
-        float showMap = CrossPlatformInputManager.GetAxis("ShowMap");
+        bool fBackOnTrack = Input.GetKeyUp(KeyCode.T);
+        bool fShowMap = Input.GetKeyUp(KeyCode.M);
+        bool fEscape = Input.GetKeyUp(KeyCode.Escape);
 
-        Mathf.Clamp(getUnstuck, 0, 1);
-        Mathf.Clamp(showMap, 0, 1);
-
-        if (getUnstuck > 0f)
-            GetCarUnstuck();
+        if (fBackOnTrack)
+            GetBackOnTrack();
+        else if (fShowMap)
+            m_mainPanelManager.OpenMapPanel();
+        else if (fEscape)
+        {
+            if (m_mainPanelManager.IsPanelOpen())
+                m_mainPanelManager.ClosePanel();
+            else
+                m_mainMenuButton.Toggle();
+        }
     }
 
     private void OnGui()
@@ -272,26 +312,33 @@ public class GameSystem : MonoBehaviour
     public void NewGame()
     {
         ResumeGame(false);
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
         StaticGlobals.TotalNumGames++;
     }
 
-    public void NextLevel()
+    public void GoToLevel(string gameLevel)
     {
         ResumeGame(false);
 
-        switch (StaticGlobals.CurGameLevel)
+        switch (gameLevel)
         {
-            case GameLevel.Downtown:
+            case "Downtown":
+                StaticGlobals.CurGameLevel = GameLevel.Downtown;
+                break;
+
+            case "Smalltown":
                 StaticGlobals.CurGameLevel = GameLevel.Smalltown;
                 break;
 
-            case GameLevel.Smalltown:
+            case "Oldtown":
                 StaticGlobals.CurGameLevel = GameLevel.Oldtown;
                 break;
         }
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
         StaticGlobals.TotalNumGames++;
     }
 
@@ -317,6 +364,8 @@ public class GameSystem : MonoBehaviour
 
         m_carController.StopCar();
 
+        m_victoryLapAudioSource.Stop(); // in case it was playing
+
         m_timeScaleSav = Time.timeScale;
         Time.timeScale = 0f;
 
@@ -331,8 +380,7 @@ public class GameSystem : MonoBehaviour
         if (fVictoryLap)
         {
             // play victory music
-            AudioSource victoryLapAudioSource = GetComponent<AudioSource>();
-            victoryLapAudioSource.Play();
+            m_victoryLapAudioSource.Play();
         }
 
         Time.timeScale = m_timeScaleSav;
@@ -353,6 +401,15 @@ public class GameSystem : MonoBehaviour
 #else
 		Application.Quit();
 #endif
+    }
+
+    private void StopAllAudio()
+    {
+         AudioSource[] allAudioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
+        foreach (AudioSource audio in allAudioSources)
+        {
+            audio.Stop();
+        }
     }
 
     // called when the player crosses a landmark
@@ -412,8 +469,9 @@ public class GameSystem : MonoBehaviour
             StaticGlobals.SavedLandmarks.Add(sl);
         }
 
-        StaticGlobals.SavedCarPosStart = m_carPosStart;
-        StaticGlobals.SavedCarRotationStart = m_carRotationStart;
+        StaticGlobals.SavedRoadOnTrack = m_roadOnTrack;
+        StaticGlobals.SavedOrigPointIndexOnTrack = m_iOrigPointOnTrack;
+        StaticGlobals.SavedRotationOnTrack = m_rotationOnTrack;
 
         StaticGlobals.SavedInitStateExists = true;
     }
@@ -425,8 +483,9 @@ public class GameSystem : MonoBehaviour
             CreateLandmark(iLandmark, StaticGlobals.SavedLandmarks[iLandmark].pos, StaticGlobals.SavedLandmarks[iLandmark].rotation);
         }
 
-        m_carPosStart = StaticGlobals.SavedCarPosStart;
-        m_carRotationStart = StaticGlobals.SavedCarRotationStart;
+        m_roadOnTrack = StaticGlobals.SavedRoadOnTrack;
+        m_iOrigPointOnTrack = StaticGlobals.SavedOrigPointIndexOnTrack;
+        m_rotationOnTrack = StaticGlobals.SavedRotationOnTrack;
 
         StaticGlobals.SavedLandmarks.Clear();
         StaticGlobals.SavedLandmarks = null;
@@ -436,19 +495,175 @@ public class GameSystem : MonoBehaviour
     private void UpdateCarStatus()
     {
         m_carSpeedText.text = String.Format(Strings.CarSpeedStatusFormat, m_carController.CurrentSpeed);
-        m_carRevsText.text = String.Format(Strings.CarRevsStatusFormat, m_carController.Revs);
+        m_carRevsText.text = String.Format(Strings.CarRevsStatusFormat, Mathf.RoundToInt(m_carController.Revs * 1000f));
+
+        // determine road and origPoint closest to the car
+        UpdateOnTrackInfo();
+    }
+
+    // we need to remember the origPoint closest to the car at all times. That way, when we go offroad and car gets stuck, the player can hit
+    // the GetUnstuck hotkey and we can bring them back to the last origPoint they were at before they left the road.
+    private void UpdateOnTrackInfo()
+    {
+        // If the car is off track, we should not update the roadCur and iOrigPointCur.
+        // This is an optimization as well as because when the player wants to bring the car back on track, we want to bring them to where they left the road.
+        // We don't want to bring them to the closest origPoint at that time (which could be in unfamiliar territory because they may have wandered off quite a bit.)
+        if (IsCarOffTrack())
+            return;
+
+        // check distance from the current origPoint
+        float dist = CarDistanceFromOrigPoint(m_roadOnTrack, m_iOrigPointOnTrack);
+
+        CiDyRoad roadNext = m_roadOnTrack;
+        int iOrigPointNext = m_iOrigPointOnTrack;
+        float distNext = dist;
+
+        // do
+        // check distance from the next origPoint
+        // if we have run out of origPoints on this road, go to the first origPoint on the adjacent road.
+        // while (distance from next origPoint is smaller than current origPoint)
+        // go in the other direction and do the same.
+        // if both distances are bigger than original then that means car has gone off road and m_roadCur and m_iOrigPoint remain unchanged
+        // otherwise, the road and the origPoint get updated
+        do
+        {
+            dist = distNext;
+            m_roadOnTrack = roadNext;
+            m_iOrigPointOnTrack = iOrigPointNext;
+            m_rotationOnTrack = Car.transform.rotation;
+
+            ++iOrigPointNext;
+
+            if (iOrigPointNext >= roadNext.origPoints.Length)
+            {
+                // ran out of the road, find next road
+                CalcNextRoad(dist, roadNext.nodeB, ref roadNext, ref iOrigPointNext);
+                if (iOrigPointNext < roadNext.origPoints.Length) // found next road
+                {
+                    m_roadOnTrack = roadNext;
+                    m_iOrigPointOnTrack = iOrigPointNext;
+                }
+
+                break;
+            }
+
+            distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
+        } while (distNext < dist);
+
+        // go in reverse direction and do the same thing
+        distNext = dist;
+        roadNext = m_roadOnTrack;
+        iOrigPointNext = m_iOrigPointOnTrack;
+
+        do
+        {
+            dist = distNext;
+            m_roadOnTrack = roadNext;
+            m_iOrigPointOnTrack = iOrigPointNext;
+            m_rotationOnTrack = Car.transform.rotation;
+
+            --iOrigPointNext;
+
+            if (iOrigPointNext < 0)
+            {
+                // ran out of the road, find prev road
+                CalcNextRoad(dist, roadNext.nodeA, ref roadNext, ref iOrigPointNext);
+                if (iOrigPointNext >= 0) // found prev road
+                {
+                    m_roadOnTrack = roadNext;
+                    m_iOrigPointOnTrack = iOrigPointNext;
+                }
+
+                break;
+            }
+
+            distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
+        } while (distNext < dist);
+
+        //ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
+    }
+
+    private void CalcNextRoad(float dist, CiDyNode node, ref CiDyRoad roadNext, ref int iOrigPointNext)
+    {
+        float distNext;
+        string roadInName = roadNext.name;
+
+        foreach (CiDyRoad road in node.connectedRoads)
+        {
+            if ((road == null) || (road.origPoints == null) || (road.origPoints.Length < 3))
+                continue;
+
+            if (road.name == roadInName)
+                continue;
+
+            float dist1 = CarDistanceFromOrigPoint(road, 1);
+            float dist2 = CarDistanceFromOrigPoint(road, road.origPoints.Length - 2);
+            int iOrigPoint;
+            if (dist1 < dist2)
+            {
+                distNext = dist1;
+                iOrigPoint = 1;
+            }
+            else
+            {
+                distNext = dist2;
+                iOrigPoint = road.origPoints.Length - 2;
+            }
+
+            if (distNext <= dist)
+            {
+                roadNext = road;
+                iOrigPointNext = iOrigPoint;
+                dist = distNext;
+                continue;
+            }
+        }
+    }
+
+    private float CarDistanceFromOrigPoint(CiDyRoad road, int iOrigPoint)
+    {
+        Debug.Assert(road != null);
+        return Vector3.Distance(Car.transform.position, road.origPoints[iOrigPoint]);
+    }
+
+    private bool IsCarOffTrack()
+    {
+        Vector3 carPosition = Car.transform.position;
+        Collider roadCollider = m_roadOnTrack.GetComponent<Collider>();
+        Vector3 closestPoint = roadCollider.ClosestPointOnBounds(carPosition);
+
+        if (Vector3.Distance(closestPoint, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so we'll say it's on track
+            return false;
+
+        // check if it is on a different road
+        foreach (Transform tRoad in m_tRoadHolder)
+        {
+            if (tRoad == m_roadOnTrack.transform)
+                continue;
+
+            roadCollider = tRoad.GetComponent<Collider>();
+            closestPoint = roadCollider.ClosestPointOnBounds(carPosition);
+
+            if (Vector3.Distance(closestPoint, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so it is on or close to this road
+            {
+                m_roadOnTrack = tRoad.GetComponent<CiDyRoad>();
+                m_iOrigPointOnTrack = m_roadOnTrack.origPoints.Length / 2; // just place it at half the length for now, it will get adjusted to the closest point
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private bool IsCarStuck()
     {
         // if car isn't moving, check if it may be stuck.
-        if (m_carController.CurrentSpeed < 0.1f)
+        if ((m_carController.CurrentSpeed < 0.1f) && (m_carController.AccelInput > 0f))
         {
             if (m_carStuckTime < 0f)
                 m_carStuckTime = Time.time;
 
-            if (m_carController.AccelInput > 0f)
-                m_carMoveAttempts++;
+            m_carMoveAttempts++;
 
             // If player has made many attempts to get unstuck and it's stuck for a while then report it as stuck.
             return (m_carMoveAttempts > 25) && (Time.time - m_carStuckTime >= 0.1f);
@@ -462,14 +677,33 @@ public class GameSystem : MonoBehaviour
         return false;
     }
 
-    private void ShowOptionToGetCarUnstuck()
+    private void GetBackOnTrack()
     {
-        Debug.Log("Car is stuck: Speed: " + m_carController.CurrentSpeed + ", Revs: " + m_carController.Revs);
-        // TODO: Alert.ShowAlert();
+        m_carController.StopCar();
+        m_carController.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
+        m_carController.transform.rotation = m_rotationOnTrack;
     }
 
-    private void GetCarUnstuck()
+    public void ShowInfoMessage(string message, float duration)
     {
-        m_carController.transform.Translate(new Vector3(10, 0, 10));
+        if (!String.IsNullOrEmpty(m_infoMessageText.text))
+            return;
+
+        m_infoMessageAudioSource.Play();
+
+        m_infoMessageText.text = message;
+        StartCoroutine(HideInfoMessage(duration));
+    }
+
+    public IEnumerator HideInfoMessage(float duration)
+    {
+        yield return new WaitForSecondsRealtime(duration);
+        m_infoMessageText.text = null;
+    }
+
+    private void ShowDebugInfo(string info)
+    {
+        Debug.Log(info);
+        ShowInfoMessage(info, 3f);
     }
 }

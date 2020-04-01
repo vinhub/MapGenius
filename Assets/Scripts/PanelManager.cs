@@ -11,7 +11,7 @@ public class PanelManager : MonoBehaviour {
 	private GameObject m_goPrevSelected;
 
     public string CurLandmarkName { get; private set; }
-    private GameObject m_mainMenu, m_panels, m_instructionsPanel, m_mapPanel;
+    private GameObject m_panels, m_instructionsPanel, m_mapPanel;
     private Text m_scoreText, m_timeText;
     private MapPanelHelper m_mpHelper;
     private bool m_gameStartInstructions;
@@ -20,7 +20,6 @@ public class PanelManager : MonoBehaviour {
 	{
         GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
 
-        m_mainMenu = mainMenuUI.transform.Find(Strings.MainMenuName).gameObject;
         m_panels = mainMenuUI.transform.Find(Strings.PanelsName).gameObject;
         m_instructionsPanel = mainMenuUI.transform.Find(Strings.InstructionsPanelPath).gameObject;
         m_mapPanel = mainMenuUI.transform.Find(Strings.MapPanelPath).gameObject;
@@ -41,7 +40,6 @@ public class PanelManager : MonoBehaviour {
 
         m_goPrevSelected = EventSystem.current.currentSelectedGameObject;
 
-        m_mainMenu.SetActive(false);
         m_panels.SetActive(true);
         goPanel.SetActive(true);
 
@@ -51,6 +49,17 @@ public class PanelManager : MonoBehaviour {
 
         m_goPanel = goPanel;
 	}
+
+    public void ClosePanel()
+    {
+        if (m_goPanel == m_instructionsPanel)
+            CloseInstructionsPanel();
+        else
+        {
+            if (CloseMapPanel(true))
+                ContinueGame(false);
+        }
+    }
 
     // this is called when game is started
     public void OpenInstructionsPanel(bool isGameStarting)
@@ -62,7 +71,7 @@ public class PanelManager : MonoBehaviour {
         OpenPanel(m_instructionsPanel);
 
         Text closePanelText = m_instructionsPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<Text>();
-        closePanelText.text = isGameStarting ? Strings.StartGame : Strings.Back;
+        closePanelText.text = isGameStarting ? Strings.StartGame : Strings.ContinueGame;
 
         Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
         hideInstructionsToggle.GetComponent<Toggle>().isOn = (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 1);
@@ -88,19 +97,11 @@ public class PanelManager : MonoBehaviour {
                 PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, hideInstructionsAtStart ? 1 : 0);
             }
 
-            // we will resume the game directly instead of going back to the main menu as is the usual case
-            GameSystem.Instance.ResumeGame(false);
-
             m_gameStartInstructions = false;
-        }
-        else
-        {
-            // back to the main menu
-            m_mainMenu.SetActive(true);
         }
 
         Text closeButtonText = m_goPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<Text>();
-        closeButtonText.text = Strings.Back;
+        closeButtonText.text = Strings.ContinueGame;
 
         EventSystem.current.SetSelectedGameObject(null);
 
@@ -108,7 +109,11 @@ public class PanelManager : MonoBehaviour {
         m_panels.SetActive(false);
 
         m_goPanel = null;
-	}
+
+        GameSystem.Instance.ResumeGame(false);
+
+        GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
+    }
 
     // called from menu
     public void OpenMapPanel()
@@ -118,8 +123,10 @@ public class PanelManager : MonoBehaviour {
 
     public void OpenMapPanel(string landmarkName, bool firstLandmarkCrossed)
     {
-        if (!String.IsNullOrEmpty(CurLandmarkName)) // already showing the panel
+        if (!String.IsNullOrEmpty(CurLandmarkName)) // already showing the panel for a landmark
             return;
+
+        GameSystem.Instance.PauseGame();
 
         CurLandmarkName = landmarkName;
 
@@ -149,12 +156,9 @@ public class PanelManager : MonoBehaviour {
         return true;
     }
 
-    public void OnClickBack()
+    public bool IsPanelOpen()
     {
-        if (!CloseMapPanel(false))
-            return;
-
-        m_mainMenu.SetActive(true);
+        return m_goPanel != null;
     }
 
     public void OnClickContinueGame()
@@ -218,9 +222,9 @@ public class PanelManager : MonoBehaviour {
         GameSystem.Instance.NewGame();
     }
 
-    public void NextLevel()
+    public void GoToLevel(string gameLevel)
     {
-        GameSystem.Instance.NextLevel();
+        GameSystem.Instance.GoToLevel(gameLevel);
     }
 
     public void QuitGame()

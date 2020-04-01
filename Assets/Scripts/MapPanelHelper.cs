@@ -72,18 +72,9 @@ public class MapPanelHelper : MonoBehaviour
 
         m_tActionButton1.gameObject.SetActive(false);
 
-        if (String.IsNullOrEmpty(landmarkName)) // panel invoked from menu?
-        {
-            m_actionButton2Text.text = Strings.Back;
-            m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
-            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickBack);
-        }
-        else // panel invoked as a result of crossing a landmark
-        {
-            m_actionButton2Text.text = Strings.ContinueGame;
-            m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
-            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickContinueGame);
-        }
+        m_actionButton2Text.text = Strings.ContinueGame;
+        m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
+        m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickContinueGame);
 
         // mark the current playermark as currently visiting
         if (m_phCur != null)

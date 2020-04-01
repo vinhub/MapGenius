@@ -2,14 +2,18 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseMenu : MonoBehaviour
+public class MainMenuButton : MonoBehaviour
 {
     private Toggle m_toggle;
     private AudioSource m_buttonClickAudioSource;
+    private GameObject m_mainMenu;
+    private PanelManager m_mainPanelManager;
 
     private void Awake()
     {
         m_toggle = GetComponent<Toggle>();
+        m_mainMenu = transform.parent.Find(Strings.MainMenuName).gameObject;
+        m_mainPanelManager = transform.parent.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
         m_buttonClickAudioSource = transform.parent.Find(Strings.ButtonClickAudioSourceName).GetComponent<AudioSource>();
 	}
 
@@ -22,10 +26,12 @@ public class PauseMenu : MonoBehaviour
     {
         m_buttonClickAudioSource.Play();
         GameSystem.Instance.PauseGame();
+        m_mainMenu.SetActive(true);
     }
     
     private void MenuOff()
     {
+        m_mainMenu.SetActive(false);
         GameSystem.Instance.ResumeGame(false);
     }
     
@@ -47,16 +53,8 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-
-#if !MOBILE_INPUT
-	private void Update()
-	{
-		if(Input.GetKeyUp(KeyCode.Escape))
-		{
-		    m_toggle.isOn = !m_toggle.isOn;
-            Cursor.visible = m_toggle.isOn;//force the cursor visible if anythign had hidden it
-		}
-	}
-#endif
+    public void Toggle()
+    {
+        m_toggle.isOn = !m_toggle.isOn;
+    }
 }
-
