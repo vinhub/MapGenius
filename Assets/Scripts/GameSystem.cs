@@ -56,6 +56,8 @@ public class GameSystem : MonoBehaviour
 
     private AudioSource m_victoryLapAudioSource;
 
+    private bool m_inFreeDriveMode = false; // in free drive mode player can drive freely anywhere without worrying about crossing landmarks or scoring etc.
+
     private void Awake()
     {
         m_instance = this;
@@ -79,6 +81,8 @@ public class GameSystem : MonoBehaviour
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
 
         m_victoryLapAudioSource = GetComponent<AudioSource>();
+
+        m_inFreeDriveMode = false;
 
         InitGame();
     }
@@ -289,12 +293,15 @@ public class GameSystem : MonoBehaviour
     {
         bool fBackOnTrack = Input.GetKeyUp(KeyCode.T);
         bool fShowMap = Input.GetKeyUp(KeyCode.M);
+        bool fFreeDrive = Input.GetKeyUp(KeyCode.F);
         bool fEscape = Input.GetKeyUp(KeyCode.Escape);
 
         if (fBackOnTrack)
             GetBackOnTrack();
         else if (fShowMap)
             m_mainPanelManager.OpenMapPanel();
+        else if (fFreeDrive)
+            StartFreeDrive();
         else if (fEscape)
         {
             if (m_mainPanelManager.IsPanelOpen())
@@ -381,6 +388,7 @@ public class GameSystem : MonoBehaviour
         {
             // play victory music
             m_victoryLapAudioSource.Play();
+            ShowInfoMessage(Strings.VictoryLapMessage, 3f);
         }
 
         Time.timeScale = m_timeScaleSav;
@@ -415,7 +423,7 @@ public class GameSystem : MonoBehaviour
     // called when the player crosses a landmark
     public void LandmarkCrossed(string landmarkName)
     {
-        if (!String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // currently processing a landmark?
+        if (m_inFreeDriveMode || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or currently processing a landmark?
             return;
 
         PauseGame();
@@ -682,6 +690,13 @@ public class GameSystem : MonoBehaviour
         m_carController.StopCar();
         m_carController.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
         m_carController.transform.rotation = m_rotationOnTrack;
+    }
+
+    // allow player to freely drive without worrying about landmarks etc.
+    private void StartFreeDrive()
+    {
+        m_inFreeDriveMode = true;
+        ShowInfoMessage(Strings.VictoryLapMessage, 3f);
     }
 
     public void ShowInfoMessage(string message, float duration)
