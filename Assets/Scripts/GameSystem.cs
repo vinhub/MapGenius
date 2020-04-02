@@ -294,7 +294,7 @@ public class GameSystem : MonoBehaviour
         bool fBackOnTrack = Input.GetKeyUp(KeyCode.T);
         bool fShowMap = Input.GetKeyUp(KeyCode.M);
         bool fFreeDrive = Input.GetKeyUp(KeyCode.F);
-        bool fEscape = Input.GetKeyUp(KeyCode.Escape);
+        bool fEscape = Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return);
 
         if (fBackOnTrack)
             GetBackOnTrack();
