@@ -50,6 +50,7 @@ public class GameSystem : MonoBehaviour
     private Quaternion m_rotationOnTrack = Quaternion.identity;
     private CiDyRoad m_roadOnTrack;
     private int m_iOrigPointOnTrack = 0;
+    private Vector3 m_closestPointOnTrack;
     private Transform m_tOnTrackLocator;
 
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
@@ -588,6 +589,10 @@ public class GameSystem : MonoBehaviour
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
         } while (distNext < dist);
 
+        // update closest point on track
+        Collider roadCollider = m_roadOnTrack.GetComponent<Collider>();
+        m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(Car.transform.position);
+
         //ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
     }
 
@@ -638,9 +643,9 @@ public class GameSystem : MonoBehaviour
     {
         Vector3 carPosition = Car.transform.position;
         Collider roadCollider = m_roadOnTrack.GetComponent<Collider>();
-        Vector3 closestPoint = roadCollider.ClosestPointOnBounds(carPosition);
+        m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(carPosition);
 
-        if (Vector3.Distance(closestPoint, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so we'll say it's on track
+        if (Vector3.Distance(m_closestPointOnTrack, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so we'll say it's on track
             return false;
 
         // check if it is on a different road
@@ -650,9 +655,9 @@ public class GameSystem : MonoBehaviour
                 continue;
 
             roadCollider = tRoad.GetComponent<Collider>();
-            closestPoint = roadCollider.ClosestPointOnBounds(carPosition);
+            m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(carPosition);
 
-            if (Vector3.Distance(closestPoint, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so it is on or close to this road
+            if (Vector3.Distance(m_closestPointOnTrack, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so it is on or close to this road
             {
                 m_roadOnTrack = tRoad.GetComponent<CiDyRoad>();
                 m_iOrigPointOnTrack = m_roadOnTrack.origPoints.Length / 2; // just place it at half the length for now, it will get adjusted to the closest point
