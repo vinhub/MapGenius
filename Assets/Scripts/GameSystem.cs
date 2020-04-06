@@ -277,7 +277,7 @@ public class GameSystem : MonoBehaviour
         m_lastUpdateTime = Time.time;
 
         // global game update logic goes here
-        UpdateCarStatus();
+        bool fCarIsOnTrack = UpdateCarStatus();
 
         // detect if car is stuck and show option to get it unstuck
         if (IsCarStuck())
@@ -287,8 +287,8 @@ public class GameSystem : MonoBehaviour
         {
             m_tOnTrackLocator.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
             m_tOnTrackLocator.transform.rotation = m_rotationOnTrack;
+            }
         }
-    }
 
     private void HandleHotkeys()
     {
@@ -501,24 +501,25 @@ public class GameSystem : MonoBehaviour
         StaticGlobals.SavedInitStateExists = false;
     }
 
-    private void UpdateCarStatus()
+    private bool UpdateCarStatus()
     {
         m_carSpeedText.text = String.Format(Strings.CarSpeedStatusFormat, m_carController.CurrentSpeed);
         m_carRevsText.text = String.Format(Strings.CarRevsStatusFormat, Mathf.RoundToInt(m_carController.Revs * 1000f));
 
         // determine road and origPoint closest to the car
-        UpdateOnTrackInfo();
+        return UpdateOnTrackInfo();
     }
 
     // we need to remember the origPoint closest to the car at all times. That way, when we go offroad and car gets stuck, the player can hit
     // the GetUnstuck hotkey and we can bring them back to the last origPoint they were at before they left the road.
-    private void UpdateOnTrackInfo()
+    // returns true iff car is still on track
+    private bool UpdateOnTrackInfo()
     {
         // If the car is off track, we should not update the roadCur and iOrigPointCur.
         // This is an optimization as well as because when the player wants to bring the car back on track, we want to bring them to where they left the road.
         // We don't want to bring them to the closest origPoint at that time (which could be in unfamiliar territory because they may have wandered off quite a bit.)
         if (IsCarOffTrack())
-            return;
+            return false;
 
         // check distance from the current origPoint
         float dist = CarDistanceFromOrigPoint(m_roadOnTrack, m_iOrigPointOnTrack);
@@ -594,6 +595,8 @@ public class GameSystem : MonoBehaviour
         m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(Car.transform.position);
 
         //ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
+
+        return true;
     }
 
     private void CalcNextRoad(float dist, CiDyNode node, ref CiDyRoad roadNext, ref int iOrigPointNext)
