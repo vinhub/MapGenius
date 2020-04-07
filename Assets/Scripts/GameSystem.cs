@@ -180,7 +180,7 @@ public class GameSystem : MonoBehaviour
 
             // calculate a point about halfway along the road and orient it so it faces the road
             Vector3 landmarkPos = road.origPoints[road.origPoints.Length / 2];
-            landmarkPos.y -= 0.5f; // lower it slightly so the landmark does not appear to be floating on sloping roads
+            landmarkPos.y -= 0.7f; // lower it slightly so the landmark does not appear to be floating on sloping roads
             Vector3 nextPos = road.origPoints[road.origPoints.Length / 2 + 1];
             nextPos.y = landmarkPos.y; // make the direction horizontal so the landmark stands up vertical
             Quaternion rotation = Quaternion.LookRotation(landmarkPos - nextPos, Vector3.up);
