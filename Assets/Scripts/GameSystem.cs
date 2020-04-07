@@ -50,11 +50,14 @@ public class GameSystem : MonoBehaviour
     private Quaternion m_rotationOnTrack = Quaternion.identity;
     private CiDyRoad m_roadOnTrack;
     private int m_iOrigPointOnTrack = 0;
+    private Vector3 m_closestPointOnTrack;
     private Transform m_tOnTrackLocator;
 
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
 
     private AudioSource m_victoryLapAudioSource;
+
+    private bool m_inFreeDriveMode = false; // in free drive mode player can drive freely anywhere without worrying about crossing landmarks or scoring etc.
 
     private void Awake()
     {
@@ -79,6 +82,8 @@ public class GameSystem : MonoBehaviour
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
 
         m_victoryLapAudioSource = GetComponent<AudioSource>();
+
+        m_inFreeDriveMode = false;
 
         InitGame();
     }
@@ -272,7 +277,7 @@ public class GameSystem : MonoBehaviour
         m_lastUpdateTime = Time.time;
 
         // global game update logic goes here
-        UpdateCarStatus();
+        bool fCarIsOnTrack = UpdateCarStatus();
 
         // detect if car is stuck and show option to get it unstuck
         if (IsCarStuck())
@@ -282,19 +287,22 @@ public class GameSystem : MonoBehaviour
         {
             m_tOnTrackLocator.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
             m_tOnTrackLocator.transform.rotation = m_rotationOnTrack;
+            }
         }
-    }
 
     private void HandleHotkeys()
     {
         bool fBackOnTrack = Input.GetKeyUp(KeyCode.T);
         bool fShowMap = Input.GetKeyUp(KeyCode.M);
-        bool fEscape = Input.GetKeyUp(KeyCode.Escape);
+        bool fFreeDrive = Input.GetKeyUp(KeyCode.F);
+        bool fEscape = Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return);
 
         if (fBackOnTrack)
             GetBackOnTrack();
         else if (fShowMap)
             m_mainPanelManager.OpenMapPanel();
+        else if (fFreeDrive)
+            StartFreeDrive();
         else if (fEscape)
         {
             if (m_mainPanelManager.IsPanelOpen())
@@ -381,6 +389,7 @@ public class GameSystem : MonoBehaviour
         {
             // play victory music
             m_victoryLapAudioSource.Play();
+            ShowInfoMessage(Strings.VictoryLapMessage, 3f);
         }
 
         Time.timeScale = m_timeScaleSav;
@@ -415,7 +424,7 @@ public class GameSystem : MonoBehaviour
     // called when the player crosses a landmark
     public void LandmarkCrossed(string landmarkName)
     {
-        if (!String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // currently processing a landmark?
+        if (m_inFreeDriveMode || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or currently processing a landmark?
             return;
 
         PauseGame();
@@ -492,24 +501,25 @@ public class GameSystem : MonoBehaviour
         StaticGlobals.SavedInitStateExists = false;
     }
 
-    private void UpdateCarStatus()
+    private bool UpdateCarStatus()
     {
         m_carSpeedText.text = String.Format(Strings.CarSpeedStatusFormat, m_carController.CurrentSpeed);
         m_carRevsText.text = String.Format(Strings.CarRevsStatusFormat, Mathf.RoundToInt(m_carController.Revs * 1000f));
 
         // determine road and origPoint closest to the car
-        UpdateOnTrackInfo();
+        return UpdateOnTrackInfo();
     }
 
     // we need to remember the origPoint closest to the car at all times. That way, when we go offroad and car gets stuck, the player can hit
     // the GetUnstuck hotkey and we can bring them back to the last origPoint they were at before they left the road.
-    private void UpdateOnTrackInfo()
+    // returns true iff car is still on track
+    private bool UpdateOnTrackInfo()
     {
         // If the car is off track, we should not update the roadCur and iOrigPointCur.
         // This is an optimization as well as because when the player wants to bring the car back on track, we want to bring them to where they left the road.
         // We don't want to bring them to the closest origPoint at that time (which could be in unfamiliar territory because they may have wandered off quite a bit.)
         if (IsCarOffTrack())
-            return;
+            return false;
 
         // check distance from the current origPoint
         float dist = CarDistanceFromOrigPoint(m_roadOnTrack, m_iOrigPointOnTrack);
@@ -580,7 +590,13 @@ public class GameSystem : MonoBehaviour
             distNext = CarDistanceFromOrigPoint(roadNext, iOrigPointNext);
         } while (distNext < dist);
 
+        // update closest point on track
+        Collider roadCollider = m_roadOnTrack.GetComponent<Collider>();
+        m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(Car.transform.position);
+
         //ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
+
+        return true;
     }
 
     private void CalcNextRoad(float dist, CiDyNode node, ref CiDyRoad roadNext, ref int iOrigPointNext)
@@ -630,9 +646,9 @@ public class GameSystem : MonoBehaviour
     {
         Vector3 carPosition = Car.transform.position;
         Collider roadCollider = m_roadOnTrack.GetComponent<Collider>();
-        Vector3 closestPoint = roadCollider.ClosestPointOnBounds(carPosition);
+        m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(carPosition);
 
-        if (Vector3.Distance(closestPoint, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so we'll say it's on track
+        if (Vector3.Distance(m_closestPointOnTrack, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so we'll say it's on track
             return false;
 
         // check if it is on a different road
@@ -642,9 +658,9 @@ public class GameSystem : MonoBehaviour
                 continue;
 
             roadCollider = tRoad.GetComponent<Collider>();
-            closestPoint = roadCollider.ClosestPointOnBounds(carPosition);
+            m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(carPosition);
 
-            if (Vector3.Distance(closestPoint, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so it is on or close to this road
+            if (Vector3.Distance(m_closestPointOnTrack, carPosition) < m_roadOnTrack.width / 2f) // this means it is inside the collider or close to it, so it is on or close to this road
             {
                 m_roadOnTrack = tRoad.GetComponent<CiDyRoad>();
                 m_iOrigPointOnTrack = m_roadOnTrack.origPoints.Length / 2; // just place it at half the length for now, it will get adjusted to the closest point
@@ -682,6 +698,13 @@ public class GameSystem : MonoBehaviour
         m_carController.StopCar();
         m_carController.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
         m_carController.transform.rotation = m_rotationOnTrack;
+    }
+
+    // allow player to freely drive without worrying about landmarks etc.
+    private void StartFreeDrive()
+    {
+        m_inFreeDriveMode = true;
+        ShowInfoMessage(Strings.VictoryLapMessage, 3f);
     }
 
     public void ShowInfoMessage(string message, float duration)

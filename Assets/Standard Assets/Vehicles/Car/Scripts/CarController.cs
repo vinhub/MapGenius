@@ -153,7 +153,7 @@ namespace UnityStandardAssets.Vehicles.Car
             handbrake = Mathf.Clamp(handbrake, 0, 1);
 
             // VINMOD: START
-            float MaximumSteerAngle = m_MaximumSteerAngle - (CurrentSpeed * m_SteeringDampingFactor);
+            float MaximumSteerAngle = m_MaximumSteerAngle - Mathf.Lerp(0, m_MaximumSteerAngle, CurrentSpeed * m_SteeringDampingFactor / m_Topspeed);
             m_SteerAngle = steering * MaximumSteerAngle;
             // VINMOD: END
 
@@ -195,6 +195,11 @@ namespace UnityStandardAssets.Vehicles.Car
         {
             m_Rigidbody.velocity = Vector3.zero;
             m_carAudio.StopSound();
+        }
+
+        public void SetSteeringDampingFactor(float factor)
+        {
+            m_SteeringDampingFactor = factor;
         }
         // VINMOD: END
 

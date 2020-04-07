@@ -91,4 +91,5 @@
     public const string CarRevsStatusFormat = "Revs: {0:d3}";
     public const string GetBackOnTrackMessage = "Press T to get back on track.";
     public const string StartingInstructionsMessage = "Drive the car using the W, A, S, D, or arrow keys.";
+    public const string VictoryLapMessage = "Drive freely anywhere you want to. You can even go offroad.";
 }
