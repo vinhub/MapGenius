@@ -11,7 +11,7 @@ public class PanelManager : MonoBehaviour {
 	private GameObject m_goPrevSelected;
 
     public string CurLandmarkName { get; private set; }
-    private GameObject m_panels, m_instructionsPanel, m_mapPanel;
+    private GameObject m_panels, m_instructionsPanel, m_aboutPanel, m_mapPanel;
     private Text m_scoreText, m_timeText;
     private MapPanelHelper m_mpHelper;
     private bool m_gameStartInstructions;
@@ -22,6 +22,7 @@ public class PanelManager : MonoBehaviour {
 
         m_panels = mainMenuUI.transform.Find(Strings.PanelsName).gameObject;
         m_instructionsPanel = mainMenuUI.transform.Find(Strings.InstructionsPanelPath).gameObject;
+        m_aboutPanel = mainMenuUI.transform.Find(Strings.AboutPanelPath).gameObject;
         m_mapPanel = mainMenuUI.transform.Find(Strings.MapPanelPath).gameObject;
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
         m_scoreText = mainMenuUI.transform.Find(Strings.GameStatusScoreTextPath).GetComponent<Text>();
@@ -113,6 +114,31 @@ public class PanelManager : MonoBehaviour {
         GameSystem.Instance.ResumeGame(false);
 
         GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
+    }
+
+    public void OpenAboutPanel()
+    {
+        GameSystem.Instance.PauseGame();
+
+        OpenPanel(m_aboutPanel);
+    }
+
+    // called when the CloseButton is clicked on the About panel
+    public void CloseAboutPanel()
+    {
+        if (m_goPanel == null)
+            return;
+
+        Debug.Assert(m_goPanel == m_aboutPanel);
+
+        EventSystem.current.SetSelectedGameObject(null);
+
+        m_goPanel.SetActive(false);
+        m_panels.SetActive(false);
+
+        m_goPanel = null;
+
+        GameSystem.Instance.ResumeGame(false);
     }
 
     // called from menu

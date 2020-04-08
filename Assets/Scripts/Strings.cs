@@ -19,6 +19,7 @@
     public const string PanelManagerPath = "PanelManager";
     public const string OpenMenuButtonPath = "OpenMenuButton";
     public const string InstructionsPanelPath = "Panels/Instructions";
+    public const string AboutPanelPath = "Panels/About";
     public const string MapPanelPath = "Panels/Map";
     public const string GameStatusScoreTextPath = "GameStatus/ScoreText";
     public const string GameStatusTimeTextPath = "GameStatus/TimeText";
