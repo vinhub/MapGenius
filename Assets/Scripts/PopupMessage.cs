@@ -4,16 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum PopupMessageType { FirstLandmarkCrossed, OtherLandmarkCrossed, LevelLost, LevelWon };
+
 public class PopupMessage : MonoBehaviour
 {
     // our singleton instance
     private static PopupMessage m_instance;
     public static PopupMessage Instance { get { return m_instance; } }
 
+    private AudioSource[] m_audioSources;
+
     private Text m_messageText;
     private GameObject m_popupWindow;
-
-    private AudioSource m_audioSource;
 
     private void Awake()
     {
@@ -22,17 +24,34 @@ public class PopupMessage : MonoBehaviour
         m_messageText = transform.Find(Strings.PopupMessageTextPath).GetComponent<Text>();
         m_popupWindow = transform.Find(Strings.PopupWindowPath).gameObject;
 
-        m_audioSource = GetComponent<AudioSource>();
+        m_audioSources = GetComponents<AudioSource>();
     }
 
-    private void _ShowMessage(string message)
+    private void _ShowMessage(PopupMessageType type, string message)
     {
-        m_audioSource.Play();
+        int iAudioSource;
+
+        switch (type)
+        {
+            case PopupMessageType.LevelLost:
+                iAudioSource = 1;
+                break;
+
+            case PopupMessageType.LevelWon:
+                iAudioSource = 2;
+                break;
+
+            default:
+                iAudioSource = 0;
+                break;
+        }
 
         m_messageText.text = message;
-        m_popupWindow.SetActive(true);
 
+        m_popupWindow.SetActive(true);
         transform.SetAsLastSibling();
+
+        m_audioSources[iAudioSource].Play();
     }
 
     private void _HideMessage()
@@ -40,9 +59,9 @@ public class PopupMessage : MonoBehaviour
         m_popupWindow.SetActive(false);
     }
 
-    public static void ShowMessage(string message)
+    public static void ShowMessage(PopupMessageType type, string message)
     {
-        Instance._ShowMessage(message);
+        Instance._ShowMessage(type, message);
     }
 
     public static void HideMessage()

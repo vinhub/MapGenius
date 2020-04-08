@@ -435,10 +435,10 @@ public class GameSystem : MonoBehaviour
     private IEnumerator HandleLandmarkCrossed(string landmarkName)
     {
         // flash a popup letting the player know they crossed the landmark
-        string messageText = String.Format(Strings.LandmarkCrossedMessageFormat, landmarkName) +
-            (m_firstLandmarkCrossed ? Strings.FirstLandmarkCrossedMessage : Strings.OtherLandmarkCrossedMessage);
+        PopupMessageType type = m_firstLandmarkCrossed ? PopupMessageType.FirstLandmarkCrossed : PopupMessageType.OtherLandmarkCrossed;
+        string message = m_firstLandmarkCrossed ? String.Format(Strings.FirstLandmarkCrossedMessageFormat, landmarkName) : String.Format(Strings.OtherLandmarkCrossedMessageFormat, landmarkName);
 
-        PopupMessage.ShowMessage(messageText);
+        PopupMessage.ShowMessage(type, message);
 
         // let it stay for some time
         yield return new WaitForSecondsRealtime(m_firstLandmarkCrossed ? 5f : 4f);

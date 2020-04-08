@@ -189,9 +189,11 @@ public class MapPanelHelper : MonoBehaviour
 
     private IEnumerator ShowLevelCompleteMessage()
     {
-        PopupMessage.ShowMessage(String.Format(
-            (GameSystem.Instance.LevelScore == StaticGlobals.MaxLevelScore) ? Strings.GoodLevelCompleteMessageFormat : Strings.BadLevelCompleteMessageFormat,
-            GameSystem.Instance.LevelScore, StaticGlobals.MaxLevelScore, (int)Time.fixedTime));
+        PopupMessageType type = IsLevelWon() ? PopupMessageType.LevelWon : PopupMessageType.LevelLost;
+        string message = IsLevelWon() ? string.Format(Strings.LevelWonMessageFormat, GameSystem.Instance.LevelScore, StaticGlobals.MaxLevelScore, (int)Time.fixedTime) :
+            string.Format(Strings.LevelLostMessageFormat, GameSystem.Instance.LevelScore, StaticGlobals.MaxLevelScore, (int)Time.fixedTime);
+
+        PopupMessage.ShowMessage(type, message);
 
         yield return new WaitForSecondsRealtime(5f);
 
@@ -383,5 +385,10 @@ public class MapPanelHelper : MonoBehaviour
         }
 
         return allPlayermarksVisited;
+    }
+
+    private static bool IsLevelWon()
+    {
+        return (GameSystem.Instance.LevelScore == StaticGlobals.MaxLevelScore);
     }
 }
