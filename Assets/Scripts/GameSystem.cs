@@ -51,7 +51,7 @@ public class GameSystem : MonoBehaviour
     private CiDyRoad m_roadOnTrack;
     private int m_iOrigPointOnTrack = 0;
     private Vector3 m_closestPointOnTrack;
-    private Transform m_tOnTrackLocator;
+    //private Transform m_tOnTrackLocator;
 
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
 
@@ -63,7 +63,7 @@ public class GameSystem : MonoBehaviour
     {
         m_instance = this;
 
-        m_tOnTrackLocator = GameObject.Find(Strings.OnTrackrLocatorPath).transform;
+        // m_tOnTrackLocator = GameObject.Find(Strings.OnTrackrLocatorPath).transform;
     }
 
     private void Start()
@@ -283,12 +283,12 @@ public class GameSystem : MonoBehaviour
         if (IsCarStuck())
             ShowInfoMessage(Strings.GetBackOnTrackMessage, 3f);
 
-        if (m_roadOnTrack)
-        {
-            m_tOnTrackLocator.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
-            m_tOnTrackLocator.transform.rotation = m_rotationOnTrack;
-            }
-        }
+        //if (m_roadOnTrack)
+        //{
+        //    m_tOnTrackLocator.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
+        //    m_tOnTrackLocator.transform.rotation = m_rotationOnTrack;
+        //}
+    }
 
     private void HandleHotkeys()
     {

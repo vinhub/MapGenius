@@ -26,7 +26,7 @@
     public const string CarStatusSpeedTextPath = "CarStatus/SpeedText";
     public const string CarStatusRevsTextPath = "CarStatus/RevsText";
     public const string InfoMessageTextPath = "InfoMessage/InfoMessageText";
-    public const string OnTrackrLocatorPath = "UI/OnTrackLocator";
+    //public const string OnTrackrLocatorPath = "UI/OnTrackLocator";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
     public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
