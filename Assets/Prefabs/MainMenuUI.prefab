@@ -948,6 +948,7 @@ GameObject:
   - component: {fileID: 4668155662263889110}
   - component: {fileID: 2115879271345261940}
   - component: {fileID: 8965996720583316829}
+  - component: {fileID: 3004451555951720268}
   m_Layer: 5
   m_Name: Instructions
   m_TagString: Untagged
@@ -1109,6 +1110,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &3004451555951720268
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012869820776832112}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a1a76cb6763ca8a4ab0450fc989edb19, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1014009227538049548
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,6 +1186,7 @@ GameObject:
   - component: {fileID: 464851055939306344}
   - component: {fileID: 5849097069432752610}
   - component: {fileID: 7305685845432777814}
+  - component: {fileID: 9176328731251468554}
   m_Layer: 5
   m_Name: About
   m_TagString: Untagged
@@ -1327,6 +1348,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &9176328731251468554
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088088418430947661}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a1a76cb6763ca8a4ab0450fc989edb19, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1127614653246278751
 GameObject:
   m_ObjectHideFlags: 0
@@ -4432,6 +4472,7 @@ GameObject:
   - component: {fileID: 6875376583176036319}
   - component: {fileID: 3218436461981410838}
   - component: {fileID: 1864750322083974311}
+  - component: {fileID: 1913770613988349160}
   m_Layer: 5
   m_Name: Map
   m_TagString: Untagged
@@ -4605,6 +4646,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &1913770613988349160
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4126016201660900676}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a1a76cb6763ca8a4ab0450fc989edb19, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4129605248290994188
 GameObject:
   m_ObjectHideFlags: 0
@@ -7745,6 +7805,7 @@ GameObject:
   - component: {fileID: 5736685844641199814}
   - component: {fileID: 5736685844641199819}
   - component: {fileID: 3213659046991475345}
+  - component: {fileID: 8231468215835940831}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -7907,6 +7968,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &8231468215835940831
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736685844641199821}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ac757252883996b40ac87a677e4cdba1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5736685844688968784
 GameObject:
   m_ObjectHideFlags: 0
