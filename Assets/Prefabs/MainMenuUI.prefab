@@ -16698,10 +16698,21 @@ MonoBehaviour:
 
     Contact:
 
-    Web:
-    http://redmondlabs.com
+    -
+    Web: http://redmondlabs.com
 
-    E-Mail: info@redmondlabs.com'
+    - E-Mail: info@redmondlabs.com
+
+
+    Credits:
+
+    -
+    Unity Asset Store: CiDy 2.1 and others
+
+    - YouTube Audio Library
+
+    - Freesound.org:
+    https://freesound.org/s/257365/ and others'
 --- !u!1 &7484729520941112111
 GameObject:
   m_ObjectHideFlags: 0

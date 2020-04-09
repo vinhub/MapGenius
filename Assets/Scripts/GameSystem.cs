@@ -644,6 +644,9 @@ public class GameSystem : MonoBehaviour
 
     private bool IsCarOffTrack()
     {
+        if (m_roadOnTrack == null)
+            return false;
+
         Vector3 carPosition = Car.transform.position;
         Collider roadCollider = m_roadOnTrack.GetComponent<Collider>();
         m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(carPosition);
