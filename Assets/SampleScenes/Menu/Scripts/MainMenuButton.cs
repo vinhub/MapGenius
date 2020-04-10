@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,10 +28,12 @@ public class MainMenuButton : MonoBehaviour
         m_buttonClickAudioSource.Play();
         GameSystem.Instance.PauseGame();
         m_mainMenu.SetActive(true);
+        m_mainMenu.transform.Find("Window").DOLocalMoveY(0f, 0.6f).SetUpdate(true);
     }
-    
+
     private void MenuOff()
     {
+        m_mainMenu.transform.Find("Window").DOLocalMoveY(1500f, 0.6f).SetUpdate(true);
         m_mainMenu.SetActive(false);
         GameSystem.Instance.ResumeGame(false);
     }

@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using DG.Tweening;
 
 public class PanelManager : MonoBehaviour {
 
@@ -39,6 +40,8 @@ public class PanelManager : MonoBehaviour {
         if (m_goPanel == goPanel)
             return;
 
+        GameSystem.Instance.PauseGame();
+
         m_goPrevSelected = EventSystem.current.currentSelectedGameObject;
 
         m_panels.SetActive(true);
@@ -49,7 +52,9 @@ public class PanelManager : MonoBehaviour {
         //EventSystem.current.SetSelectedGameObject(FindFirstEnabledSelectable(goPanel));
 
         m_goPanel = goPanel;
-	}
+
+        m_goPanel.transform.Find("Window").DOLocalMoveY(0f, 0.6f).SetUpdate(true);
+    }
 
     public void ClosePanel()
     {
@@ -57,17 +62,26 @@ public class PanelManager : MonoBehaviour {
             CloseInstructionsPanel();
         else
         {
-            if (CloseMapPanel(true))
-                ContinueGame(false);
+            if (!CloseMapPanel(true))
+                return;
         }
+
+        m_goPanel.transform.Find("Window").DOLocalMoveY(1500f, 0.6f).SetUpdate(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+
+        m_goPanel.SetActive(false);
+        m_panels.SetActive(false);
+
+        m_goPanel = null;
+
+        GameSystem.Instance.ResumeGame(false);
     }
 
     // this is called when game is started
     public void OpenInstructionsPanel(bool isGameStarting)
     {
         m_gameStartInstructions = isGameStarting;
-
-        GameSystem.Instance.PauseGame();
 
         OpenPanel(m_instructionsPanel);
 
@@ -82,7 +96,7 @@ public class PanelManager : MonoBehaviour {
     }
 
     // called when the CloseButton is clicked on the Instructions panel
-    public void CloseInstructionsPanel()
+    private void CloseInstructionsPanel()
 	{
 		if (m_goPanel == null)
 			return;
@@ -104,41 +118,12 @@ public class PanelManager : MonoBehaviour {
         Text closeButtonText = m_goPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<Text>();
         closeButtonText.text = Strings.ContinueGame;
 
-        EventSystem.current.SetSelectedGameObject(null);
-
-        m_goPanel.SetActive(false);
-        m_panels.SetActive(false);
-
-        m_goPanel = null;
-
-        GameSystem.Instance.ResumeGame(false);
-
         GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
     }
 
     public void OpenAboutPanel()
     {
-        GameSystem.Instance.PauseGame();
-
         OpenPanel(m_aboutPanel);
-    }
-
-    // called when the CloseButton is clicked on the About panel
-    public void CloseAboutPanel()
-    {
-        if (m_goPanel == null)
-            return;
-
-        Debug.Assert(m_goPanel == m_aboutPanel);
-
-        EventSystem.current.SetSelectedGameObject(null);
-
-        m_goPanel.SetActive(false);
-        m_panels.SetActive(false);
-
-        m_goPanel = null;
-
-        GameSystem.Instance.ResumeGame(false);
     }
 
     // called from menu
@@ -151,8 +136,6 @@ public class PanelManager : MonoBehaviour {
     {
         if (!String.IsNullOrEmpty(CurLandmarkName)) // already showing the panel for a landmark
             return;
-
-        GameSystem.Instance.PauseGame();
 
         CurLandmarkName = landmarkName;
 
@@ -171,13 +154,6 @@ public class PanelManager : MonoBehaviour {
             return false;
 
         CurLandmarkName = null;
-
-        EventSystem.current.SetSelectedGameObject(null);
-
-        m_goPanel.SetActive(false);
-        m_panels.SetActive(false);
-
-        m_goPanel = null;
 
         return true;
     }
