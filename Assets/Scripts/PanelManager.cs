@@ -53,7 +53,7 @@ public class PanelManager : MonoBehaviour {
 
         m_goPanel = goPanel;
 
-        m_goPanel.transform.Find("Window").DOLocalMoveY(0f, 0.6f).SetUpdate(true);
+        m_goPanel.transform.Find("Window").DOLocalMoveY(0f, 0.6f, false).SetUpdate(true);
     }
 
     public void ClosePanel()
@@ -66,14 +66,9 @@ public class PanelManager : MonoBehaviour {
                 return;
         }
 
-        m_goPanel.transform.Find("Window").DOLocalMoveY(1500f, 0.6f).SetUpdate(true);
-
         EventSystem.current.SetSelectedGameObject(null);
 
-        m_goPanel.SetActive(false);
-        m_panels.SetActive(false);
-
-        m_goPanel = null;
+        m_goPanel.transform.Find("Window").DOLocalMoveY(1500f, 0.6f, false).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_panels.SetActive(false); m_goPanel = null; });
 
         GameSystem.Instance.ResumeGame(false);
     }

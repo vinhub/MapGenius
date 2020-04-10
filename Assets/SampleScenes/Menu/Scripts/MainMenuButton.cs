@@ -33,8 +33,7 @@ public class MainMenuButton : MonoBehaviour
 
     private void MenuOff()
     {
-        m_mainMenu.transform.Find("Window").DOLocalMoveY(1500f, 0.6f).SetUpdate(true);
-        m_mainMenu.SetActive(false);
+        m_mainMenu.transform.Find("Window").DOLocalMoveY(1500f, 0.6f).SetUpdate(true).OnComplete(() => m_mainMenu.SetActive(false));
         GameSystem.Instance.ResumeGame(false);
     }
     
