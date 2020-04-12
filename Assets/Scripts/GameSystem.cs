@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -62,6 +63,8 @@ public class GameSystem : MonoBehaviour
     private void Awake()
     {
         m_instance = this;
+
+        DOTween.useSmoothDeltaTime = true;
 
         // m_tOnTrackLocator = GameObject.Find(Strings.OnTrackrLocatorPath).transform;
     }

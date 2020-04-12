@@ -22,7 +22,7 @@ public class PopupMessage : MonoBehaviour
         m_instance = this;
 
         m_messageText = transform.Find(Strings.PopupMessageTextPath).GetComponent<Text>();
-        m_popupWindow = transform.Find(Strings.PopupWindowPath).gameObject;
+        m_popupWindow = transform.Find(Strings.WindowPath).gameObject;
 
         m_audioSources = GetComponents<AudioSource>();
     }
