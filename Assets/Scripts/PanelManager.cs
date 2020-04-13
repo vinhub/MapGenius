@@ -56,12 +56,17 @@ public class PanelManager : MonoBehaviour {
 
     public void ClosePanel()
     {
+        ClosePanel(true);
+    }
+
+    public bool ClosePanel(bool fCheckOkToClose)
+    {
         if (m_goPanel == m_instructionsPanel)
             CloseInstructionsPanel();
         else
         {
-            if (!CloseMapPanel(true))
-                return;
+            if (!CloseMapPanel(fCheckOkToClose))
+                return false;
         }
 
         EventSystem.current.SetSelectedGameObject(null);
@@ -69,6 +74,8 @@ public class PanelManager : MonoBehaviour {
         m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1500f, 0.6f, false).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_goPanel = null; });
 
         GameSystem.Instance.ResumeGame(false);
+
+        return true;
     }
 
     // this is called when game is started
@@ -158,7 +165,7 @@ public class PanelManager : MonoBehaviour {
 
     public void OnClickContinueGame()
     {
-        if (!CloseMapPanel(true))
+        if (!ClosePanel(true))
             return;
 
         ContinueGame(false);
@@ -166,7 +173,7 @@ public class PanelManager : MonoBehaviour {
 
     public void OnClickRetryGame()
     {
-        if (!CloseMapPanel(false))
+        if (!ClosePanel(false))
             return;
 
         RetryGame();
@@ -174,7 +181,7 @@ public class PanelManager : MonoBehaviour {
 
     public void OnClickVictoryLap()
     {
-        if (!CloseMapPanel(false))
+        if (!ClosePanel(false))
             return;
 
         ContinueGame(true);
@@ -184,7 +191,7 @@ public class PanelManager : MonoBehaviour {
 
     public void OnClickNewGame()
     {
-        if (!CloseMapPanel(false))
+        if (!ClosePanel(false))
             return;
 
         NewGame();
