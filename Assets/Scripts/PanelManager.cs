@@ -12,7 +12,7 @@ public class PanelManager : MonoBehaviour {
 	private GameObject m_goPrevSelected;
 
     public string CurLandmarkName { get; private set; }
-    private GameObject m_panels, m_instructionsPanel, m_aboutPanel, m_mapPanel;
+    private GameObject m_instructionsPanel, m_aboutPanel, m_mapPanel;
     private Text m_scoreText, m_timeText;
     private MapPanelHelper m_mpHelper;
     private bool m_gameStartInstructions;
@@ -21,7 +21,6 @@ public class PanelManager : MonoBehaviour {
 	{
         GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
 
-        m_panels = mainMenuUI.transform.Find(Strings.PanelsName).gameObject;
         m_instructionsPanel = mainMenuUI.transform.Find(Strings.InstructionsPanelPath).gameObject;
         m_aboutPanel = mainMenuUI.transform.Find(Strings.AboutPanelPath).gameObject;
         m_mapPanel = mainMenuUI.transform.Find(Strings.MapPanelPath).gameObject;
@@ -44,7 +43,6 @@ public class PanelManager : MonoBehaviour {
 
         m_goPrevSelected = EventSystem.current.currentSelectedGameObject;
 
-        m_panels.SetActive(true);
         goPanel.SetActive(true);
 
         goPanel.transform.SetAsLastSibling();
@@ -53,7 +51,7 @@ public class PanelManager : MonoBehaviour {
 
         m_goPanel = goPanel;
 
-        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(0f, 0.6f, false).SetUpdate(true);
+        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(0f, 0.6f, false).SetEase(Ease.InOutCubic).SetUpdate(true);
     }
 
     public void ClosePanel()
@@ -68,13 +66,13 @@ public class PanelManager : MonoBehaviour {
 
         EventSystem.current.SetSelectedGameObject(null);
 
-        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1500f, 0.6f, false).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_panels.SetActive(false); m_goPanel = null; });
+        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1500f, 0.6f, false).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_goPanel = null; });
 
         GameSystem.Instance.ResumeGame(false);
     }
 
     // this is called when game is started
-    public void OpenInstructionsPanel(bool isGameStarting)
+    public void OpenInstructionsPanel(bool isGameStarting = false)
     {
         m_gameStartInstructions = isGameStarting;
 

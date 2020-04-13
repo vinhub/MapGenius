@@ -6,6 +6,11 @@
     public static readonly string[] CarColliderNames = { "ColliderBody" }; // TODO: Do we need them all? { "ColliderBody", "ColliderFront", "ColliderBottom" };
     public const string HideInstructionsAtStart = "HideInstructionsAtStart";
 
+    // panel names
+    public const string MapPanelName = "Map";
+    public const string InstructionsPanelName = "Instructions";
+    public const string AboutPanelName = "About";
+
     // object names and paths
     public const string PlayermarkName = "Playermark";
     public const string PlayermarkTextName = "PlayermarkText";
