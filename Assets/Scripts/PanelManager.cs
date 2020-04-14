@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using DG.Tweening;
+using TMPro;
 
 public class PanelManager : MonoBehaviour {
 
@@ -71,7 +72,7 @@ public class PanelManager : MonoBehaviour {
 
         EventSystem.current.SetSelectedGameObject(null);
 
-        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1500f, 0.25f, false).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_goPanel = null; });
+        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1600f, 0.25f, false).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_goPanel = null; });
 
         GameSystem.Instance.ResumeGame(false);
 
@@ -85,7 +86,7 @@ public class PanelManager : MonoBehaviour {
 
         OpenPanel(m_instructionsPanel);
 
-        Text closePanelText = m_instructionsPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<Text>();
+        TMP_Text closePanelText = m_instructionsPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
         closePanelText.text = isGameStarting ? Strings.StartGame : Strings.ContinueGame;
 
         Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
@@ -115,7 +116,7 @@ public class PanelManager : MonoBehaviour {
             m_gameStartInstructions = false;
         }
 
-        Text closeButtonText = m_goPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<Text>();
+        TMP_Text closeButtonText = m_goPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
         closeButtonText.text = Strings.ContinueGame;
 
         GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
