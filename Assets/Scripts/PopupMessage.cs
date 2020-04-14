@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public enum PopupMessageType { FirstLandmarkCrossed, OtherLandmarkCrossed, LevelLost, LevelWon };
 
@@ -51,12 +52,14 @@ public class PopupMessage : MonoBehaviour
         m_popupWindow.SetActive(true);
         transform.SetAsLastSibling();
 
+        m_popupWindow.transform.DOScale(1f, 0.6f).SetUpdate(true);
+
         m_audioSources[iAudioSource].Play();
     }
 
     private void _HideMessage()
-    { 
-        m_popupWindow.SetActive(false);
+    {
+        m_popupWindow.transform.DOScale(0f, 0.25f).SetUpdate(true).OnComplete(() => m_popupWindow.SetActive(false));
     }
 
     public static void ShowMessage(PopupMessageType type, string message)

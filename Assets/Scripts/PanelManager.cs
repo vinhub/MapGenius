@@ -71,7 +71,7 @@ public class PanelManager : MonoBehaviour {
 
         EventSystem.current.SetSelectedGameObject(null);
 
-        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1500f, 0.6f, false).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_goPanel = null; });
+        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1500f, 0.25f, false).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_goPanel = null; });
 
         GameSystem.Instance.ResumeGame(false);
 
