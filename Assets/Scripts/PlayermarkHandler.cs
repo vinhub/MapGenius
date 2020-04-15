@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private Image m_playermarkImage, m_emptyPlayermarkImage;
-    private Text m_playermarkText;
+    private TMP_Text m_playermarkText;
 
     public enum PlayermarkState { Unvisited, CurrentlyVisiting, Visited };
 
@@ -30,7 +31,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private void Awake()
     {
         m_playermarkImage = this.GetComponent<Image>();
-        m_playermarkText = this.transform.parent.Find(Strings.PlayermarkTextName).GetComponent<Text>();
+        m_playermarkText = this.transform.parent.Find(Strings.PlayermarkTextName).GetComponent<TMP_Text>();
         m_emptyPlayermarkImage = this.transform.parent.Find(Strings.EmptyPlayermarkName).GetComponent<Image>();
     }
 

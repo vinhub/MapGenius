@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -27,12 +28,12 @@ public class GameSystem : MonoBehaviour
     public GameObject PlayermarksListItemPrefab; // prefab for playermarks list item in the map panel
 
     // car status
-    private Text m_carSpeedText, m_carRevsText;
+    private TMP_Text m_carSpeedText, m_carRevsText;
     private float m_carStuckTime = 0f;
     private int m_carMoveAttempts = 0;
 
     // info message
-    private Text m_infoMessageText;
+    private TMP_Text m_infoMessageText;
     private AudioSource m_infoMessageAudioSource;
 
     private Transform m_tRoadHolder, m_tNodeHolder, m_tLandmarks;
@@ -78,10 +79,10 @@ public class GameSystem : MonoBehaviour
         m_tPlayermarksList = tMainMenuUI.Find(Strings.MapPanelPath).Find(Strings.PlayermarksPath);
         m_mainMenuButton = tMainMenuUI.Find(Strings.OpenMenuButtonPath).GetComponent<MainMenuButton>();
 
-        m_carSpeedText = tMainMenuUI.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
-        m_carRevsText = tMainMenuUI.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
+        m_carSpeedText = tMainMenuUI.Find(Strings.CarStatusSpeedTextPath).GetComponent<TMP_Text>();
+        m_carRevsText = tMainMenuUI.Find(Strings.CarStatusRevsTextPath).GetComponent<TMP_Text>();
 
-        m_infoMessageText = tMainMenuUI.Find(Strings.InfoMessageTextPath).GetComponent<Text>();
+        m_infoMessageText = tMainMenuUI.Find(Strings.InfoMessageTextPath).GetComponent<TMP_Text>();
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
 
         m_victoryLapAudioSource = GetComponent<AudioSource>();
@@ -218,9 +219,9 @@ public class GameSystem : MonoBehaviour
         GameObject goPlayermarkListItem = Instantiate(PlayermarksListItemPrefab, m_tPlayermarksList);
         goPlayermarkListItem.tag = Strings.PlayermarkTag;
         goPlayermarkListItem.layer = m_UILayerIndex;
-        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexEmptyPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
-        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
-        goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<Text>().text = landmarkName;
+        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexEmptyPath).GetComponent<TMP_Text>().text = (iLandmark + 1).ToString();
+        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexPath).GetComponent<TMP_Text>().text = (iLandmark + 1).ToString();
+        goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<TMP_Text>().text = landmarkName;
     }
 
     private void CalcStartingCarLocation(CiDyRoad road)

@@ -14,7 +14,7 @@ public class PanelManager : MonoBehaviour {
 
     public string CurLandmarkName { get; private set; }
     private GameObject m_instructionsPanel, m_aboutPanel, m_mapPanel;
-    private Text m_scoreText, m_timeText;
+    private TMP_Text m_scoreText, m_timeText;
     private MapPanelHelper m_mpHelper;
     private bool m_gameStartInstructions;
 
@@ -26,8 +26,8 @@ public class PanelManager : MonoBehaviour {
         m_aboutPanel = mainMenuUI.transform.Find(Strings.AboutPanelPath).gameObject;
         m_mapPanel = mainMenuUI.transform.Find(Strings.MapPanelPath).gameObject;
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
-        m_scoreText = mainMenuUI.transform.Find(Strings.GameStatusScoreTextPath).GetComponent<Text>();
-        m_timeText = mainMenuUI.transform.Find(Strings.GameStatusTimeTextPath).GetComponent<Text>();
+        m_scoreText = mainMenuUI.transform.Find(Strings.GameStatusScoreTextPath).GetComponent<TMP_Text>();
+        m_timeText = mainMenuUI.transform.Find(Strings.GameStatusTimeTextPath).GetComponent<TMP_Text>();
     }
 
     private void Update()
@@ -47,8 +47,6 @@ public class PanelManager : MonoBehaviour {
         goPanel.SetActive(true);
 
         goPanel.transform.SetAsLastSibling();
-
-        //EventSystem.current.SetSelectedGameObject(FindFirstEnabledSelectable(goPanel));
 
         m_goPanel = goPanel;
 

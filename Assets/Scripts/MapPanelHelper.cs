@@ -308,7 +308,7 @@ public class MapPanelHelper : MonoBehaviour
         foreach (Transform tPlayermarkListItem in m_tPlayermarkList)
         {
             Transform tPlayermarkText = tPlayermarkListItem.Find(Strings.PlayermarkTextName);
-            Text text = tPlayermarkText.GetComponent<Text>();
+            TMP_Text text = tPlayermarkText.GetComponent<TMP_Text>();
 
             if (text.text == landmarkName)
             {
@@ -329,7 +329,7 @@ public class MapPanelHelper : MonoBehaviour
 
         // get its parent/PlayermarkText/Text
         Transform tPlayermarkText = ph.transform.parent.Find(Strings.PlayermarkTextName);
-        Text text = tPlayermarkText.GetComponent<Text>();
+        TMP_Text text = tPlayermarkText.GetComponent<TMP_Text>();
 
         // Text.text == goLandmark.name
         foreach (GameObject goLandmark in m_goLandmarks)

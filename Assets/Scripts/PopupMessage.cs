@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public enum PopupMessageType { FirstLandmarkCrossed, OtherLandmarkCrossed, LevelLost, LevelWon };
 
@@ -15,14 +16,14 @@ public class PopupMessage : MonoBehaviour
 
     private AudioSource[] m_audioSources;
 
-    private Text m_messageText;
+    private TMP_Text m_messageText;
     private GameObject m_popupWindow;
 
     private void Awake()
     {
         m_instance = this;
 
-        m_messageText = transform.Find(Strings.PopupMessageTextPath).GetComponent<Text>();
+        m_messageText = transform.Find(Strings.PopupMessageTextPath).GetComponent<TMP_Text>();
         m_popupWindow = transform.Find(Strings.WindowPath).gameObject;
 
         m_audioSources = GetComponents<AudioSource>();
