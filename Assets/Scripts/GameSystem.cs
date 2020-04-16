@@ -520,6 +520,9 @@ public class GameSystem : MonoBehaviour
     // returns true iff car is still on track
     private bool UpdateOnTrackInfo()
     {
+        if (m_roadOnTrack == null)
+            return true;
+
         // If the car is off track, we should not update the roadCur and iOrigPointCur.
         // This is an optimization as well as because when the player wants to bring the car back on track, we want to bring them to where they left the road.
         // We don't want to bring them to the closest origPoint at that time (which could be in unfamiliar territory because they may have wandered off quite a bit.)
@@ -649,9 +652,6 @@ public class GameSystem : MonoBehaviour
 
     private bool IsCarOffTrack()
     {
-        if (m_roadOnTrack == null)
-            return false;
-
         Vector3 carPosition = Car.transform.position;
         Collider roadCollider = m_roadOnTrack.GetComponent<Collider>();
         m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(carPosition);
