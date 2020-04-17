@@ -24,6 +24,7 @@ public class Test : MonoBehaviour
 
     private void RunTest()
     {
-        GameSystem.Instance.ShowInfoMessage("Test message", 3f);
+        PopupMessage.ShowMessage(PopupMessageType.FirstLandmarkCrossed, string.Format(Strings.OtherLandmarkCrossedMessageFormat, "Post Office"));
+        //GameSystem.Instance.ShowInfoMessage("Test message", 3f);
     }
 }

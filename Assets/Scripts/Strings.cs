@@ -48,7 +48,8 @@
     public const string ShowLandmarksBackgroundPath = "Window/MapPanel/PlayermarksPanel/Hint/Toggle/Background";
     public const string ShowLandmarksLabelPath = "Window/MapPanel/PlayermarksPanel/Hint/Toggle/Label";
     public const string WindowPath = "Window";
-    public const string PopupMessageTextPath = "Window/Popup/Background/MessageText";
+    public const string PopupPath = "Popup";
+    public const string PopupMessageTextPath = "Popup/Background/MessageText";
     public const string FloatingMessageTextPath = "FloatingMessage";
     public const string LandmarkOnMap = "LandmarkOnMap";
     public const string ButtonClickAudioSourceName = "ButtonClickAudioSource";

@@ -16,15 +16,15 @@ public class PopupMessage : MonoBehaviour
 
     private AudioSource[] m_audioSources;
 
+    private GameObject m_popup;
     private TMP_Text m_messageText;
-    private GameObject m_popupWindow;
 
     private void Awake()
     {
         m_instance = this;
 
+        m_popup = transform.Find(Strings.PopupPath).gameObject;
         m_messageText = transform.Find(Strings.PopupMessageTextPath).GetComponent<TMP_Text>();
-        m_popupWindow = transform.Find(Strings.WindowPath).gameObject;
 
         m_audioSources = GetComponents<AudioSource>();
     }
@@ -50,17 +50,17 @@ public class PopupMessage : MonoBehaviour
 
         m_messageText.text = message;
 
-        m_popupWindow.SetActive(true);
+        m_popup.SetActive(true);
         transform.SetAsLastSibling();
 
-        m_popupWindow.transform.DOScale(1f, 0.6f).SetUpdate(true);
+        m_popup.transform.DOScale(1f, 0.6f).SetUpdate(true);
 
         m_audioSources[iAudioSource].Play();
     }
 
     private void _HideMessage()
     {
-        m_popupWindow.transform.DOScale(0f, 0.25f).SetUpdate(true).OnComplete(() => m_popupWindow.SetActive(false));
+        m_popup.transform.DOScale(0f, 0.25f).SetUpdate(true).OnComplete(() => m_popup.SetActive(false));
     }
 
     public static void ShowMessage(PopupMessageType type, string message)
