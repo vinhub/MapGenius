@@ -26,11 +26,11 @@
     public const string InstructionsPanelPath = "Panels/Instructions";
     public const string AboutPanelPath = "Panels/About";
     public const string MapPanelPath = "Panels/Map";
-    public const string GameStatusScoreTextPath = "GameStatus/ScoreText";
-    public const string GameStatusTimeTextPath = "GameStatus/TimeText";
-    public const string CarStatusSpeedTextPath = "CarStatus/SpeedText";
-    public const string CarStatusRevsTextPath = "CarStatus/RevsText";
-    public const string InfoMessageTextPath = "InfoMessage/InfoMessageText";
+    public const string StatusBarScoreTextPath = "ScoreStatus/Window/ScoreText";
+    public const string StatusBarTimeTextPath = "TimeStatus/Window/TimeText";
+    public const string StatusBarSpeedTextPath = "SpeedStatus/Window/SpeedText";
+    public const string StatusBarRevsTextPath = "RevsStatus/Window/RevsText";
+    public const string InfoMessageTextPath = "InfoMessage/Window/InfoMessageText";
     //public const string OnTrackrLocatorPath = "UI/OnTrackLocator";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";

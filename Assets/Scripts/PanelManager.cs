@@ -26,8 +26,8 @@ public class PanelManager : MonoBehaviour {
         m_aboutPanel = mainMenuUI.transform.Find(Strings.AboutPanelPath).gameObject;
         m_mapPanel = mainMenuUI.transform.Find(Strings.MapPanelPath).gameObject;
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
-        m_scoreText = mainMenuUI.transform.Find(Strings.GameStatusScoreTextPath).GetComponent<TMP_Text>();
-        m_timeText = mainMenuUI.transform.Find(Strings.GameStatusTimeTextPath).GetComponent<TMP_Text>();
+        m_scoreText = mainMenuUI.transform.Find(Strings.StatusBarScoreTextPath).GetComponent<TMP_Text>();
+        m_timeText = mainMenuUI.transform.Find(Strings.StatusBarTimeTextPath).GetComponent<TMP_Text>();
     }
 
     private void Update()

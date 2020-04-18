@@ -79,8 +79,8 @@ public class GameSystem : MonoBehaviour
         m_tPlayermarksList = tMainMenuUI.Find(Strings.MapPanelPath).Find(Strings.PlayermarksPath);
         m_mainMenuButton = tMainMenuUI.Find(Strings.OpenMenuButtonPath).GetComponent<MainMenuButton>();
 
-        m_carSpeedText = tMainMenuUI.Find(Strings.CarStatusSpeedTextPath).GetComponent<TMP_Text>();
-        m_carRevsText = tMainMenuUI.Find(Strings.CarStatusRevsTextPath).GetComponent<TMP_Text>();
+        m_carSpeedText = tMainMenuUI.Find(Strings.StatusBarSpeedTextPath).GetComponent<TMP_Text>();
+        m_carRevsText = tMainMenuUI.Find(Strings.StatusBarRevsTextPath).GetComponent<TMP_Text>();
 
         m_infoMessageText = tMainMenuUI.Find(Strings.InfoMessageTextPath).GetComponent<TMP_Text>();
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
