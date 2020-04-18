@@ -26817,6 +26817,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PopupMessage
       objectReference: {fileID: 0}
+    - target: {fileID: 4151101018858585659, guid: ee65b927a00fe314ebbf8b2530f5e12c,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4340613160245965938, guid: ee65b927a00fe314ebbf8b2530f5e12c,
         type: 3}
       propertyPath: m_textInfo.characterCount
