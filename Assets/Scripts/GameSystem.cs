@@ -33,6 +33,7 @@ public class GameSystem : MonoBehaviour
     private int m_carMoveAttempts = 0;
 
     // info message
+    private GameObject m_infoMessage;
     private TMP_Text m_infoMessageText;
     private AudioSource m_infoMessageAudioSource;
 
@@ -82,7 +83,9 @@ public class GameSystem : MonoBehaviour
         m_carSpeedText = tMainMenuUI.Find(Strings.StatusBarSpeedTextPath).GetComponent<TMP_Text>();
         m_carRevsText = tMainMenuUI.Find(Strings.StatusBarRevsTextPath).GetComponent<TMP_Text>();
 
-        m_infoMessageText = tMainMenuUI.Find(Strings.InfoMessageTextPath).GetComponent<TMP_Text>();
+        Transform tInfoMessage = tMainMenuUI.Find(Strings.InfoMessagePath);
+        m_infoMessage = tInfoMessage.gameObject;
+        m_infoMessageText = tInfoMessage.Find(Strings.InfoMessageTextPath).GetComponent<TMP_Text>();
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
 
         m_victoryLapAudioSource = GetComponent<AudioSource>();
@@ -717,8 +720,10 @@ public class GameSystem : MonoBehaviour
 
     public void ShowInfoMessage(string message, float duration)
     {
-        if (!String.IsNullOrEmpty(m_infoMessageText.text))
+        if (m_infoMessage.activeSelf)
             return;
+
+        m_infoMessage.SetActive(true);
 
         m_infoMessageAudioSource.Play();
 
@@ -730,6 +735,7 @@ public class GameSystem : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(duration);
         m_infoMessageText.text = null;
+        m_infoMessage.SetActive(false);
     }
 
     private void ShowDebugInfo(string info)

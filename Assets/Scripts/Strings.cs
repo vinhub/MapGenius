@@ -30,7 +30,8 @@
     public const string StatusBarTimeTextPath = "TimeStatus/Window/TimeText";
     public const string StatusBarSpeedTextPath = "SpeedStatus/Window/SpeedText";
     public const string StatusBarRevsTextPath = "RevsStatus/Window/RevsText";
-    public const string InfoMessageTextPath = "InfoMessage/Window/InfoMessageText";
+    public const string InfoMessagePath = "InfoMessage";
+    public const string InfoMessageTextPath = "Window/InfoMessageText";
     //public const string OnTrackrLocatorPath = "UI/OnTrackLocator";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
@@ -95,7 +96,7 @@
     public const string LevelLostMessageFormat = "<b><color=#ff0000ff>Map completed, but with some mistakes.</color></b>\r\n\r\nYou scored {0}/{1} points in {2} seconds.";
     public const string CarSpeedStatusFormat = "Speed: {0:F0}";
     public const string CarRevsStatusFormat = "Revs: {0:d3}";
-    public const string GetBackOnTrackMessage = "Press T to get back on track.";
+    public const string GetBackOnTrackMessage = "Car is stuck? Press T to get it back on track.";
     public const string StartingInstructionsMessage = "Drive the car using the W, A, S, D, or arrow keys.";
     public const string VictoryLapMessage = "Drive freely anywhere you want to. You can even go offroad.";
 }
