@@ -386,8 +386,8 @@ public class GameSystem : MonoBehaviour
 
         m_timeScaleSav = Time.timeScale;
 
-        Time.timeScale = 0.001f; // we want to set it to 0, but doing so causes a jerk. So do it in 2 steps.
-        Time.timeScale = 0f;
+        Time.timeScale = 0.001f; // we want to set it to 0, but doing so causes a jerk.
+        //Time.timeScale = 0f;
     }
 
     public void ResumeGame(bool fVictoryLap)
