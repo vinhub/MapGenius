@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private Image m_playermarkImage, m_emptyPlayermarkImage;
-    private TMP_Text m_playermarkText, m_playermarkIndex;
+    private TMP_Text m_playermarkText, m_playermarkIndex, m_emptyPlayermarkText;
 
     public enum PlayermarkState { Unvisited, CurrentlyVisiting, Visited };
 
@@ -34,6 +34,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         m_playermarkIndex = this.transform.Find(Strings.PlayermarkIndexPath2).GetComponent<TMP_Text>();
         m_playermarkText = this.transform.parent.Find(Strings.PlayermarkTextName).GetComponent<TMP_Text>();
         m_emptyPlayermarkImage = this.transform.parent.Find(Strings.EmptyPlayermarkName).GetComponent<Image>();
+        m_emptyPlayermarkText = this.transform.parent.Find(Strings.PlayermarkIndexEmptyPath).GetComponent<TMP_Text>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -149,6 +150,6 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     // update appearance based on score.
     public void OnUpdateScore(float score)
     {
-        m_playermarkImage.color = m_playermarkIndex.color = m_emptyPlayermarkImage.color = m_playermarkText.color = (score > 0.01) ? m_green : m_red;
+        m_playermarkImage.color = m_playermarkIndex.color = m_emptyPlayermarkImage.color = m_playermarkText.color = m_emptyPlayermarkText.color = (score > 0.01) ? m_green : m_red;
     }
 }
