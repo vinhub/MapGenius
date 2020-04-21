@@ -290,8 +290,9 @@ public class MapPanelHelper : MonoBehaviour
             go.SetActive(m_revealedLandmarksOnMap);
             go.name = Strings.LandmarkOnMap;
             go.transform.parent = m_tMapImage;
-            go.AddComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
-            go.AddComponent<Image>();
+            go.AddComponent<RectTransform>().sizeDelta = new Vector2(31, 31);
+            Image img = go.AddComponent<Image>();
+            img.color = new Color32(160, 160, 160, 255);
             go.transform.position = position;
         }
     }

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private Image m_playermarkImage, m_emptyPlayermarkImage;
-    private TMP_Text m_playermarkText;
+    private TMP_Text m_playermarkText, m_playermarkIndex;
 
     public enum PlayermarkState { Unvisited, CurrentlyVisiting, Visited };
 
@@ -18,11 +18,11 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private bool m_isDropped = false; // whether the marker has been drag/dropped at least once
     public float ScoreFactor { get; private set; } = 100f; // percentage to multiply the score by
 
-    private Color32 m_unvisitedColor = new Color32(0, 160, 0, 255);
-    private Color32 m_currentlyVisitingColor = new Color32(0, 255, 0, 255);
+    private Color32 m_unvisitedColor = new Color32(0, 255, 255, 255);
+    private Color32 m_currentlyVisitingColor = new Color32(255, 96, 0, 255);
     private Color32 m_visitedColor = new Color32(160, 160, 160, 255);
-    private Color32 m_droppedColor = new Color32(0, 160, 0, 255);
-    private Color32 m_red = new Color32(255, 0, 0, 255);
+    private Color32 m_droppedColor = new Color32(0, 255, 255, 255);
+    private Color32 m_red = new Color32(255, 96, 0, 255);
     private Color32 m_green = new Color32(0, 255, 0, 255);
 
     private bool m_isMoving = false;
@@ -31,6 +31,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private void Awake()
     {
         m_playermarkImage = this.GetComponent<Image>();
+        m_playermarkIndex = this.transform.Find(Strings.PlayermarkIndexPath2).GetComponent<TMP_Text>();
         m_playermarkText = this.transform.parent.Find(Strings.PlayermarkTextName).GetComponent<TMP_Text>();
         m_emptyPlayermarkImage = this.transform.parent.Find(Strings.EmptyPlayermarkName).GetComponent<Image>();
     }
@@ -41,7 +42,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (this.State != PlayermarkState.CurrentlyVisiting)
             return;
 
-        m_playermarkText.color = m_visitedColor;
+        m_playermarkText.color = m_playermarkImage.color = m_playermarkIndex.color = m_visitedColor;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -99,14 +100,12 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
         switch (state)
         {
             case PlayermarkState.Unvisited:
-                m_playermarkImage.color = m_unvisitedColor;
-                m_playermarkText.color = m_unvisitedColor;
+                m_playermarkImage.color = m_playermarkIndex.color = m_playermarkText.color = m_unvisitedColor;
                 break;
 
             case PlayermarkState.CurrentlyVisiting:
                 // highlight the current playermark and make it draggable
-                m_playermarkImage.color = m_currentlyVisitingColor;
-                m_playermarkText.color = m_currentlyVisitingColor;
+                m_playermarkImage.color = m_playermarkIndex.color = m_playermarkText.color = m_currentlyVisitingColor;
 
                 // make image blink
                 StartCoroutine(Blink(1000));
@@ -122,7 +121,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
                 }
                 else
                 {
-                    m_playermarkImage.color = m_droppedColor;
+                    m_playermarkImage.color = m_playermarkIndex.color = m_droppedColor;
                 }
 
                 m_playermarkText.color = m_visitedColor;
@@ -139,10 +138,10 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         for (int i = 0; i < blinkCount; i++)
         {
-            m_playermarkImage.color = m_unvisitedColor;
+            m_playermarkImage.color = m_playermarkIndex.color = m_playermarkText.color = m_unvisitedColor;
             yield return new WaitForSecondsRealtime(0.5f);
 
-            m_playermarkImage.color = m_currentlyVisitingColor;
+            m_playermarkImage.color = m_playermarkIndex.color = m_playermarkText.color = m_currentlyVisitingColor;
             yield return new WaitForSecondsRealtime(0.5f);
         }
     }
@@ -150,6 +149,6 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     // update appearance based on score.
     public void OnUpdateScore(float score)
     {
-        m_playermarkImage.color = m_emptyPlayermarkImage.color = m_playermarkText.color = (score > 0.01) ? m_green : m_red;
+        m_playermarkImage.color = m_playermarkIndex.color = m_emptyPlayermarkImage.color = m_playermarkText.color = (score > 0.01) ? m_green : m_red;
     }
 }

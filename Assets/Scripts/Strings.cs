@@ -17,6 +17,7 @@
     public const string EmptyPlayermarkName = "PlayermarkEmpty";
     public const string PlayermarkIndexEmptyPath = "PlayermarkEmpty/PlayermarkIndexEmpty";
     public const string PlayermarkIndexPath = "Playermark/PlayermarkIndex";
+    public const string PlayermarkIndexPath2 = "PlayermarkIndex";
     public const string PlayermarkTextPath = "PlayermarkText";
     public const string MainMenuName = "MainMenu";
     public const string ContinueGameButtonPath = "MainMenu/Window/ContinueGame";
