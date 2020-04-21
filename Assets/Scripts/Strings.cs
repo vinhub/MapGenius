@@ -91,10 +91,10 @@
     public const string ScoreTextFormat = "Score: {0:d4} / {1:d4}";
     public const string TimeTextFormat = "Time: {0:d3}";
     public const string LevelTextFormat = "Level: {0}";
-    public const string FirstLandmarkCrossedMessageFormat = "You just crossed the  <i><color=#00ff00ff>\"{0}\"</color></i>  landmark!\r\n\r\nWe will now demonstrate how to mark its position on the map.";
-    public const string OtherLandmarkCrossedMessageFormat = "You just crossed the  <i><color=#00ff00ff>\"{0}\"</color></i>  landmark!\r\n\r\nDrag and drop the blinking marker to the appropriate position on the map.";
+    public const string FirstLandmarkCrossedMessageFormat = "You just crossed the  <b><color=#00ffffff>\"{0}\"</color></b>  landmark!\r\n\r\nWe will now demonstrate how to mark its position on the map.";
+    public const string OtherLandmarkCrossedMessageFormat = "You just crossed the  <b><color=#00ffffff>\"{0}\"</color></b>  landmark!\r\n\r\nDrag and drop the blinking marker to the appropriate position on the map.";
     public const string LevelWonMessageFormat = "<b><color=#00ff00ff>Congratulations! You won!</color></b>\r\n\r\nYou scored {0}/{1} points in {2} seconds!";
-    public const string LevelLostMessageFormat = "<b><color=#ff0000ff>Map completed, but with some mistakes.</color></b>\r\n\r\nYou scored {0}/{1} points in {2} seconds.";
+    public const string LevelLostMessageFormat = "<b><color=#ff5733ff>Map completed, but with some mistakes.</color></b>\r\n\r\nYou scored {0}/{1} points in {2} seconds.";
     public const string CarSpeedStatusFormat = "Speed: {0:F0}";
     public const string CarRevsStatusFormat = "Revs: {0:d3}";
     public const string GetBackOnTrackMessage = "Car is stuck? Press T to get it back on track.";
