@@ -30372,6 +30372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3683c1517cab04341bed1a0b634c2570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LandmarkOnMap: {fileID: 0}
 --- !u!82 &2113245628
 AudioSource:
   m_ObjectHideFlags: 0

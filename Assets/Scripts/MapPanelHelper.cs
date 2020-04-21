@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class MapPanelHelper : MonoBehaviour
 {
+    public GameObject LandmarkOnMap;
+
     private PanelManager m_panelManager;
     private Transform m_tMapPanel = null; // whether / which panel is being shown right now
     private string m_landmarkName;
@@ -286,14 +288,11 @@ public class MapPanelHelper : MonoBehaviour
             LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
             Vector3 position = CalcPosOnMap(lh);
 
-            GameObject go = new GameObject();
-            go.SetActive(m_revealedLandmarksOnMap);
-            go.name = Strings.LandmarkOnMap;
+            GameObject go = Instantiate(LandmarkOnMap, position, Quaternion.identity);
             go.transform.parent = m_tMapImage;
-            go.AddComponent<RectTransform>().sizeDelta = new Vector2(31, 31);
-            Image img = go.AddComponent<Image>();
-            img.color = new Color32(160, 160, 160, 255);
-            go.transform.position = position;
+            go.name = Strings.LandmarkOnMap;
+
+            go.SetActive(m_revealedLandmarksOnMap);
         }
     }
 
