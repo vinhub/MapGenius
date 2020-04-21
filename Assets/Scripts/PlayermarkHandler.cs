@@ -19,10 +19,10 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     public float ScoreFactor { get; private set; } = 100f; // percentage to multiply the score by
 
     private Color32 m_unvisitedColor = new Color32(0, 255, 255, 255);
-    private Color32 m_currentlyVisitingColor = new Color32(255, 96, 0, 255);
+    private Color32 m_currentlyVisitingColor = new Color32(0xff, 0x57, 0x33, 0xff);
     private Color32 m_visitedColor = new Color32(160, 160, 160, 255);
     private Color32 m_droppedColor = new Color32(0, 255, 255, 255);
-    private Color32 m_red = new Color32(255, 96, 0, 255);
+    private Color32 m_red = new Color32(0xff, 0x57, 0x33, 0xff);
     private Color32 m_green = new Color32(0, 255, 0, 255);
 
     private bool m_isMoving = false;
