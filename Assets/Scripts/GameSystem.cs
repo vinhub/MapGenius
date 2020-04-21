@@ -377,15 +377,17 @@ public class GameSystem : MonoBehaviour
         if (m_paused)
             return;
 
+        m_paused = true;
+
         m_carController.StopCar();
 
         if (m_victoryLapAudioSource.isPlaying)
             m_victoryLapAudioSource.Stop();
 
         m_timeScaleSav = Time.timeScale;
-        Time.timeScale = 0.0001f; // we want to set it to 0, but doing so causes a jerk.
 
-        m_paused = true;
+        Time.timeScale = 0.001f; // we want to set it to 0, but doing so causes a jerk. So do it in 2 steps.
+        Time.timeScale = 0f;
     }
 
     public void ResumeGame(bool fVictoryLap)
