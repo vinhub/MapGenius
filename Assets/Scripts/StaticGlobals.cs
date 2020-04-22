@@ -23,7 +23,8 @@ public static class StaticGlobals
     public static float TotalScoreMax = StaticGlobals.MaxLevelScore * StaticGlobals.TotalNumGames;
 
     // saved game state related items
-    public static bool SavedInitStateExists { get; set; }
+    public static bool RetryingGame { get; set; }
+    public static bool SavedStateExists { get { return SavedLandmarks != null; } }
     public static List<SavedLandmark> SavedLandmarks { get; set; }
     public static Quaternion SavedRotationOnTrack  { get; set; }
     public static CiDyRoad SavedRoadOnTrack { get; set; }

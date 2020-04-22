@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -26,12 +28,13 @@ public class GameSystem : MonoBehaviour
     public GameObject PlayermarksListItemPrefab; // prefab for playermarks list item in the map panel
 
     // car status
-    private Text m_carSpeedText, m_carRevsText;
+    private TMP_Text m_carSpeedText, m_carRevsText;
     private float m_carStuckTime = 0f;
     private int m_carMoveAttempts = 0;
 
     // info message
-    private Text m_infoMessageText;
+    private GameObject m_infoMessage;
+    private TMP_Text m_infoMessageText;
     private AudioSource m_infoMessageAudioSource;
 
     private Transform m_tRoadHolder, m_tNodeHolder, m_tLandmarks;
@@ -51,7 +54,7 @@ public class GameSystem : MonoBehaviour
     private CiDyRoad m_roadOnTrack;
     private int m_iOrigPointOnTrack = 0;
     private Vector3 m_closestPointOnTrack;
-    private Transform m_tOnTrackLocator;
+    //private Transform m_tOnTrackLocator;
 
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
 
@@ -63,7 +66,9 @@ public class GameSystem : MonoBehaviour
     {
         m_instance = this;
 
-        m_tOnTrackLocator = GameObject.Find(Strings.OnTrackrLocatorPath).transform;
+        DOTween.useSmoothDeltaTime = true;
+
+        // m_tOnTrackLocator = GameObject.Find(Strings.OnTrackrLocatorPath).transform;
     }
 
     private void Start()
@@ -75,10 +80,12 @@ public class GameSystem : MonoBehaviour
         m_tPlayermarksList = tMainMenuUI.Find(Strings.MapPanelPath).Find(Strings.PlayermarksPath);
         m_mainMenuButton = tMainMenuUI.Find(Strings.OpenMenuButtonPath).GetComponent<MainMenuButton>();
 
-        m_carSpeedText = tMainMenuUI.Find(Strings.CarStatusSpeedTextPath).GetComponent<Text>();
-        m_carRevsText = tMainMenuUI.Find(Strings.CarStatusRevsTextPath).GetComponent<Text>();
+        m_carSpeedText = tMainMenuUI.Find(Strings.StatusBarSpeedTextPath).GetComponent<TMP_Text>();
+        m_carRevsText = tMainMenuUI.Find(Strings.StatusBarRevsTextPath).GetComponent<TMP_Text>();
 
-        m_infoMessageText = tMainMenuUI.Find(Strings.InfoMessageTextPath).GetComponent<Text>();
+        Transform tInfoMessage = tMainMenuUI.Find(Strings.InfoMessagePath);
+        m_infoMessage = tInfoMessage.gameObject;
+        m_infoMessageText = tInfoMessage.Find(Strings.InfoMessageTextPath).GetComponent<TMP_Text>();
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
 
         m_victoryLapAudioSource = GetComponent<AudioSource>();
@@ -106,14 +113,18 @@ public class GameSystem : MonoBehaviour
         m_tRoadHolder = m_graph.transform.Find(Strings.RoadHolderPath).transform;
         m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
 
-        if (StaticGlobals.SavedInitStateExists)
+        if (StaticGlobals.RetryingGame)
         {
-            ReInitGameState();
+            LoadGameState();
+
+            StaticGlobals.RetryingGame = false;
         }
         else
         {
-            // init landmarks
+            // init landmarks, car initial pos etc.
             InitGameState();
+
+            SaveGameState();
         }
 
         // place car some distance from the first landmark
@@ -180,7 +191,7 @@ public class GameSystem : MonoBehaviour
 
             // calculate a point about halfway along the road and orient it so it faces the road
             Vector3 landmarkPos = road.origPoints[road.origPoints.Length / 2];
-            landmarkPos.y -= 0.5f; // lower it slightly so the landmark does not appear to be floating on sloping roads
+            landmarkPos.y -= 0.7f; // lower it slightly so the landmark does not appear to be floating on sloping roads
             Vector3 nextPos = road.origPoints[road.origPoints.Length / 2 + 1];
             nextPos.y = landmarkPos.y; // make the direction horizontal so the landmark stands up vertical
             Quaternion rotation = Quaternion.LookRotation(landmarkPos - nextPos, Vector3.up);
@@ -215,9 +226,9 @@ public class GameSystem : MonoBehaviour
         GameObject goPlayermarkListItem = Instantiate(PlayermarksListItemPrefab, m_tPlayermarksList);
         goPlayermarkListItem.tag = Strings.PlayermarkTag;
         goPlayermarkListItem.layer = m_UILayerIndex;
-        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexEmptyPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
-        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexPath).GetComponent<Text>().text = (iLandmark + 1).ToString();
-        goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<Text>().text = landmarkName;
+        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexEmptyPath).GetComponent<TMP_Text>().text = (iLandmark + 1).ToString();
+        goPlayermarkListItem.transform.Find(Strings.PlayermarkIndexPath).GetComponent<TMP_Text>().text = (iLandmark + 1).ToString();
+        goPlayermarkListItem.transform.Find(Strings.PlayermarkTextPath).GetComponent<TMP_Text>().text = landmarkName;
     }
 
     private void CalcStartingCarLocation(CiDyRoad road)
@@ -283,12 +294,12 @@ public class GameSystem : MonoBehaviour
         if (IsCarStuck())
             ShowInfoMessage(Strings.GetBackOnTrackMessage, 3f);
 
-        if (m_roadOnTrack)
-        {
-            m_tOnTrackLocator.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
-            m_tOnTrackLocator.transform.rotation = m_rotationOnTrack;
-            }
-        }
+        //if (m_roadOnTrack)
+        //{
+        //    m_tOnTrackLocator.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
+        //    m_tOnTrackLocator.transform.rotation = m_rotationOnTrack;
+        //}
+    }
 
     private void HandleHotkeys()
     {
@@ -319,7 +330,7 @@ public class GameSystem : MonoBehaviour
 
     public void NewGame()
     {
-        ResumeGame(false);
+        ContinueGame(false);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
@@ -328,7 +339,7 @@ public class GameSystem : MonoBehaviour
 
     public void GoToLevel(string gameLevel)
     {
-        ResumeGame(false);
+        ContinueGame(false);
 
         switch (gameLevel)
         {
@@ -353,16 +364,11 @@ public class GameSystem : MonoBehaviour
     // retry the same level without changing anything
     public void RetryGame()
     {
-        ResumeGame(false);
-        SaveGameInitState();
+        ContinueGame(false);
+
+        StaticGlobals.RetryingGame = true;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    public void LoadScene(string sceneName)
-    {
-        GameSystem.Instance.ResumeGame(false);
-        SceneManager.LoadScene(sceneName);
     }
 
     public void PauseGame()
@@ -370,17 +376,20 @@ public class GameSystem : MonoBehaviour
         if (m_paused)
             return;
 
+        m_paused = true;
+
         m_carController.StopCar();
 
-        m_victoryLapAudioSource.Stop(); // in case it was playing
+        if (m_victoryLapAudioSource.isPlaying)
+            m_victoryLapAudioSource.Stop();
 
         m_timeScaleSav = Time.timeScale;
-        Time.timeScale = 0f;
 
-        m_paused = true;
+        Time.timeScale = 0.001f; // we want to set it to 0, but doing so causes a jerk.
+        //Time.timeScale = 0f;
     }
 
-    public void ResumeGame(bool fVictoryLap)
+    public void ContinueGame(bool fVictoryLap)
     {
         if (!m_paused)
             return;
@@ -435,10 +444,10 @@ public class GameSystem : MonoBehaviour
     private IEnumerator HandleLandmarkCrossed(string landmarkName)
     {
         // flash a popup letting the player know they crossed the landmark
-        string messageText = String.Format(Strings.LandmarkCrossedMessageFormat, landmarkName) +
-            (m_firstLandmarkCrossed ? Strings.FirstLandmarkCrossedMessage : Strings.OtherLandmarkCrossedMessage);
+        PopupMessageType type = m_firstLandmarkCrossed ? PopupMessageType.FirstLandmarkCrossed : PopupMessageType.OtherLandmarkCrossed;
+        string message = m_firstLandmarkCrossed ? String.Format(Strings.FirstLandmarkCrossedMessageFormat, landmarkName) : String.Format(Strings.OtherLandmarkCrossedMessageFormat, landmarkName);
 
-        PopupMessage.ShowMessage(messageText);
+        PopupMessage.ShowMessage(type, message);
 
         // let it stay for some time
         yield return new WaitForSecondsRealtime(m_firstLandmarkCrossed ? 5f : 4f);
@@ -459,10 +468,10 @@ public class GameSystem : MonoBehaviour
         m_mainPanelManager.UpdateScore();
     }
 
-    private void SaveGameInitState()
+    private void SaveGameState()
     {
-        if (StaticGlobals.SavedLandmarks != null)
-            StaticGlobals.SavedLandmarks.Clear();
+        if (StaticGlobals.SavedStateExists)
+            ClearGameState();
 
         StaticGlobals.SavedLandmarks = new List<SavedLandmark>();
 
@@ -481,12 +490,13 @@ public class GameSystem : MonoBehaviour
         StaticGlobals.SavedRoadOnTrack = m_roadOnTrack;
         StaticGlobals.SavedOrigPointIndexOnTrack = m_iOrigPointOnTrack;
         StaticGlobals.SavedRotationOnTrack = m_rotationOnTrack;
-
-        StaticGlobals.SavedInitStateExists = true;
     }
 
-    private void ReInitGameState()
+    private void LoadGameState()
     {
+        if (!StaticGlobals.SavedStateExists)
+            return;
+
         for (int iLandmark = 0; iLandmark < StaticGlobals.SavedLandmarks.Count; iLandmark++)
         {
             CreateLandmark(iLandmark, StaticGlobals.SavedLandmarks[iLandmark].pos, StaticGlobals.SavedLandmarks[iLandmark].rotation);
@@ -495,10 +505,16 @@ public class GameSystem : MonoBehaviour
         m_roadOnTrack = StaticGlobals.SavedRoadOnTrack;
         m_iOrigPointOnTrack = StaticGlobals.SavedOrigPointIndexOnTrack;
         m_rotationOnTrack = StaticGlobals.SavedRotationOnTrack;
+    }
 
+    private void ClearGameState()
+    {
         StaticGlobals.SavedLandmarks.Clear();
         StaticGlobals.SavedLandmarks = null;
-        StaticGlobals.SavedInitStateExists = false;
+
+        StaticGlobals.SavedRoadOnTrack = null;
+        StaticGlobals.SavedOrigPointIndexOnTrack = -1;
+        StaticGlobals.SavedRotationOnTrack = Quaternion.identity;
     }
 
     private bool UpdateCarStatus()
@@ -515,6 +531,9 @@ public class GameSystem : MonoBehaviour
     // returns true iff car is still on track
     private bool UpdateOnTrackInfo()
     {
+        if (m_roadOnTrack == null)
+            return true;
+
         // If the car is off track, we should not update the roadCur and iOrigPointCur.
         // This is an optimization as well as because when the player wants to bring the car back on track, we want to bring them to where they left the road.
         // We don't want to bring them to the closest origPoint at that time (which could be in unfamiliar territory because they may have wandered off quite a bit.)
@@ -709,8 +728,10 @@ public class GameSystem : MonoBehaviour
 
     public void ShowInfoMessage(string message, float duration)
     {
-        if (!String.IsNullOrEmpty(m_infoMessageText.text))
+        if (m_infoMessage.activeSelf)
             return;
+
+        m_infoMessage.SetActive(true);
 
         m_infoMessageAudioSource.Play();
 
@@ -722,6 +743,7 @@ public class GameSystem : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(duration);
         m_infoMessageText.text = null;
+        m_infoMessage.SetActive(false);
     }
 
     private void ShowDebugInfo(string info)

@@ -19,11 +19,39 @@ public class Test : MonoBehaviour
     IEnumerator LateStart(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        RunTest();
+        RunTests();
     }
 
-    private void RunTest()
+    private void RunTests()
+    {
+        //RunPopupMessageTest();
+
+        //RunInfoMessageTest();
+
+        StartCoroutine(RunMapPanelTest());
+    }
+
+    private void RunPopupMessageTest()
+    {
+        PopupMessage.ShowMessage(PopupMessageType.FirstLandmarkCrossed, string.Format(Strings.OtherLandmarkCrossedMessageFormat, "Post Office"));
+    }
+
+    private void RunInfoMessageTest()
     {
         GameSystem.Instance.ShowInfoMessage("Test message", 3f);
+    }
+
+    private IEnumerator RunMapPanelTest()
+    {
+        Transform tMainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag).transform;
+        PanelManager m_mainPanelManager = tMainMenuUI.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
+
+        for (int iLandmark = 0; iLandmark < Strings.LandmarkNames.Length; iLandmark++)
+        {
+            m_mainPanelManager.OpenMapPanel(Strings.LandmarkNames[iLandmark], iLandmark == 0);
+            yield return new WaitForSecondsRealtime(1f);
+            m_mainPanelManager.ClosePanel();
+            yield return new WaitForSecondsRealtime(1f);
+        }
     }
 }

@@ -74,3 +74,11 @@ Update Mode: updateDependencies
 
 The following packages were removed:
   com.unity.package-manager-ui@2.2.0
+
+=== Thu Apr 16 19:20:17 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.test-framework from version 1.1.11 to 1.1.13

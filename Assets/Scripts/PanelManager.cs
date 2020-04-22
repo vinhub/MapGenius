@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using DG.Tweening;
+using TMPro;
 
 public class PanelManager : MonoBehaviour {
 
@@ -11,8 +13,8 @@ public class PanelManager : MonoBehaviour {
 	private GameObject m_goPrevSelected;
 
     public string CurLandmarkName { get; private set; }
-    private GameObject m_panels, m_instructionsPanel, m_mapPanel;
-    private Text m_scoreText, m_timeText;
+    private GameObject m_instructionsPanel, m_aboutPanel, m_mapPanel;
+    private TMP_Text m_scoreText, m_timeText;
     private MapPanelHelper m_mpHelper;
     private bool m_gameStartInstructions;
 
@@ -20,12 +22,12 @@ public class PanelManager : MonoBehaviour {
 	{
         GameObject mainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag);
 
-        m_panels = mainMenuUI.transform.Find(Strings.PanelsName).gameObject;
         m_instructionsPanel = mainMenuUI.transform.Find(Strings.InstructionsPanelPath).gameObject;
+        m_aboutPanel = mainMenuUI.transform.Find(Strings.AboutPanelPath).gameObject;
         m_mapPanel = mainMenuUI.transform.Find(Strings.MapPanelPath).gameObject;
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
-        m_scoreText = mainMenuUI.transform.Find(Strings.GameStatusScoreTextPath).GetComponent<Text>();
-        m_timeText = mainMenuUI.transform.Find(Strings.GameStatusTimeTextPath).GetComponent<Text>();
+        m_scoreText = mainMenuUI.transform.Find(Strings.StatusBarScoreTextPath).GetComponent<TMP_Text>();
+        m_timeText = mainMenuUI.transform.Find(Strings.StatusBarTimeTextPath).GetComponent<TMP_Text>();
     }
 
     private void Update()
@@ -38,39 +40,51 @@ public class PanelManager : MonoBehaviour {
         if (m_goPanel == goPanel)
             return;
 
+        GameSystem.Instance.PauseGame();
+
         m_goPrevSelected = EventSystem.current.currentSelectedGameObject;
 
-        m_panels.SetActive(true);
         goPanel.SetActive(true);
 
         goPanel.transform.SetAsLastSibling();
 
-        //EventSystem.current.SetSelectedGameObject(FindFirstEnabledSelectable(goPanel));
-
         m_goPanel = goPanel;
-	}
+
+        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(0f, 0.6f, false).SetEase(Ease.InOutCubic).SetUpdate(true);
+    }
 
     public void ClosePanel()
+    {
+        ClosePanel(true);
+    }
+
+    public bool ClosePanel(bool fCheckOkToClose)
     {
         if (m_goPanel == m_instructionsPanel)
             CloseInstructionsPanel();
         else
         {
-            if (CloseMapPanel(true))
-                ContinueGame(false);
+            if (!CloseMapPanel(fCheckOkToClose))
+                return false;
         }
+
+        EventSystem.current.SetSelectedGameObject(null);
+
+        m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1600f, 0.25f, false).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_goPanel = null; });
+
+        GameSystem.Instance.ContinueGame(false);
+
+        return true;
     }
 
     // this is called when game is started
-    public void OpenInstructionsPanel(bool isGameStarting)
+    public void OpenInstructionsPanel(bool isGameStarting = false)
     {
         m_gameStartInstructions = isGameStarting;
 
-        GameSystem.Instance.PauseGame();
-
         OpenPanel(m_instructionsPanel);
 
-        Text closePanelText = m_instructionsPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<Text>();
+        TMP_Text closePanelText = m_instructionsPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
         closePanelText.text = isGameStarting ? Strings.StartGame : Strings.ContinueGame;
 
         Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
@@ -81,7 +95,7 @@ public class PanelManager : MonoBehaviour {
     }
 
     // called when the CloseButton is clicked on the Instructions panel
-    public void CloseInstructionsPanel()
+    private void CloseInstructionsPanel()
 	{
 		if (m_goPanel == null)
 			return;
@@ -100,19 +114,15 @@ public class PanelManager : MonoBehaviour {
             m_gameStartInstructions = false;
         }
 
-        Text closeButtonText = m_goPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<Text>();
+        TMP_Text closeButtonText = m_goPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
         closeButtonText.text = Strings.ContinueGame;
 
-        EventSystem.current.SetSelectedGameObject(null);
-
-        m_goPanel.SetActive(false);
-        m_panels.SetActive(false);
-
-        m_goPanel = null;
-
-        GameSystem.Instance.ResumeGame(false);
-
         GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
+    }
+
+    public void OpenAboutPanel()
+    {
+        OpenPanel(m_aboutPanel);
     }
 
     // called from menu
@@ -125,8 +135,6 @@ public class PanelManager : MonoBehaviour {
     {
         if (!String.IsNullOrEmpty(CurLandmarkName)) // already showing the panel for a landmark
             return;
-
-        GameSystem.Instance.PauseGame();
 
         CurLandmarkName = landmarkName;
 
@@ -146,13 +154,6 @@ public class PanelManager : MonoBehaviour {
 
         CurLandmarkName = null;
 
-        EventSystem.current.SetSelectedGameObject(null);
-
-        m_goPanel.SetActive(false);
-        m_panels.SetActive(false);
-
-        m_goPanel = null;
-
         return true;
     }
 
@@ -163,7 +164,7 @@ public class PanelManager : MonoBehaviour {
 
     public void OnClickContinueGame()
     {
-        if (!CloseMapPanel(true))
+        if (!ClosePanel(true))
             return;
 
         ContinueGame(false);
@@ -171,7 +172,7 @@ public class PanelManager : MonoBehaviour {
 
     public void OnClickRetryGame()
     {
-        if (!CloseMapPanel(false))
+        if (!ClosePanel(false))
             return;
 
         RetryGame();
@@ -179,7 +180,7 @@ public class PanelManager : MonoBehaviour {
 
     public void OnClickVictoryLap()
     {
-        if (!CloseMapPanel(false))
+        if (!ClosePanel(false))
             return;
 
         ContinueGame(true);
@@ -189,7 +190,7 @@ public class PanelManager : MonoBehaviour {
 
     public void OnClickNewGame()
     {
-        if (!CloseMapPanel(false))
+        if (!ClosePanel(false))
             return;
 
         NewGame();
@@ -202,14 +203,9 @@ public class PanelManager : MonoBehaviour {
             (int)Math.Round(StaticGlobals.TotalScoreMax, MidpointRounding.AwayFromZero));
     }
 
-    public void LoadScene(string sceneName)
-    {
-        GameSystem.Instance.LoadScene(sceneName);
-    }
-
     public void ContinueGame(bool fVictoryLap)
     {
-        GameSystem.Instance.ResumeGame(fVictoryLap);
+        GameSystem.Instance.ContinueGame(fVictoryLap);
     }
 
     public void RetryGame()

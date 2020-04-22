@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MapPanelHelper : MonoBehaviour
 {
+    public GameObject LandmarkOnMap;
+
     private PanelManager m_panelManager;
     private Transform m_tMapPanel = null; // whether / which panel is being shown right now
     private string m_landmarkName;
@@ -15,12 +18,12 @@ public class MapPanelHelper : MonoBehaviour
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
 
     private Transform m_tActionButton1, m_tActionButton2; // action buttons
-    private Text m_actionButton1Text, m_actionButton2Text; // text for the action buttons
+    private TMP_Text m_actionButton1Text, m_actionButton2Text; // text for the action buttons
     private Transform m_tMapImage;
     private Camera m_skyCamera;
 
     private bool m_isMapPanelInitialized = false;
-    private Text m_levelText, m_totalScoreText;
+    private TMP_Text m_levelText, m_totalScoreText;
     private GameObject[] m_goLandmarks;
     private Transform m_tPlayermarkList;
     private bool m_revealedLandmarksOnMap = false;
@@ -38,15 +41,15 @@ public class MapPanelHelper : MonoBehaviour
         m_isLevelComplete = false;
         m_tActionButton1 = m_tMapPanel.Find(Strings.ActionButton1Path);
         m_tActionButton2 = m_tMapPanel.Find(Strings.ActionButton2Path);
-        m_actionButton1Text = m_tMapPanel.Find(Strings.ActionButton1LabelPath).GetComponent<Text>();
-        m_actionButton2Text = m_tMapPanel.Find(Strings.ActionButton2LabelPath).GetComponent<Text>();
+        m_actionButton1Text = m_tMapPanel.Find(Strings.ActionButton1LabelPath).GetComponent<TMP_Text>();
+        m_actionButton2Text = m_tMapPanel.Find(Strings.ActionButton2LabelPath).GetComponent<TMP_Text>();
 
         if (!m_isMapPanelInitialized)
         {
             m_skyCamera = GameObject.Find("Skycam").GetComponent<Camera>();
             m_tMapImage = m_tMapPanel.Find(Strings.MapImagePath);
-            m_levelText = m_tMapPanel.Find(Strings.LevelTextPath).GetComponent<Text>();
-            m_totalScoreText = m_tMapPanel.Find(Strings.TotalScoreTextPath).GetComponent<Text>();
+            m_levelText = m_tMapPanel.Find(Strings.LevelTextPath).GetComponent<TMP_Text>();
+            m_totalScoreText = m_tMapPanel.Find(Strings.TotalScoreTextPath).GetComponent<TMP_Text>();
             m_goLandmarks = GameObject.FindGameObjectsWithTag(Strings.LandmarkTag);
             m_tPlayermarkList = m_tMapPanel.Find(Strings.PlayermarksPath);
 
@@ -183,15 +186,17 @@ public class MapPanelHelper : MonoBehaviour
             Transform tBackground = m_tMapPanel.Find(Strings.ShowLandmarksBackgroundPath);
             tBackground.GetComponent<Image>().color = new Color32(192, 192, 192, 255);
             Transform tLabel = m_tMapPanel.Find(Strings.ShowLandmarksLabelPath);
-            tLabel.GetComponent<Text>().color = new Color32(192, 192, 192, 255);
+            tLabel.GetComponent<TMP_Text>().color = new Color32(192, 192, 192, 255);
         }
     }
 
     private IEnumerator ShowLevelCompleteMessage()
     {
-        PopupMessage.ShowMessage(String.Format(
-            (GameSystem.Instance.LevelScore == StaticGlobals.MaxLevelScore) ? Strings.GoodLevelCompleteMessageFormat : Strings.BadLevelCompleteMessageFormat,
-            GameSystem.Instance.LevelScore, StaticGlobals.MaxLevelScore, (int)Time.fixedTime));
+        PopupMessageType type = IsLevelWon() ? PopupMessageType.LevelWon : PopupMessageType.LevelLost;
+        string message = IsLevelWon() ? string.Format(Strings.LevelWonMessageFormat, GameSystem.Instance.LevelScore, StaticGlobals.MaxLevelScore, (int)Time.fixedTime) :
+            string.Format(Strings.LevelLostMessageFormat, GameSystem.Instance.LevelScore, StaticGlobals.MaxLevelScore, (int)Time.fixedTime);
+
+        PopupMessage.ShowMessage(type, message);
 
         yield return new WaitForSecondsRealtime(5f);
 
@@ -283,13 +288,11 @@ public class MapPanelHelper : MonoBehaviour
             LandmarkHandler lh = goLandmark.GetComponent<LandmarkHandler>();
             Vector3 position = CalcPosOnMap(lh);
 
-            GameObject go = new GameObject();
-            go.SetActive(m_revealedLandmarksOnMap);
-            go.name = Strings.LandmarkOnMap;
+            GameObject go = Instantiate(LandmarkOnMap, position, Quaternion.identity);
             go.transform.parent = m_tMapImage;
-            go.AddComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
-            go.AddComponent<Image>();
-            go.transform.position = position;
+            go.name = Strings.LandmarkOnMap;
+
+            go.SetActive(m_revealedLandmarksOnMap);
         }
     }
 
@@ -305,7 +308,7 @@ public class MapPanelHelper : MonoBehaviour
         foreach (Transform tPlayermarkListItem in m_tPlayermarkList)
         {
             Transform tPlayermarkText = tPlayermarkListItem.Find(Strings.PlayermarkTextName);
-            Text text = tPlayermarkText.GetComponent<Text>();
+            TMP_Text text = tPlayermarkText.GetComponent<TMP_Text>();
 
             if (text.text == landmarkName)
             {
@@ -326,7 +329,7 @@ public class MapPanelHelper : MonoBehaviour
 
         // get its parent/PlayermarkText/Text
         Transform tPlayermarkText = ph.transform.parent.Find(Strings.PlayermarkTextName);
-        Text text = tPlayermarkText.GetComponent<Text>();
+        TMP_Text text = tPlayermarkText.GetComponent<TMP_Text>();
 
         // Text.text == goLandmark.name
         foreach (GameObject goLandmark in m_goLandmarks)
@@ -383,5 +386,10 @@ public class MapPanelHelper : MonoBehaviour
         }
 
         return allPlayermarksVisited;
+    }
+
+    private static bool IsLevelWon()
+    {
+        return (GameSystem.Instance.LevelScore == StaticGlobals.MaxLevelScore);
     }
 }
