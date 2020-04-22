@@ -113,9 +113,11 @@ public class GameSystem : MonoBehaviour
         m_tRoadHolder = m_graph.transform.Find(Strings.RoadHolderPath).transform;
         m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
 
-        if (StaticGlobals.SavedInitStateExists)
+        if (StaticGlobals.RetryingGame)
         {
             LoadGameState();
+
+            StaticGlobals.RetryingGame = false;
         }
         else
         {
@@ -364,6 +366,8 @@ public class GameSystem : MonoBehaviour
     {
         ContinueGame(false);
 
+        StaticGlobals.RetryingGame = true;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -466,8 +470,8 @@ public class GameSystem : MonoBehaviour
 
     private void SaveGameState()
     {
-        if (StaticGlobals.SavedLandmarks != null)
-            StaticGlobals.SavedLandmarks.Clear();
+        if (StaticGlobals.SavedStateExists)
+            ClearGameState();
 
         StaticGlobals.SavedLandmarks = new List<SavedLandmark>();
 
@@ -486,12 +490,13 @@ public class GameSystem : MonoBehaviour
         StaticGlobals.SavedRoadOnTrack = m_roadOnTrack;
         StaticGlobals.SavedOrigPointIndexOnTrack = m_iOrigPointOnTrack;
         StaticGlobals.SavedRotationOnTrack = m_rotationOnTrack;
-
-        StaticGlobals.SavedInitStateExists = true;
     }
 
     private void LoadGameState()
     {
+        if (!StaticGlobals.SavedStateExists)
+            return;
+
         for (int iLandmark = 0; iLandmark < StaticGlobals.SavedLandmarks.Count; iLandmark++)
         {
             CreateLandmark(iLandmark, StaticGlobals.SavedLandmarks[iLandmark].pos, StaticGlobals.SavedLandmarks[iLandmark].rotation);
@@ -500,10 +505,16 @@ public class GameSystem : MonoBehaviour
         m_roadOnTrack = StaticGlobals.SavedRoadOnTrack;
         m_iOrigPointOnTrack = StaticGlobals.SavedOrigPointIndexOnTrack;
         m_rotationOnTrack = StaticGlobals.SavedRotationOnTrack;
+    }
 
+    private void ClearGameState()
+    {
         StaticGlobals.SavedLandmarks.Clear();
         StaticGlobals.SavedLandmarks = null;
-        StaticGlobals.SavedInitStateExists = false;
+
+        StaticGlobals.SavedRoadOnTrack = null;
+        StaticGlobals.SavedOrigPointIndexOnTrack = -1;
+        StaticGlobals.SavedRotationOnTrack = Quaternion.identity;
     }
 
     private bool UpdateCarStatus()
