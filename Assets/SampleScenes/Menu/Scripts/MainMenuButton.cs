@@ -36,7 +36,7 @@ public class MainMenuButton : MonoBehaviour
     private void MenuOff(string panelName)
     {
         m_mainMenuRectTransform.DOAnchorPosY(1500f, 0.25f).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => OnCompleteMenuOff(panelName));
-        GameSystem.Instance.ResumeGame(false);
+        GameSystem.Instance.ContinueGame(false);
     }
 
     private void OnCompleteMenuOff(string panelName)

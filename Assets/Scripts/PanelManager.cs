@@ -72,7 +72,7 @@ public class PanelManager : MonoBehaviour {
 
         m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1600f, 0.25f, false).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_goPanel = null; });
 
-        GameSystem.Instance.ResumeGame(false);
+        GameSystem.Instance.ContinueGame(false);
 
         return true;
     }
@@ -203,14 +203,9 @@ public class PanelManager : MonoBehaviour {
             (int)Math.Round(StaticGlobals.TotalScoreMax, MidpointRounding.AwayFromZero));
     }
 
-    public void LoadScene(string sceneName)
-    {
-        GameSystem.Instance.LoadScene(sceneName);
-    }
-
     public void ContinueGame(bool fVictoryLap)
     {
-        GameSystem.Instance.ResumeGame(fVictoryLap);
+        GameSystem.Instance.ContinueGame(fVictoryLap);
     }
 
     public void RetryGame()

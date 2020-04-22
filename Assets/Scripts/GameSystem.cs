@@ -115,12 +115,14 @@ public class GameSystem : MonoBehaviour
 
         if (StaticGlobals.SavedInitStateExists)
         {
-            ReInitGameState();
+            LoadGameState();
         }
         else
         {
-            // init landmarks
+            // init landmarks, car initial pos etc.
             InitGameState();
+
+            SaveGameState();
         }
 
         // place car some distance from the first landmark
@@ -326,7 +328,7 @@ public class GameSystem : MonoBehaviour
 
     public void NewGame()
     {
-        ResumeGame(false);
+        ContinueGame(false);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
@@ -335,7 +337,7 @@ public class GameSystem : MonoBehaviour
 
     public void GoToLevel(string gameLevel)
     {
-        ResumeGame(false);
+        ContinueGame(false);
 
         switch (gameLevel)
         {
@@ -360,16 +362,9 @@ public class GameSystem : MonoBehaviour
     // retry the same level without changing anything
     public void RetryGame()
     {
-        ResumeGame(false);
-        SaveGameInitState();
+        ContinueGame(false);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    public void LoadScene(string sceneName)
-    {
-        GameSystem.Instance.ResumeGame(false);
-        SceneManager.LoadScene(sceneName);
     }
 
     public void PauseGame()
@@ -390,7 +385,7 @@ public class GameSystem : MonoBehaviour
         //Time.timeScale = 0f;
     }
 
-    public void ResumeGame(bool fVictoryLap)
+    public void ContinueGame(bool fVictoryLap)
     {
         if (!m_paused)
             return;
@@ -469,7 +464,7 @@ public class GameSystem : MonoBehaviour
         m_mainPanelManager.UpdateScore();
     }
 
-    private void SaveGameInitState()
+    private void SaveGameState()
     {
         if (StaticGlobals.SavedLandmarks != null)
             StaticGlobals.SavedLandmarks.Clear();
@@ -495,7 +490,7 @@ public class GameSystem : MonoBehaviour
         StaticGlobals.SavedInitStateExists = true;
     }
 
-    private void ReInitGameState()
+    private void LoadGameState()
     {
         for (int iLandmark = 0; iLandmark < StaticGlobals.SavedLandmarks.Count; iLandmark++)
         {
