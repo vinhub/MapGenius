@@ -317,7 +317,7 @@ public class GameSystem : MonoBehaviour
         else if (fEscape)
         {
             if (m_mainPanelManager.IsPanelOpen())
-                m_mainPanelManager.ClosePanel();
+                m_mainPanelManager.ClosePanelAndContinue();
             else
                 m_mainMenuButton.Toggle();
         }

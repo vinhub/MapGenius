@@ -53,9 +53,11 @@ public class PanelManager : MonoBehaviour {
         m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(0f, 0.6f, false).SetEase(Ease.InOutCubic).SetUpdate(true);
     }
 
-    public void ClosePanel()
+    public void ClosePanelAndContinue()
     {
         ClosePanel(true);
+
+        ContinueGame(false);
     }
 
     public bool ClosePanel(bool fCheckOkToClose)
@@ -71,8 +73,6 @@ public class PanelManager : MonoBehaviour {
         EventSystem.current.SetSelectedGameObject(null);
 
         m_goPanel.GetComponent<RectTransform>().DOAnchorPosY(1600f, 0.25f, false).SetEase(Ease.InOutCubic).SetUpdate(true).OnComplete(() => { m_goPanel.SetActive(false); m_goPanel = null; });
-
-        GameSystem.Instance.ContinueGame(false);
 
         return true;
     }
@@ -184,8 +184,6 @@ public class PanelManager : MonoBehaviour {
             return;
 
         ContinueGame(true);
-
-        //TODO: Celebration
     }
 
     public void OnClickNewGame()
