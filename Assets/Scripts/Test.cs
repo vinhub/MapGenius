@@ -44,14 +44,23 @@ public class Test : MonoBehaviour
     private IEnumerator RunMapPanelTest()
     {
         Transform tMainMenuUI = GameObject.FindWithTag(Strings.MainMenuUITag).transform;
-        PanelManager m_mainPanelManager = tMainMenuUI.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
+        PanelManager mainPanelManager = tMainMenuUI.Find(Strings.PanelManagerPath).GetComponent<PanelManager>();
+        GameObject[] goLandmarks = GameObject.FindGameObjectsWithTag(Strings.LandmarkTag);
 
-        for (int iLandmark = 0; iLandmark < Strings.LandmarkNames.Length; iLandmark++)
+        for (int iLandmark = 0; iLandmark < goLandmarks.Length; iLandmark++)
         {
-            m_mainPanelManager.OpenMapPanel(Strings.LandmarkNames[iLandmark], iLandmark == 0);
-            yield return new WaitForSecondsRealtime(1f);
-            m_mainPanelManager.ClosePanel();
-            yield return new WaitForSecondsRealtime(1f);
+            goLandmarks[iLandmark].GetComponent<LandmarkHandler>().IsVisited = true;
+
+            mainPanelManager.OpenMapPanel(goLandmarks[iLandmark].name, true);
+
+            yield return new WaitForSecondsRealtime(2f);
+
+            if (iLandmark < goLandmarks.Length - 1)
+            {
+                mainPanelManager.ClosePanelAndContinue();
+
+                yield return new WaitForSecondsRealtime(1f);
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LandmarkHandler : MonoBehaviour
 {
-    private bool m_isVisited = false;
+    public bool IsVisited { get; set; } = false;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -14,9 +14,9 @@ public class LandmarkHandler : MonoBehaviour
         {
             // Debug.Log("Car crossed landmark " + this.name);
 
-            if (!m_isVisited) // notify only if this was the first visit to this landmark
+            if (!IsVisited) // notify only if this was the first visit to this landmark
             {
-                m_isVisited = true;
+                IsVisited = true;
 
                 GameSystem.Instance.LandmarkCrossed(this.name);
             }
