@@ -386,7 +386,8 @@ public class GameSystem : MonoBehaviour
         m_timeScaleSav = Time.timeScale;
 
         Time.timeScale = 0.001f; // we want to set it to 0, but doing so causes a jerk.
-        //Time.timeScale = 0f;
+        Time.timeScale = 0f;
+        //DOTween.To(() => { return Time.timeScale; }, (s) => { Time.timeScale = s; }, 0f, 0.2f);
     }
 
     public void ContinueGame(bool fVictoryLap)
