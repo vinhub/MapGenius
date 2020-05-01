@@ -194,10 +194,10 @@ namespace UnityStandardAssets.Vehicles.Car
         public void StopCar()
         {
             m_Rigidbody.velocity = Vector3.zero;
-            Revs = 0;
-            m_CurrentTorque = 0;
-            Move(0, 0, -1f, 1f);
-            m_carAudio.StopSound();
+            //Revs = 0;
+            //m_CurrentTorque = 0;
+            //Move(0, 0, -1f, 1f);
+            //m_carAudio.StopSound();
         }
         // VINMOD: END
 

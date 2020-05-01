@@ -378,22 +378,25 @@ public class GameSystem : MonoBehaviour
 
         m_paused = true;
 
-        m_carController.StopCar();
-
-        if (m_victoryLapAudioSource.isPlaying)
-            m_victoryLapAudioSource.Stop();
+        PauseAllAudio();
 
         m_timeScaleSav = Time.timeScale;
 
-        Time.timeScale = 0.001f; // we want to set it to 0, but doing so causes a jerk.
-        Time.timeScale = 0f;
-        //DOTween.To(() => { return Time.timeScale; }, (s) => { Time.timeScale = s; }, 0f, 0.2f);
+        Time.timeScale = 0.0005f; // we want to set it to 0, but doing so causes a jerk.
+
+        // DOTween.To(() => { return Time.timeScale; }, (s) => { Time.timeScale = s; }, 0f, 0.2f);
     }
 
     public void ContinueGame(bool fVictoryLap)
     {
         if (!m_paused)
             return;
+
+        m_carController.StopCar();
+
+        Time.timeScale = m_timeScaleSav;
+
+        ResumePausedAudio();
 
         if (fVictoryLap)
         {
@@ -402,7 +405,6 @@ public class GameSystem : MonoBehaviour
             ShowInfoMessage(Strings.VictoryLapMessage, 3f);
         }
 
-        Time.timeScale = m_timeScaleSav;
         m_paused = false;
     }
 
@@ -422,14 +424,31 @@ public class GameSystem : MonoBehaviour
 #endif
     }
 
-    private void StopAllAudio()
+    private List<AudioSource> m_pausedAudioSources = new List<AudioSource>(); 
+    private void PauseAllAudio()
     {
          AudioSource[] allAudioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
         foreach (AudioSource audio in allAudioSources)
         {
-            audio.Stop();
+            if (!audio.isPlaying)
+                continue;
+
+            audio.Pause();
+            m_pausedAudioSources.Add(audio);
         }
     }
+
+
+    private void ResumePausedAudio()
+    {
+        foreach (AudioSource audio in m_pausedAudioSources)
+        {
+            audio.Play();
+        }
+
+        m_pausedAudioSources.Clear();
+    }
+
 
     // called when the player crosses a landmark
     public void LandmarkCrossed(string landmarkName)
