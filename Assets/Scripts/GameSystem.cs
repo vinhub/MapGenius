@@ -378,8 +378,6 @@ public class GameSystem : MonoBehaviour
 
         m_paused = true;
 
-        //m_carController.StopCar();
-
         PauseAllAudio();
 
         m_timeScaleSav = Time.timeScale;
@@ -393,6 +391,8 @@ public class GameSystem : MonoBehaviour
     {
         if (!m_paused)
             return;
+
+        m_carController.StopCar();
 
         Time.timeScale = m_timeScaleSav;
 
