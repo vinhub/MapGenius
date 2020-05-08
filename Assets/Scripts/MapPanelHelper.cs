@@ -193,8 +193,8 @@ public class MapPanelHelper : MonoBehaviour
     private IEnumerator ShowLevelCompleteMessage()
     {
         PopupMessageType type = IsLevelWon() ? PopupMessageType.LevelWon : PopupMessageType.LevelLost;
-        string message = IsLevelWon() ? string.Format(Strings.LevelWonMessageFormat, GameSystem.Instance.LevelScore, StaticGlobals.MaxLevelScore, (int)Time.fixedTime) :
-            string.Format(Strings.LevelLostMessageFormat, GameSystem.Instance.LevelScore, StaticGlobals.MaxLevelScore, (int)Time.fixedTime);
+        string message = IsLevelWon() ? string.Format(Strings.LevelWonMessageFormat, GameSystem.Instance.LevelScore, (int)Time.fixedTime) :
+            string.Format(Strings.LevelLostMessageFormat, GameSystem.Instance.LevelScore, (int)Time.fixedTime);
 
         PopupMessage.ShowMessage(type, message);
 
@@ -258,8 +258,7 @@ public class MapPanelHelper : MonoBehaviour
     {
         m_levelText.text = String.Format(Strings.LevelTextFormat, StaticGlobals.CurGameLevel);
         m_totalScoreText.text = String.Format(Strings.ScoreTextFormat,
-            (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero),
-            (int)Math.Round(StaticGlobals.TotalScoreMax, MidpointRounding.AwayFromZero));
+            (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero));
 
         if (isNewScore)
         {

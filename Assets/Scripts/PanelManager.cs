@@ -196,9 +196,7 @@ public class PanelManager : MonoBehaviour {
 
     public void UpdateScore()
     {
-        m_scoreText.text = String.Format(Strings.ScoreTextFormat,
-            (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero),
-            (int)Math.Round(StaticGlobals.TotalScoreMax, MidpointRounding.AwayFromZero));
+        m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero));
     }
 
     public void ContinueGame(bool fVictoryLap)
