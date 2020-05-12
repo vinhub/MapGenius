@@ -25,6 +25,7 @@
     public const string PanelManagerPath = "PanelManager";
     public const string OpenMenuButtonPath = "OpenMenuButton";
     public const string InstructionsPanelPath = "Panels/Instructions";
+    public const string InstructionSteps = "Window/Instructions/Background";
     public const string AboutPanelPath = "Panels/About";
     public const string MapPanelPath = "Panels/Map";
     public const string StatusBarScoreTextPath = "ScoreStatus/Window/ScoreText";
@@ -37,7 +38,7 @@
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
     public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
-    public const string CloseButtonLabelPath = "Window/ButtonBar/CloseButton/Background/Label";
+    public const string CloseButtonLabelPath = "Background/Label";
     public const string ActionButton1LabelPath = "Window/ButtonBar/ActionButton1/Background/Label";
     public const string ActionButton2LabelPath = "Window/ButtonBar/ActionButton2/Background/Label";
     public const string ButtonBarTogglePath = "Window/ButtonBar/Toggle";
@@ -86,6 +87,7 @@
     public const string RetryGame = "Try Again";
     public const string VictoryLap = "Take a Victory Lap!";
     public const string CheckScore = "Check Score";
+    public const string Next = "Next";
 
     // format strings
     public const string ScoreTextFormat = "Score: {0:d4}";

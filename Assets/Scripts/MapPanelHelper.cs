@@ -21,6 +21,7 @@ public class MapPanelHelper : MonoBehaviour
     private TMP_Text m_actionButton1Text, m_actionButton2Text; // text for the action buttons
     private Transform m_tMapImage;
     private Camera m_skyCamera;
+    private AudioSource m_buttonClickAudioSource;
 
     private bool m_isMapPanelInitialized = false;
     private TMP_Text m_levelText, m_totalScoreText;
@@ -43,6 +44,7 @@ public class MapPanelHelper : MonoBehaviour
         m_tActionButton2 = m_tMapPanel.Find(Strings.ActionButton2Path);
         m_actionButton1Text = m_tMapPanel.Find(Strings.ActionButton1LabelPath).GetComponent<TMP_Text>();
         m_actionButton2Text = m_tMapPanel.Find(Strings.ActionButton2LabelPath).GetComponent<TMP_Text>();
+        m_buttonClickAudioSource = transform.parent.parent.Find(Strings.ButtonClickAudioSourceName).GetComponent<AudioSource>();
 
         if (!m_isMapPanelInitialized)
         {
@@ -78,6 +80,7 @@ public class MapPanelHelper : MonoBehaviour
         m_actionButton2Text.text = Strings.ContinueGame;
         m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
         m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickContinueGame);
+        m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
 
         // mark the current playermark as currently visiting
         if (m_phCur != null)
@@ -140,10 +143,12 @@ public class MapPanelHelper : MonoBehaviour
                 m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
             }
 
+            m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
 
             m_actionButton2Text.text = Strings.NewGame;
             m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
             m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickNewGame);
+            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
 
             return false;
         }
