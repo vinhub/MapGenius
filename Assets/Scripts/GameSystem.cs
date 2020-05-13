@@ -309,9 +309,9 @@ public class GameSystem : MonoBehaviour
         bool fEscape = Input.GetKeyUp(KeyCode.Escape);
         bool fEnter = Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return); // TODO: press default button
 
-        if (fBackOnTrack)
+        if (fBackOnTrack && !IsGamePaused())
             GetBackOnTrack();
-        else if (fShowMap)
+        else if (fShowMap && !IsGamePaused())
             m_mainPanelManager.OpenMapPanel();
         else if (fFreeDrive)
             StartFreeDrive();
