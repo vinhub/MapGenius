@@ -118,7 +118,7 @@ public class MapPanelHelper : MonoBehaviour
         SavePlayermarkChanges();
 
         // if level is complete, we should not close the panel but show the results
-        if (fCheckOkToClose && m_isLevelComplete)
+        if (fCheckOkToClose && m_isLevelComplete && !GameSystem.Instance.InFreeDriveMode())
         {
             // Calculate and display score
             float levelScore = CalcLevelScore();

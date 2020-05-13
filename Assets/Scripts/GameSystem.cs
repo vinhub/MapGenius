@@ -306,7 +306,8 @@ public class GameSystem : MonoBehaviour
         bool fBackOnTrack = Input.GetKeyUp(KeyCode.T);
         bool fShowMap = Input.GetKeyUp(KeyCode.M);
         bool fFreeDrive = Input.GetKeyUp(KeyCode.F);
-        bool fEscape = Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return);
+        bool fEscape = Input.GetKeyUp(KeyCode.Escape);
+        bool fEnter = Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return); // TODO: press default button
 
         if (fBackOnTrack)
             GetBackOnTrack();
@@ -400,9 +401,10 @@ public class GameSystem : MonoBehaviour
 
         if (fVictoryLap)
         {
+            StartFreeDrive();
+
             // play victory music
             m_victoryLapAudioSource.Play();
-            ShowInfoMessage(Strings.VictoryLapMessage, 3f);
         }
 
         m_paused = false;
@@ -770,5 +772,10 @@ public class GameSystem : MonoBehaviour
     {
         Debug.Log(info);
         ShowInfoMessage(info, 3f);
+    }
+
+    public bool InFreeDriveMode()
+    {
+        return m_inFreeDriveMode;
     }
 }
