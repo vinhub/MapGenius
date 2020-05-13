@@ -154,6 +154,10 @@ public class MapPanelHelper : MonoBehaviour
         }
         else
         {
+            // hide level complete message in case it is showing
+            if (m_isLevelComplete)
+                PopupMessage.HideMessage();
+
             m_phCur = null;
             m_tMapPanel = null;
         }
