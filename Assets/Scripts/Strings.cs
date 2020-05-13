@@ -100,6 +100,6 @@
     public const string CarSpeedStatusFormat = "Speed: {0:F0}";
     public const string CarRevsStatusFormat = "Revs: {0:d3}";
     public const string GetBackOnTrackMessage = "Car is stuck? Press T to get it back on track.";
-    public const string StartingInstructionsMessage = "Drive the car using the W, A, S, D, or arrow keys.";
+    public const string StartingInstructionsMessage = "Drive the car using the W, A, S, D or arrow keys (or standard joystick controls).";
     public const string VictoryLapMessage = "Drive freely anywhere you want to. You can even go offroad.";
 }
