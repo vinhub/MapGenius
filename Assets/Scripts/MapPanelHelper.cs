@@ -155,8 +155,7 @@ public class MapPanelHelper : MonoBehaviour
         else
         {
             // hide level complete message in case it is showing
-            if (m_isLevelComplete)
-                PopupMessage.HideMessage();
+            PopupMessage.HideMessage();
 
             m_phCur = null;
             m_tMapPanel = null;
@@ -240,7 +239,7 @@ public class MapPanelHelper : MonoBehaviour
             // full points if the playermark is within slop distance of the landmark
             float landmarkScore = (distance <= maxSlopDistance) ? (maxLandmarkScore * ph.ScoreFactor / 100f) : 0f;
 
-            ph.OnUpdateScore(landmarkScore);
+            ph.SetState((landmarkScore > 0.01) ? PlayermarkHandler.PlayermarkState.Correct : PlayermarkHandler.PlayermarkState.Incorrect);
 
             levelScore += landmarkScore;
         }
@@ -367,7 +366,7 @@ public class MapPanelHelper : MonoBehaviour
     private void SavePlayermarkChanges()
     {
         // lock the current playmarker and mark it as drag-dropped
-        if (m_phCur != null)
+        if ((m_phCur != null) && (m_phCur.State == PlayermarkHandler.PlayermarkState.CurrentlyVisiting))
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.Visited);
             m_phCur.SetScoreFactor(((StaticGlobals.CurGameLevel > GameLevel.Smalltown) && m_revealedLandmarksOnMap) ? 50f : 100f);

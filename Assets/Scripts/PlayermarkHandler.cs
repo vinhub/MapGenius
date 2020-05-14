@@ -11,7 +11,7 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Image m_playermarkImage, m_emptyPlayermarkImage;
     private TMP_Text m_playermarkText, m_playermarkIndex, m_emptyPlayermarkText;
 
-    public enum PlayermarkState { Unvisited, CurrentlyVisiting, Visited };
+    public enum PlayermarkState { Unvisited, CurrentlyVisiting, Visited, Correct, Incorrect };
 
     public PlayermarkState State { get; private set; } = PlayermarkState.Unvisited;
 
@@ -127,6 +127,14 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
                 m_playermarkText.color = m_visitedColor;
                 break;
+
+            case PlayermarkState.Correct:
+                m_playermarkImage.color = m_playermarkIndex.color = m_emptyPlayermarkImage.color = m_playermarkText.color = m_emptyPlayermarkText.color = m_green;
+                break;
+
+            case PlayermarkState.Incorrect:
+                m_playermarkImage.color = m_playermarkIndex.color = m_emptyPlayermarkImage.color = m_playermarkText.color = m_emptyPlayermarkText.color = m_red;
+                break;
         }
     }
 
@@ -145,11 +153,5 @@ public class PlayermarkHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
             m_playermarkImage.color = m_playermarkIndex.color = m_playermarkText.color = m_currentlyVisitingColor;
             yield return new WaitForSecondsRealtime(0.5f);
         }
-    }
-
-    // update appearance based on score.
-    public void OnUpdateScore(float score)
-    {
-        m_playermarkImage.color = m_playermarkIndex.color = m_emptyPlayermarkImage.color = m_playermarkText.color = m_emptyPlayermarkText.color = (score > 0.01) ? m_green : m_red;
     }
 }
