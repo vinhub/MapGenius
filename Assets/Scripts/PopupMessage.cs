@@ -60,6 +60,9 @@ public class PopupMessage : MonoBehaviour
 
     private void _HideMessage()
     {
+        if (!m_popup.activeInHierarchy)
+            return;
+
         m_popup.transform.DOScale(0f, 0.25f).SetUpdate(true).OnComplete(() => m_popup.SetActive(false));
     }
 

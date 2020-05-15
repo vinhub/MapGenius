@@ -1,0 +1,1 @@
+butler push mapgenius-win-64-beta.zip vinhub/mapgenius:win-64-beta

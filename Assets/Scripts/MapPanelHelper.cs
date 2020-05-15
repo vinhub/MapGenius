@@ -21,6 +21,7 @@ public class MapPanelHelper : MonoBehaviour
     private TMP_Text m_actionButton1Text, m_actionButton2Text; // text for the action buttons
     private Transform m_tMapImage;
     private Camera m_skyCamera;
+    private AudioSource m_buttonClickAudioSource;
 
     private bool m_isMapPanelInitialized = false;
     private TMP_Text m_levelText, m_totalScoreText;
@@ -43,6 +44,7 @@ public class MapPanelHelper : MonoBehaviour
         m_tActionButton2 = m_tMapPanel.Find(Strings.ActionButton2Path);
         m_actionButton1Text = m_tMapPanel.Find(Strings.ActionButton1LabelPath).GetComponent<TMP_Text>();
         m_actionButton2Text = m_tMapPanel.Find(Strings.ActionButton2LabelPath).GetComponent<TMP_Text>();
+        m_buttonClickAudioSource = transform.parent.parent.Find(Strings.ButtonClickAudioSourceName).GetComponent<AudioSource>();
 
         if (!m_isMapPanelInitialized)
         {
@@ -78,6 +80,7 @@ public class MapPanelHelper : MonoBehaviour
         m_actionButton2Text.text = Strings.ContinueGame;
         m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
         m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickContinueGame);
+        m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
 
         // mark the current playermark as currently visiting
         if (m_phCur != null)
@@ -115,7 +118,7 @@ public class MapPanelHelper : MonoBehaviour
         SavePlayermarkChanges();
 
         // if level is complete, we should not close the panel but show the results
-        if (fCheckOkToClose && m_isLevelComplete)
+        if (fCheckOkToClose && m_isLevelComplete && !GameSystem.Instance.InFreeDriveMode())
         {
             // Calculate and display score
             float levelScore = CalcLevelScore();
@@ -140,15 +143,20 @@ public class MapPanelHelper : MonoBehaviour
                 m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
             }
 
+            m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
 
             m_actionButton2Text.text = Strings.NewGame;
             m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
             m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickNewGame);
+            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
 
             return false;
         }
         else
         {
+            // hide level complete message in case it is showing
+            PopupMessage.HideMessage();
+
             m_phCur = null;
             m_tMapPanel = null;
         }
@@ -231,7 +239,7 @@ public class MapPanelHelper : MonoBehaviour
             // full points if the playermark is within slop distance of the landmark
             float landmarkScore = (distance <= maxSlopDistance) ? (maxLandmarkScore * ph.ScoreFactor / 100f) : 0f;
 
-            ph.OnUpdateScore(landmarkScore);
+            ph.SetState((landmarkScore > 0.01) ? PlayermarkHandler.PlayermarkState.Correct : PlayermarkHandler.PlayermarkState.Incorrect);
 
             levelScore += landmarkScore;
         }
@@ -358,7 +366,7 @@ public class MapPanelHelper : MonoBehaviour
     private void SavePlayermarkChanges()
     {
         // lock the current playmarker and mark it as drag-dropped
-        if (m_phCur != null)
+        if ((m_phCur != null) && (m_phCur.State == PlayermarkHandler.PlayermarkState.CurrentlyVisiting))
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.Visited);
             m_phCur.SetScoreFactor(((StaticGlobals.CurGameLevel > GameLevel.Smalltown) && m_revealedLandmarksOnMap) ? 50f : 100f);

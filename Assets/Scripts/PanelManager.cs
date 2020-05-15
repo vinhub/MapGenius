@@ -16,7 +16,11 @@ public class PanelManager : MonoBehaviour {
     private GameObject m_instructionsPanel, m_aboutPanel, m_mapPanel;
     private TMP_Text m_scoreText, m_timeText;
     private MapPanelHelper m_mpHelper;
-    private bool m_gameStartInstructions;
+    private bool m_isGameStarting = true;
+    private AudioSource m_buttonClickAudioSource;
+
+    // intructions panel specific items
+    private int m_iInstructionStep = 0; // instructions panel consists of multiple steps
 
     private void Awake()
 	{
@@ -28,6 +32,7 @@ public class PanelManager : MonoBehaviour {
         m_mpHelper = m_mapPanel.GetComponent<MapPanelHelper>();
         m_scoreText = mainMenuUI.transform.Find(Strings.StatusBarScoreTextPath).GetComponent<TMP_Text>();
         m_timeText = mainMenuUI.transform.Find(Strings.StatusBarTimeTextPath).GetComponent<TMP_Text>();
+        m_buttonClickAudioSource = transform.parent.Find(Strings.ButtonClickAudioSourceName).GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -80,18 +85,53 @@ public class PanelManager : MonoBehaviour {
     // this is called when game is started
     public void OpenInstructionsPanel(bool isGameStarting = false)
     {
-        m_gameStartInstructions = isGameStarting;
+        m_isGameStarting = isGameStarting;
 
         OpenPanel(m_instructionsPanel);
 
-        TMP_Text closePanelText = m_instructionsPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
-        closePanelText.text = isGameStarting ? Strings.StartGame : Strings.ContinueGame;
+        SetupInstructionsPanel();
 
         Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
         hideInstructionsToggle.GetComponent<Toggle>().isOn = (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 1);
 
         // show the "don't show this again" toggle only when starting the game
-        hideInstructionsToggle.gameObject.SetActive(isGameStarting);
+        hideInstructionsToggle.gameObject.SetActive(m_isGameStarting);
+    }
+
+    private void SetupInstructionsPanel()
+    {
+        Transform tInstructionSteps = m_instructionsPanel.transform.Find(Strings.InstructionSteps);
+        bool isLastInstruction = (m_iInstructionStep == tInstructionSteps.childCount - 1);
+
+        // show current step
+        for (int iInstructionStep = 0; iInstructionStep < tInstructionSteps.childCount; iInstructionStep++)
+        {
+            Transform instructionStep = tInstructionSteps.GetChild(iInstructionStep);
+            instructionStep.gameObject.SetActive(iInstructionStep == m_iInstructionStep);
+        }
+
+        Transform tCloseButton = m_instructionsPanel.transform.Find(Strings.CloseButtonPath);
+
+        TMP_Text closePanelText = tCloseButton.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
+
+        closePanelText.text = isLastInstruction ? (m_isGameStarting ? Strings.StartGame : Strings.ContinueGame) : Strings.Next;
+
+        Button closeButton = tCloseButton.GetComponent<Button>();
+        
+        closeButton.onClick.RemoveAllListeners();
+
+        if (isLastInstruction)
+            closeButton.onClick.AddListener(ClosePanelAndContinue);
+        else
+            closeButton.onClick.AddListener(OnClickNextInstruction);
+
+        closeButton.onClick.AddListener(m_buttonClickAudioSource.Play);
+    }
+
+    public void OnClickNextInstruction()
+    {
+        m_iInstructionStep++;
+        SetupInstructionsPanel();
     }
 
     // called when the CloseButton is clicked on the Instructions panel
@@ -102,7 +142,7 @@ public class PanelManager : MonoBehaviour {
 
         Debug.Assert(m_goPanel == m_instructionsPanel);
 
-        if (m_gameStartInstructions) // instructions panel is being shown at the start of the game
+        if (m_isGameStarting) // instructions panel is being shown at the start of the game
         {
             Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
             if (hideInstructionsToggle.gameObject.activeInHierarchy)
@@ -111,13 +151,12 @@ public class PanelManager : MonoBehaviour {
                 PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, hideInstructionsAtStart ? 1 : 0);
             }
 
-            m_gameStartInstructions = false;
+            GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
+
+            m_isGameStarting = false;
         }
 
-        TMP_Text closeButtonText = m_goPanel.transform.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
-        closeButtonText.text = Strings.ContinueGame;
-
-        GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
+        m_iInstructionStep = 0;
     }
 
     public void OpenAboutPanel()
