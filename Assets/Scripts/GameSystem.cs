@@ -103,10 +103,7 @@ public class GameSystem : MonoBehaviour
             m_mainPanelManager.OpenInstructionsPanel(true);
         }
 
-        CiDyGraph[] graphs = Resources.FindObjectsOfTypeAll<CiDyGraph>();
-
-        m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == StaticGlobals.CurGameLevel.ToString()).gameObject;
-        m_graph.SetActive(true);
+        m_graph = GameObject.Find(Strings.GraphPath);
  
         // now that we have a graph, we can gather some frequently needed references
         m_tNodeHolder = m_graph.transform.Find(Strings.NodeHolderPath).transform;
@@ -356,7 +353,7 @@ public class GameSystem : MonoBehaviour
                 break;
         }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(gameLevel);
 
         StaticGlobals.TotalNumGames++;
     }
