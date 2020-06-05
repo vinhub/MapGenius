@@ -4,13 +4,14 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Intersection
   m_Shader: {fileID: 4800000, guid: 542810d16b3aa744eb0f7e4d24657468, type: 3}
-  m_ShaderKeywords: _GLOSSYREFLECTIONS_OFF _NORMALMAP _PARALLAXMAP _SPECGLOSSMAP _SPECULARHIGHLIGHTS_OFF
+  m_ShaderKeywords: _NORMALMAP _SPECGLOSSMAP
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -63,7 +64,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: 66b6e499f578cc74abf38a7b9adf07cd, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Roughness:
@@ -88,25 +89,25 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AOIntensity: 1
-    - _BumpScale: 1
+    - _BumpScale: 0.33
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DisplacementAmount: 0
     - _DstBlend: 0
     - _EdgeLength: 10
     - _EmissionScaleUI: 0
-    - _GlossMapScale: 0.08
+    - _GlossMapScale: 0.1618
     - _Glossiness: 0.016
-    - _GlossyReflections: 0
+    - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Parallax: 0.01618
+    - _Parallax: 0.005
     - _Shininess: 0.6
     - _SmoothnessTextureChannel: 0
     - _SnowAmount: 1
     - _SnowHeight: 0.5
-    - _SpecularHighlights: 0
+    - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _TesselationAmount: 1
     - _TileAmount: 1
