@@ -42,7 +42,8 @@ public class GameSystem : MonoBehaviour
 
     // for pausing / resuming game
     private float m_timeScaleSav = 1f;
-    private bool m_paused;
+    private bool m_isGamePaused;
+    private bool m_isGameQuitting = false;
 
     private MainMenuButton m_mainMenuButton;
     private PanelManager m_mainPanelManager;
@@ -269,6 +270,7 @@ public class GameSystem : MonoBehaviour
 
     private void OnDestroy()
     {
+        m_isGameQuitting = true;
         m_instance = null;
     }
 
@@ -370,10 +372,10 @@ public class GameSystem : MonoBehaviour
 
     public void PauseGame()
     {
-        if (m_paused)
+        if (m_isGamePaused)
             return;
 
-        m_paused = true;
+        m_isGamePaused = true;
 
         PauseAllAudio();
 
@@ -386,7 +388,7 @@ public class GameSystem : MonoBehaviour
 
     public void ContinueGame(bool fVictoryLap)
     {
-        if (!m_paused)
+        if (!m_isGamePaused)
             return;
 
         m_carController.StopCar();
@@ -403,17 +405,22 @@ public class GameSystem : MonoBehaviour
             m_victoryLapAudioSource.Play();
         }
 
-        m_paused = false;
+        m_isGamePaused = false;
     }
 
     public bool IsGamePaused()
     {
-        return m_paused;
+        return m_isGamePaused;
+    }
+
+    public bool IsGameQuitting()
+    {
+        return m_isGameQuitting;
     }
 
     public void QuitGame()
     {
-        Debug.Log("Player quit the game.");
+        //Debug.Log("Player quit the game.");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
