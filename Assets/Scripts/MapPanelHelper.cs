@@ -17,8 +17,8 @@ public class MapPanelHelper : MonoBehaviour
 
     private bool m_isLevelComplete = false; // whether the current level has been completed by the player
 
-    private Transform m_tActionButton1, m_tActionButton2; // action buttons
-    private TMP_Text m_actionButton1Text, m_actionButton2Text; // text for the action buttons
+    private Transform m_tActionButton;
+    private TMP_Text m_actionButtonText;
     private Transform m_tMapImage;
     private Camera m_skyCamera;
     private AudioSource m_buttonClickAudioSource;
@@ -40,10 +40,8 @@ public class MapPanelHelper : MonoBehaviour
         m_firstLandmarkCrossed = firstLandmarkCrossed;
 
         m_isLevelComplete = false;
-        m_tActionButton1 = m_tMapPanel.Find(Strings.ActionButton1Path);
-        m_tActionButton2 = m_tMapPanel.Find(Strings.ActionButton2Path);
-        m_actionButton1Text = m_tMapPanel.Find(Strings.ActionButton1LabelPath).GetComponent<TMP_Text>();
-        m_actionButton2Text = m_tMapPanel.Find(Strings.ActionButton2LabelPath).GetComponent<TMP_Text>();
+        m_tActionButton = m_tMapPanel.Find(Strings.ActionButtonPath);
+        m_actionButtonText = m_tMapPanel.Find(Strings.ActionButtonLabelPath).GetComponent<TMP_Text>();
         m_buttonClickAudioSource = transform.parent.parent.Find(Strings.ButtonClickAudioSourceName).GetComponent<AudioSource>();
 
         if (!m_isMapPanelInitialized)
@@ -75,12 +73,10 @@ public class MapPanelHelper : MonoBehaviour
         // display current score
         DisplayScore(false);
 
-        m_tActionButton1.gameObject.SetActive(false);
-
-        m_actionButton2Text.text = Strings.ContinueGame;
-        m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
-        m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickContinueGame);
-        m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
+        m_actionButtonText.text = Strings.ContinueGame;
+        m_tActionButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        m_tActionButton.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickContinueGame);
+        m_tActionButton.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
 
         // mark the current playermark as currently visiting
         if (m_phCur != null)
@@ -129,26 +125,20 @@ public class MapPanelHelper : MonoBehaviour
 
             DisplayScore(true);
 
-            m_tActionButton1.gameObject.SetActive(true);
             if (levelScore == StaticGlobals.MaxLevelScore) // max score achieved
             {
-                m_actionButton1Text.text = Strings.VictoryLap;
-                m_tActionButton1.GetComponent<Button>().onClick.RemoveAllListeners();
-                m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickVictoryLap);
+                m_actionButtonText.text = Strings.VictoryLap;
+                m_tActionButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                m_tActionButton.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickVictoryLap);
             }
             else
             {
-                m_actionButton1Text.text = Strings.RetryGame;
-                m_tActionButton1.GetComponent<Button>().onClick.RemoveAllListeners();
-                m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
+                m_actionButtonText.text = Strings.RetryGame;
+                m_tActionButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                m_tActionButton.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
             }
 
-            m_tActionButton1.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
-
-            m_actionButton2Text.text = Strings.NewGame;
-            m_tActionButton2.GetComponent<Button>().onClick.RemoveAllListeners();
-            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickNewGame);
-            m_tActionButton2.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
+            m_tActionButton.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
 
             return false;
         }
@@ -374,9 +364,6 @@ public class MapPanelHelper : MonoBehaviour
 
         // check if level is complete
         m_isLevelComplete = CheckLevelComplete();
-
-        if (m_isLevelComplete)
-            m_actionButton1Text.text = Strings.CheckScore;
     }
 
     // if all playermarks have been finalized i.e. drag-dropped and locked, then the level is complete

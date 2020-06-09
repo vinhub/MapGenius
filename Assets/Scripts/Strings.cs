@@ -36,11 +36,9 @@
     public const string InfoMessageTextPath = "Window/InfoMessageText";
     //public const string OnTrackrLocatorPath = "UI/OnTrackLocator";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
-    public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
-    public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
+    public const string ActionButtonPath = "Window/ButtonBar/ActionButton";
     public const string CloseButtonLabelPath = "Background/Label";
-    public const string ActionButton1LabelPath = "Window/ButtonBar/ActionButton1/Background/Label";
-    public const string ActionButton2LabelPath = "Window/ButtonBar/ActionButton2/Background/Label";
+    public const string ActionButtonLabelPath = "Window/ButtonBar/ActionButton/Background/Label";
     public const string ButtonBarTogglePath = "Window/ButtonBar/Toggle";
     public const string MapImagePath = "Window/MapPanel/MapBackground/MapImage";
     public const string LevelTextPath = "Window/MapPanel/PlayermarksPanel/Score/LevelText";
