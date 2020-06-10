@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 
-public enum PopupMessageType { FirstLandmarkCrossed, OtherLandmarkCrossed, LevelLost, LevelWon };
+public enum PopupMessageType { FirstLandmarkCrossed, OtherLandmarkCrossed, LevelLost, LevelWon, GameOver };
 
 public class PopupMessage : MonoBehaviour
 {
@@ -41,6 +41,10 @@ public class PopupMessage : MonoBehaviour
 
             case PopupMessageType.LevelWon:
                 iAudioSource = 2;
+                break;
+
+            case PopupMessageType.GameOver:
+                iAudioSource = 3;
                 break;
 
             default:

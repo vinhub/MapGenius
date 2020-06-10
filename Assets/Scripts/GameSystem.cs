@@ -456,7 +456,15 @@ public class GameSystem : MonoBehaviour
 
     public void GameOver()
     {
-        // TODO: show game over scene
+        PopupMessage.ShowMessage(PopupMessageType.GameOver, Strings.GameOverMessage);
+        StartCoroutine(GameOverAfterDelay());
+    }
+
+    private IEnumerator GameOverAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(5f);
+
+        PopupMessage.HideMessage();
         QuitGame();
     }
 

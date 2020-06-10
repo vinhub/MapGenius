@@ -110,4 +110,5 @@
     public const string StartFreeDrive = "Drive around freely";
     public const string VictoryLapMessage = "Relax and bask in the glory of your success!";
     public const string FreeDriveMessage = "Drive freely anywhere you want to, including offroad. Hit 'Esc' when bored.";
+    public const string GameOverMessage = "<b><color=#00ff00ff>Game Over!\r\n\r\nBye!</color></b>";
 }
