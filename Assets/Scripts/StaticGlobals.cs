@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // generic stuff
-public enum GameLevel { Downtown = 0, Smalltown = 1, Oldtown = 2 };
+public enum GameLevel { Downtown = 0, Smalltown = 1, Oldtown = 2, FutureTown = 3 };
+public enum DrivingMode { Normal, Free, VictoryLap };
 
 // saved as a part of the game state
 public struct SavedLandmark

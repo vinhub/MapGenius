@@ -61,7 +61,7 @@ public class GameSystem : MonoBehaviour
 
     private AudioSource m_victoryLapAudioSource;
 
-    private bool m_inFreeDriveMode = false; // in free drive mode player can drive freely anywhere without worrying about crossing landmarks or scoring etc.
+    public DrivingMode CurDrivingMode { get; private set; } = DrivingMode.Normal;
 
     private void Awake()
     {
@@ -91,7 +91,7 @@ public class GameSystem : MonoBehaviour
 
         m_victoryLapAudioSource = GetComponent<AudioSource>();
 
-        m_inFreeDriveMode = false;
+        CurDrivingMode = DrivingMode.Normal;
 
         InitGame();
     }
@@ -336,6 +336,28 @@ public class GameSystem : MonoBehaviour
         StaticGlobals.TotalNumGames++;
     }
 
+    public void LevelUp()
+    {
+        switch (StaticGlobals.CurGameLevel)
+        {
+            case GameLevel.Downtown:
+                GoToLevel(GameLevel.Smalltown.ToString());
+                break;
+
+            case GameLevel.Smalltown:
+                GoToLevel(GameLevel.Oldtown.ToString());
+                break;
+
+            case GameLevel.Oldtown:
+                GoToLevel(GameLevel.FutureTown.ToString());
+                break;
+
+            case GameLevel.FutureTown:
+                GameOver();
+                break;
+        }
+    }
+
     public void GoToLevel(string gameLevel)
     {
         ContinueGame(false);
@@ -351,7 +373,13 @@ public class GameSystem : MonoBehaviour
                 break;
 
             case "Oldtown":
-                StaticGlobals.CurGameLevel = GameLevel.Oldtown;
+                GameOver();
+                //TODO: StaticGlobals.CurGameLevel = GameLevel.Oldtown;
+                break;
+
+            case "FutureTown":
+                GameOver();
+                //TODO: StaticGlobals.CurGameLevel = GameLevel.FutureTown;
                 break;
         }
 
@@ -399,10 +427,7 @@ public class GameSystem : MonoBehaviour
 
         if (fVictoryLap)
         {
-            StartFreeDrive();
-
-            // play victory music
-            m_victoryLapAudioSource.Play();
+            StartVictoryLap();
         }
 
         m_isGamePaused = false;
@@ -427,6 +452,12 @@ public class GameSystem : MonoBehaviour
 #else
 		Application.Quit();
 #endif
+    }
+
+    public void GameOver()
+    {
+        // TODO: show game over scene
+        QuitGame();
     }
 
     private List<AudioSource> m_pausedAudioSources = new List<AudioSource>(); 
@@ -458,7 +489,7 @@ public class GameSystem : MonoBehaviour
     // called when the player crosses a landmark
     public void LandmarkCrossed(string landmarkName)
     {
-        if (m_inFreeDriveMode || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or currently processing a landmark?
+        if ((CurDrivingMode != DrivingMode.Normal) || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or victory lap mode or already processing a landmark?
             return;
 
         PauseGame();
@@ -747,8 +778,26 @@ public class GameSystem : MonoBehaviour
     // allow player to freely drive without worrying about landmarks etc.
     private void StartFreeDrive()
     {
-        m_inFreeDriveMode = true;
+        CurDrivingMode = DrivingMode.Free;
+        ShowInfoMessage(Strings.FreeDriveMessage, 3f);
+    }
+
+    private void StartVictoryLap()
+    {
+        CurDrivingMode = DrivingMode.VictoryLap;
+
+        // play victory music
+        m_victoryLapAudioSource.Play();
+        StartCoroutine(TerminateVictoryLap(m_victoryLapAudioSource.clip.length));
+
         ShowInfoMessage(Strings.VictoryLapMessage, 3f);
+    }
+
+    private IEnumerator TerminateVictoryLap(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        PromptMessage.ShowMessage(Strings.VictoryLapEndPrompt, Strings.MoveToNextLevel, Strings.StartFreeDrive, (levelUp) => { if (levelUp) LevelUp(); else StartFreeDrive(); });
     }
 
     public void ShowInfoMessage(string message, float duration)
@@ -775,10 +824,5 @@ public class GameSystem : MonoBehaviour
     {
         Debug.Log(info);
         ShowInfoMessage(info, 3f);
-    }
-
-    public bool InFreeDriveMode()
-    {
-        return m_inFreeDriveMode;
     }
 }
