@@ -776,7 +776,7 @@ public class GameSystem : MonoBehaviour
         return false;
     }
 
-    private void GetBackOnTrack()
+    public void GetBackOnTrack()
     {
         m_carController.StopCar();
         m_carController.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
