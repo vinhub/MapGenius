@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Smalltown/Smalltown.unity
-    guid: 8076fa2e44a99e94c9f333fab49eacf5
-  - enabled: 1
     path: Assets/Scenes/Downtown/Downtown.unity
     guid: 954dd4e797151124491a43099487a6b1
+  - enabled: 1
+    path: Assets/Scenes/Smalltown/Smalltown.unity
+    guid: 8076fa2e44a99e94c9f333fab49eacf5
   m_configObjects: {}
