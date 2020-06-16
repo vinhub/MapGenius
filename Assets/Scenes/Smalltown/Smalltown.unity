@@ -27574,8 +27574,8 @@ OcclusionArea:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921573678}
   serializedVersion: 2
-  m_Size: {x: 324.82584, y: 57.29, z: 306.55154}
-  m_Center: {x: 17.155449, y: 21.09, z: -83.16022}
+  m_Size: {x: 1200, y: 250, z: 1200}
+  m_Center: {x: 0, y: 0, z: 0}
   m_IsViewVolume: 1
 --- !u!4 &1921573680
 Transform:
@@ -27585,7 +27585,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921573678}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 78}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
