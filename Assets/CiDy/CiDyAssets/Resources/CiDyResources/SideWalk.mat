@@ -4,11 +4,13 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: SideWalk
-  m_Shader: {fileID: 4800000, guid: 542810d16b3aa744eb0f7e4d24657468, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0ad80dc1007ccd148810e112ebe05355, type: 3}
   m_ShaderKeywords: _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP _SNOWMODE_ON _SPECGLOSSMAP
+    _TOGGLESWITCH0_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -18,6 +20,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: b42ee3e964d78174fbb55e0135ff80ef, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AmbientOcclusion:
         m_Texture: {fileID: 2800000, guid: 68150a2acc18c43459b6d58e89bd5c2e, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -74,6 +80,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: ef1ddbea5ce843149b09f61afaba621d, type: 3}
         m_Scale: {x: 0.16, y: 0.16}
         m_Offset: {x: 0, y: 0}
+    - _FalloffTex:
+        m_Texture: {fileID: 2800000, guid: c690ecb64abaf0d44a9f564c742c3f8d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HeightMap:
+        m_Texture: {fileID: 2800000, guid: 736e5d241967ee04ea03e0c9b32c9a2d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _IntersectionBump:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -82,16 +96,36 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _LightTex:
+        m_Texture: {fileID: 2800000, guid: c690ecb64abaf0d44a9f564c742c3f8d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: b42ee3e964d78174fbb55e0135ff80ef, type: 3}
         m_Scale: {x: 0.16, y: 0.16}
+        m_Offset: {x: 0, y: 0}
+    - _Metallic:
+        m_Texture: {fileID: 2800000, guid: 736e5d241967ee04ea03e0c9b32c9a2d, type: 3}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 2800000, guid: 1e0f4f2269d11c34c8b5201976ead071, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MetallicTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal:
+        m_Texture: {fileID: 2800000, guid: 70bce467b4b99df4ebaf6b08ccf7abec, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _NormalSAO:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Occlusion:
+        m_Texture: {fileID: 2800000, guid: 0a5b7c16a3b87a2409700d1fb10d1560, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -107,7 +141,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Roughness:
-        m_Texture: {fileID: 2800000, guid: 13e6013e7a7478d4ca17fcec47901184, type: 3}
+        m_Texture: {fileID: 2800000, guid: 736e5d241967ee04ea03e0c9b32c9a2d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Smoothness:
+        m_Texture: {fileID: 2800000, guid: d52ea0625a1c67e419f604ce22317bc4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SnowBump:
@@ -126,12 +164,19 @@ Material:
         m_Texture: {fileID: 2800000, guid: d52ea0625a1c67e419f604ce22317bc4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AOIntensity: 1
     - _AlphaDeflate: 0
     - _BlueInflate: 0
     - _BumpScale: 1
     - _Contrast: 0.4
+    - _CurvFix: 0.5
+    - _CurvatureU: 1
+    - _CurvatureV: 1
     - _Cutoff: 0.5
     - _DepthFactor: 0.06
     - _DetailAO: 0.5
@@ -149,19 +194,25 @@ Material:
     - _GlossyReflections: 1
     - _GreenSub: 0
     - _InflateGround: 35
+    - _Intensity: 1
     - _IntersectionPow: 5.78
     - _IntersectionScale: 1
     - _IntersectionThresholdMax: 0.09
     - _MaskMult: 1
     - _MaskPow: 1
     - _Metallic: 0.1618
+    - _MetallicAmount: 0.1618
     - _Mode: 0
+    - _NormalScale: 1.618
     - _OcclusionStrength: 1
-    - _Parallax: 0.056
+    - _Parallax: 0.01618
     - _Phong: 0.5
     - _RedAdd: 0
+    - _RoughScale: 0.5
+    - _Scale: 0.032
     - _ShadowLOD: 0.5
     - _Shininess: 0.618
+    - _SmoothnessScale: 0.1618
     - _SmoothnessTextureChannel: 0
     - _SnowAmount: 0.5
     - _SnowHeight: 0.5
@@ -172,16 +223,21 @@ Material:
     - _SpecBurn: 1
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Step: 0
+    - _Strength: 0
     - _Tess: 32
     - _TessMode: 0
     - _TesselationAmount: 1
     - _TileAmount: 1
+    - _Tiling: 0.55
+    - _ToggleSwitch0: 1
     - _UVSec: 0
     - _YOffset: 0
     - _ZWrite: 1
+    - __dirty: 0
     - _maxDist: 500
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Displacement_TO: {r: 1, g: 1, b: 0, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}

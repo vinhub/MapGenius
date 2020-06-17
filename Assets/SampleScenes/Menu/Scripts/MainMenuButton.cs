@@ -64,7 +64,7 @@ public class MainMenuButton : MonoBehaviour
 
     public void OnMenuStatusChange(string panelName)
     {
-        if ((m_toggle == null) || (GameSystem.Instance == null))
+        if ((m_toggle == null) || (GameSystem.Instance == null) || GameSystem.Instance.IsGameQuitting())
             return;
 
         if (m_toggle.isOn && !GameSystem.Instance.IsGamePaused())

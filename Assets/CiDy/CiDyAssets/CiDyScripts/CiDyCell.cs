@@ -6,6 +6,9 @@ using StraightSkeletonNet;
 using StraightSkeletonNet.Primitives;
 //using BuildR2;
 //using BuildR2.Genesis;
+#if VEGETATION_STUDIO_PRO
+    using AwesomeTechnologies;
+#endif
 
 [ExecuteInEditMode]
 [System.Serializable]
@@ -898,6 +901,36 @@ public class CiDyCell : MonoBehaviour {
         {
             extPoints.Add(interiorPoints[i]);
         }
+        /*//Create Vegitation Mask
+        #if VEGETATION_STUDIO_PRO
+            VegetationMaskArea vegetationMaskArea = this.gameObject.GetComponent<VegetationMaskArea>();
+            if (vegetationMaskArea) {
+            //Set Values
+                vegetationMaskArea.RemoveGrass = true;
+                vegetationMaskArea.RemovePlants = true;
+                vegetationMaskArea.RemoveTrees = true;
+                vegetationMaskArea.RemoveObjects = true;
+                vegetationMaskArea.RemoveLargeObjects = true;
+                vegetationMaskArea.AdditionalGrassPerimiter = 5f;
+                vegetationMaskArea.ClearNodes();
+                vegetationMaskArea.AddNodesToEnd(extPoints.ToArray());
+                //Points in the array list needs to be in worldspace positions.
+                vegetationMaskArea.UpdateVegetationMask();
+            } else {
+                vegetationMaskArea = this.gameObject.AddComponent<VegetationMaskArea>();
+                //Set Values
+                vegetationMaskArea.RemoveGrass = true;
+                vegetationMaskArea.RemovePlants = true;
+                vegetationMaskArea.RemoveTrees = true;
+                vegetationMaskArea.RemoveObjects = true;
+                vegetationMaskArea.RemoveLargeObjects = true;
+                vegetationMaskArea.AdditionalGrassPerimiter = 5f;
+                vegetationMaskArea.ClearNodes();
+                vegetationMaskArea.AddNodesToEnd(extPoints.ToArray());
+                //Points in the array list needs to be in worldspace positions.
+                vegetationMaskArea.UpdateVegetationMask();
+            }
+        #endif*/
         //Debug.Log("Create SideWalks: "+createSideWalks);
         //If the Interior Points have changed then the SideWalks Must Be Updated As Well.
         if (createSideWalks)
@@ -1573,6 +1606,7 @@ public class CiDyCell : MonoBehaviour {
 				DestroyImmediate(buildings[i]);
 			}
 		}
+
 		/*if(!usePrefabBuildings){
             //Iterate through Lot Vectors and Extrude the Buildings based on Height Values.
             if (lots.Count > 0)
@@ -1656,6 +1690,7 @@ public class CiDyCell : MonoBehaviour {
             //These points are the polygon we want to fit to.
             //Iterate through Lot and Find Longest Edge With RoadAccess
             for (int i = 0;i<cidyLots.Count;i++){
+                //Debug.Log("CiDy Lots Road Sides Count: " + cidyLots[i].roadSides.Count);
 				Vector3 fwd = cidyLots[i].fwd;
 				Vector3 cntr = CiDyUtils.FindCentroid (cidyLots[i].lotPrint,1);
 				Vector3[] lotBoundary = cidyLots[i].lotPrint.ToArray();
@@ -1872,16 +1907,18 @@ public class CiDyCell : MonoBehaviour {
                     }
                 }
                 else {
-                    //Place Buildings As Close Together as Possible.(Huddle Them)
-                    maxTrys = prefabBuildings.Length * 4;
                     //Store reference to all the Added Buildings so we can offset them later.
                     List<GameObject> rowBuildings = new List<GameObject>(0);
+                    //Debug.Log("CiDy Lots Road Sides Count: " + cidyLots[i].roadSides.Count);
                     //Place As Many Buildings Side By Side in this Lot as we can fit.
                     //For Every Road with Road Access. We want to Cram Buildings in along the Road Edge.
                     for (int t = 0; t < cidyLots[i].roadSides.Count; t++)
                     {
                         //Iterate through RoadSides(May only be one)
                         float remainingRoadAccess = CiDyUtils.FindTotalDistOfPoints(cidyLots[i].roadSides[t].vectorList);
+                        //Place Buildings As Close Together as Possible.(Huddle Them)
+                        maxTrys = Mathf.RoundToInt(remainingRoadAccess*16);
+                        //Debug.Log(t + " : " + maxTrys+" Remaining Dist: "+ remainingRoadAccess);
                         //Debug.Log("Road Access Length for LOT: " + i + " Length: " + remainingRoadAccess);
                         //Now that we know the Road Length. Lets start at the First Point and work our way down the line.
                         Vector3 lastRightPoint = cidyLots[i].roadSides[t].vectorList[0];//Right Point
@@ -1900,6 +1937,7 @@ public class CiDyCell : MonoBehaviour {
                             //Pick a Building that fits into the RemainingRoadAccess Space(If one is avialable)
                             if (remainingRoadAccess >= smallestWidth)
                             {
+                                //Debug.Log(remainingRoadAccess + ">");
                                 //testedPrefabs = new List<int>(0);
                                 //There is a Building in here that will fit. But lets not keep grabbing the same ones.
                                 int k = 0;
@@ -1986,7 +2024,8 @@ public class CiDyCell : MonoBehaviour {
                                 boundFootPrint[j] = placedBuilding.transform.TransformPoint(boundFootPrint[j]);
                             }
                             //Make Sure Width is Within Road Width and not Overlapping any previously placed buildings.
-                            if (prefabWidths[pickedPrefab] <= remainingRoadAccess && !CiDyUtils.BoundsIntersect(lotBoundary, boundFootPrint))
+                            //if (prefabWidths[pickedPrefab] <= remainingRoadAccess && !CiDyUtils.BoundsIntersect(lotBoundary, boundFootPrint))
+                            if (prefabWidths[pickedPrefab] <= remainingRoadAccess)
                             {
                                 
                                 //Check this Buildings Boundaries to the Already Placed Buildings of this Cell.//Make sure we do not place a building into another cell building of any other lots.
@@ -2052,11 +2091,14 @@ public class CiDyCell : MonoBehaviour {
                             }
                             else
                             {
-                                //Debug.Log("This Prefab can't Fit");
+                                //Move the Test Point by the Smallest Width
+                                lastRightPoint += (-right * 0.1f);
+                                remainingRoadAccess -= 0.1f;
+
                                 //Destory Buildings
                                 DestroyImmediate(placedBuilding);
                                 //Are there any Prefabs that Could Fit or Not?
-                                if (smallestWidth >= remainingRoadAccess)
+                                if (smallestWidth > remainingRoadAccess)
                                 {
                                     //Debug.Log("No Remaining Prefabs are Small enough for Remaining Road Access");
                                     //Offset buildings Left by Remaining Dist/2
@@ -2095,7 +2137,57 @@ public class CiDyCell : MonoBehaviour {
                 }
 			}
 		}
-	}
+        //Handle Vegetation Pro Masking of Lots that have buildings on them only
+        //Create Vegitation Mask
+        #if VEGETATION_STUDIO_PRO
+            for (int i = 0; i < cidyLots.Count; i++) {
+            if (cidyLots[i].empty) {
+                continue;
+            }
+            //This lot must have something on it, so lets create an area mask to cover its interior of vegetation for each occupied Lot.
+                //Generate SideWalk Vegitation Masks.
+                VegetationMaskArea vegetationMaskArea = cidyLots[i].buildings[0].GetComponent<VegetationMaskArea>();
+                //Calculate Needed Points
+                List<Vector3> print = cidyLots[i].lotPrint;
+                Vector3[] vegPoints = new Vector3[print.Count];
+                Vector3 walkPos = transform.position;
+                for (int j = 0; j < print.Count; j++)
+                {
+                    //Add Orig Pos
+                    vegPoints[j] = (print[j]);
+                }
+                if (vegetationMaskArea)
+                {
+                    //Set Values
+                    vegetationMaskArea.RemoveGrass = false;
+                    vegetationMaskArea.RemovePlants = true;
+                    vegetationMaskArea.RemoveTrees = true;
+                    vegetationMaskArea.RemoveObjects = true;
+                    vegetationMaskArea.RemoveLargeObjects = true;
+                    vegetationMaskArea.AdditionalGrassPerimiter = 5f;
+                    vegetationMaskArea.ClearNodes();
+                    vegetationMaskArea.AddNodesToEnd(vegPoints);
+                    //Points in the array list needs to be in worldspace positions.
+                    vegetationMaskArea.UpdateVegetationMask();
+                }
+                else
+                {
+                    vegetationMaskArea = cidyLots[i].buildings[0].AddComponent<VegetationMaskArea>();
+                    //Set Values
+                    vegetationMaskArea.RemoveGrass = false;
+                    vegetationMaskArea.RemovePlants = true;
+                    vegetationMaskArea.RemoveTrees = true;
+                    vegetationMaskArea.RemoveObjects = true;
+                    vegetationMaskArea.RemoveLargeObjects = true;
+                    vegetationMaskArea.AdditionalGrassPerimiter = 5f;
+                    vegetationMaskArea.ClearNodes();
+                    vegetationMaskArea.AddNodesToEnd(vegPoints);
+                    //Points in the array list needs to be in worldspace positions.
+                    vegetationMaskArea.UpdateVegetationMask();
+                }
+            }
+        #endif
+    }
 
 	bool DuplicateInt(int testInt, List<int> intList){
 		for(int i = 0;i<intList.Count;i++){
@@ -2289,13 +2381,85 @@ public class CiDyCell : MonoBehaviour {
         //List<Vector3> tmpPons = new List<Vector3>(0);
         lotPoly = insetNodes;
 
-        /*for (int i = 0; i < insetNodes.Count; i++) {
-            for (int j = 0; j < insetNodes[i].Count; j++)
-            {
-                CiDyUtils.MarkPoint(insetNodes[i][j].position, j);
+        //Create Vegitation Mask
+        #if VEGETATION_STUDIO_PRO
+            //Generate SideWalk Vegitation Masks.
+            VegetationMaskLine vegetationMaskLine = sideWalk.GetComponent<VegetationMaskLine>();
+            //Calculate Needed Points
+            Vector3[] vegPoints = new Vector3[interiorPoints.Count];
+            Vector3 walkPos = transform.position;
+            for (int i = 0; i < interiorPoints.Count; i++) {
+                //We need line direction to caclulate offset
+                Vector3 cur = interiorPoints[i];
+                Vector3 nxt;
+                if (i == interiorPoints.Count - 1) {
+                    //At End
+                    nxt = interiorPoints[0];
+                } else {
+                    nxt = interiorPoints[i+1];
+                }
+                Vector3 fwd = (nxt-cur).normalized;
+                Vector3 left = Vector3.Cross(fwd,Vector3.up);
+                vegPoints[i] = (interiorPoints[i]+walkPos)+(left*(sideWalkWidth/2));
             }
-        }*/
-        //Debug.Log("Set Lot Poly from Inset: " + name);
+            if (vegetationMaskLine)
+            {
+                /*//Set Values
+                vegetationMaskArea.RemoveGrass = true;
+                vegetationMaskArea.RemovePlants = true;
+                vegetationMaskArea.RemoveTrees = true;
+                vegetationMaskArea.RemoveObjects = true;
+                vegetationMaskArea.RemoveLargeObjects = true;
+                vegetationMaskArea.AdditionalGrassPerimiter = 5f;
+                vegetationMaskArea.ClearNodes();
+                vegetationMaskArea.AddNodesToEnd(vegPoints);
+                //Points in the array list needs to be in worldspace positions.
+                vegetationMaskArea.UpdateVegetationMask();*/
+                vegetationMaskLine.RemoveGrass = true;
+                vegetationMaskLine.RemovePlants = true;
+                vegetationMaskLine.RemoveTrees = true;
+                vegetationMaskLine.RemoveObjects = true;
+                vegetationMaskLine.RemoveLargeObjects = true;
+                vegetationMaskLine.AdditionalPlantPerimiter = 0.8f;
+                vegetationMaskLine.AdditionalGrassPerimiter = 0.8f;
+                vegetationMaskLine.LineWidth = sideWalkWidth + 1.618f;
+                vegetationMaskLine.ClearNodes();
+                //Add RepeatingNode
+                vegPoints[vegPoints.Length - 1] = vegPoints[0];
+                vegetationMaskLine.AddNodesToEnd(vegPoints);
+                //Points in the array list needs to be in worldspace positions.
+                vegetationMaskLine.UpdateVegetationMask();
+            }
+            else
+            {
+                vegetationMaskLine = sideWalk.AddComponent<VegetationMaskLine>();
+                //Set Values
+                /*vegetationMaskArea.RemoveGrass = true;
+                vegetationMaskArea.RemovePlants = true;
+                vegetationMaskArea.RemoveTrees = true;
+                vegetationMaskArea.RemoveObjects = true;
+                vegetationMaskArea.RemoveLargeObjects = true;
+                vegetationMaskArea.AdditionalGrassPerimiter = 5f;
+                vegetationMaskArea.ClearNodes();
+                vegetationMaskArea.AddNodesToEnd(vegPoints);
+                //Points in the array list needs to be in worldspace positions.
+                vegetationMaskArea.UpdateVegetationMask();*/
+                vegetationMaskLine.RemoveGrass = true;
+                vegetationMaskLine.RemovePlants = true;
+                vegetationMaskLine.RemoveTrees = true;
+                vegetationMaskLine.RemoveObjects = true;
+                vegetationMaskLine.RemoveLargeObjects = true;
+                vegetationMaskLine.AdditionalPlantPerimiter = 0.8f;
+                vegetationMaskLine.AdditionalGrassPerimiter = 0.8f;
+                vegetationMaskLine.LineWidth = sideWalkWidth + 1.618f;
+                vegetationMaskLine.ClearNodes();
+                //Add RepeatingNode
+                vegPoints[vegPoints.Length - 1] = vegPoints[0];
+                vegetationMaskLine.AddNodesToEnd(vegPoints);
+                //Points in the array list needs to be in worldspace positions.
+                vegetationMaskLine.UpdateVegetationMask();
+            }
+        #endif
     }
 
     //Special Function that will adapt line A to match Line B with segments amount and depth.(y axis)

@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+#if VEGETATION_STUDIO_PRO
+using AwesomeTechnologies;
+#endif
+
 [System.Serializable]
 public class CiDyRoad : MonoBehaviour {
 
@@ -94,8 +98,8 @@ public class CiDyRoad : MonoBehaviour {
         postMat = (Material)Resources.Load("CiDyResources/PostMat", typeof(Material));
     }
 
-	//Raw Path That needs to be Bezier/BSpline
-	public void InitilizeRoad(Vector3[] rawPath, float newWidth, int newSegmentLength, int newFlatAmount, CiDyNode newA, CiDyNode newB, GameObject holder, CiDyGraph newGraph, bool normalizePath){
+    //Raw Path That needs to be Bezier/BSpline
+    public void InitilizeRoad(Vector3[] rawPath, float newWidth, int newSegmentLength, int newFlatAmount, CiDyNode newA, CiDyNode newB, GameObject holder, CiDyGraph newGraph, bool normalizePath){
 		//Debug.Log ("Initilized "+name+" with "+rawPath.Length+" points and width of "+newWidth+"NodeA: "+newA.name+" NewB: "+newB.name+" RoadMaterial: "+newGraph.roadMaterial);
         graph = newGraph;//Set Graph Reference
         if (mRender == null){
@@ -270,6 +274,7 @@ public class CiDyRoad : MonoBehaviour {
 	}
 
     Vector3[] FlattenRoadPath() {
+
         float totalDist = CiDyUtils.FindTotalDistOfPoints(origPoints);
         float flatDist = (width*3.2f) + (segmentLength * 2);
         if (flatDist > (totalDist/2)) {
@@ -351,6 +356,55 @@ public class CiDyRoad : MonoBehaviour {
     public void SnipRoadMesh()
     {
         //Debug.Log("Snip");
+        //If Vegitation Studio. Update Layouer
+        //Grab its Initialized Point Data
+        #if VEGETATION_STUDIO_PRO
+            //Debug.Log("Generate Vegitation LayerMask");
+            VegetationMaskLine vegetationMaskLine = this.gameObject.GetComponent<VegetationMaskLine>();
+        if (vegetationMaskLine)
+        {
+            vegetationMaskLine.RemoveGrass = true;
+            vegetationMaskLine.RemovePlants = true;
+            vegetationMaskLine.RemoveTrees = true;
+            vegetationMaskLine.RemoveObjects = true;
+            vegetationMaskLine.RemoveLargeObjects = true;
+            vegetationMaskLine.LineWidth = width+1;
+            vegetationMaskLine.ClearNodes();
+            Vector3 origPos = transform.position;
+            Vector3[] worldPosArray = new Vector3[origPoints.Length + 1];
+            for (int i = 0; i < origPoints.Length; i++)
+            {
+                worldPosArray[i] = origPoints[i] + origPos;
+            }
+            //Add RepeatingNode
+            worldPosArray[worldPosArray.Length - 1] = worldPosArray[0];
+            vegetationMaskLine.AddNodesToEnd(worldPosArray);
+            //Points in the array list needs to be in worldspace positions.
+            vegetationMaskLine.UpdateVegetationMask();
+        }
+        else {
+            vegetationMaskLine = this.gameObject.AddComponent<VegetationMaskLine>();
+            //Set Values
+            vegetationMaskLine.RemoveGrass = true;
+            vegetationMaskLine.RemovePlants = true;
+            vegetationMaskLine.RemoveTrees = true;
+            vegetationMaskLine.RemoveObjects = true;
+            vegetationMaskLine.RemoveLargeObjects = true;
+            vegetationMaskLine.LineWidth = width+1;
+            vegetationMaskLine.ClearNodes();
+            Vector3 origPos = transform.position;
+            Vector3[] worldPosArray = new Vector3[origPoints.Length + 1];
+            for (int i = 0; i < origPoints.Length; i++)
+            {
+                worldPosArray[i] = origPoints[i] + origPos;
+            }
+            //Add RepeatingNode
+            worldPosArray[worldPosArray.Length - 1] = worldPosArray[0];
+            vegetationMaskLine.AddNodesToEnd(worldPosArray);
+            //Points in the array list needs to be in worldspace positions.
+            vegetationMaskLine.UpdateVegetationMask();
+        }
+        #endif
         //Is this a Special Case of Minor Road Intersecting with a Major Road?
         bool minorRoadMerge = false;
         /*if (nodeA.hierarchy != nodeB.hierarchy)
@@ -1101,8 +1155,16 @@ public class CiDyRoad : MonoBehaviour {
     }
 
     //This function is called when we want to change the applied Material to the Road.
-    public void ChangeRoadMaterial() {
+    public void ChangeRoadMaterial()
+    {
         mRender.sharedMaterial = graph.roadMaterial;
+        lastMaterial = graph.roadMaterial;
+    }
+    //Specific Material
+    public void ChangeRoadMaterial(Material newMat)
+    {
+        mRender.sharedMaterial = newMat;
+        lastMaterial = newMat;
     }
 
     //Functions used to Select and Deselect the Road(IE. Change Material)

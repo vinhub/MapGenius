@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Road
   m_Shader: {fileID: 4800000, guid: 542810d16b3aa744eb0f7e4d24657468, type: 3}
-  m_ShaderKeywords: _NORMALMAP _PARALLAXMAP _SPECGLOSSMAP
+  m_ShaderKeywords: _NORMALMAP _SPECGLOSSMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: 0a3ef9c276ed5a14887eeec168c14c98, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 71f3e1ef4413a3b4585ad7dfed7e9ec0, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -43,6 +47,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 1}
+    - _HeightMap:
+        m_Texture: {fileID: 2800000, guid: a09e4eff02794aa42a762364c401d53e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainBump:
         m_Texture: {fileID: 2800000, guid: 7952affdc8e9a7b45a6b19383e369c36, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -51,12 +59,20 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0a3ef9c276ed5a14887eeec168c14c98, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 1}
+    - _Metallic:
+        m_Texture: {fileID: 2800000, guid: a09e4eff02794aa42a762364c401d53e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Normal:
+        m_Texture: {fileID: 2800000, guid: 71f3e1ef4413a3b4585ad7dfed7e9ec0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Occlusion:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 4af240d81148c2f48a9a994ec4617e31, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -64,7 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: a09e4eff02794aa42a762364c401d53e, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SandBump:
@@ -77,6 +93,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SandTex:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Smoothness:
+        m_Texture: {fileID: 2800000, guid: 2a0aee1cf4b99b643a3c39030d871f3d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SnowBump:
@@ -103,24 +123,31 @@ Material:
         m_Texture: {fileID: 2800000, guid: 2a0aee1cf4b99b643a3c39030d871f3d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BumpScale: 1
+    - _BumpScale: 0.33
     - _Cutoff: 0.5
     - _DetailIntensity: 0
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EmissionScaleUI: 0
     - _Freq: 1
-    - _GlossMapScale: 0.08
+    - _GlossMapScale: 0.1618
     - _Glossiness: 0
     - _GlossyReflections: 1
     - _Metallic: 0
+    - _MetallicAmount: 0.1618
     - _Mode: 0
+    - _NormalScale: 1
     - _OcclusionStrength: 1
-    - _Parallax: 0.0161
+    - _Parallax: 0.01618
     - _SandHeight: 0.5
     - _Shininess: 0.6
     - _Smoothness: 0.25
+    - _SmoothnessScale: 1.618
     - _SmoothnessTextureChannel: 0
     - _SnowAmount: 1
     - _SnowHeight: 0.5
@@ -128,12 +155,14 @@ Material:
     - _SpecularHighlights: 1
     - _Speed: 1
     - _SrcBlend: 1
+    - _Tiling: 1
     - _UVSec: 0
     - _WetnessMultiplier: 0.5
     - _ZWrite: 1
+    - __dirty: 0
     m_Colors:
     - _CloudSpeed: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.63235295, g: 0.63235295, b: 0.63235295, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}
     - _MainTexColor: {r: 1, g: 1, b: 1, a: 1}

@@ -9,7 +9,6 @@ using UnityEditor;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Collections;*/
 
-
 [System.Serializable]
 //This is Required in the Scene Space for Graph Creation and Manipulation
 public class CiDyGraph : MonoBehaviour {
@@ -2030,7 +2029,6 @@ public class CiDyGraph : MonoBehaviour {
                         float pY = (oHeight * tSize.y) + (terrPos.y / mapScale.y);//((tSize.y/oHeight) + terrPos.y + mapScale.y);
                         Vector3 p0 = new Vector3(pX, pY, pZ);
                         path[i] = new Vector3(path[i].x, pY + 0.1f, path[i].z);
-                        CiDyUtils.MarkPoint(p0, x + y);
                     }
                 }
 
@@ -2056,10 +2054,8 @@ public class CiDyGraph : MonoBehaviour {
             return;
         }
         //Iterate through Terrain Stored Heights
-        if (terrain != null)
-        {
-            //Debug.Log("Contour");
-            //Get Stored Heights
+        //Debug.Log("Contour");
+        //Get Stored Heights
             float[,] terrHeights = ReturnHeights();
             //Grab Area around Point in Terrain for Height Samples
             int mWidth = terrain.terrainData.heightmapResolution;
@@ -2067,6 +2063,12 @@ public class CiDyGraph : MonoBehaviour {
             // we set an offset so that all the raising terrain is under this game object
             int xDetail = Mathf.RoundToInt((terrain.terrainData.heightmapResolution / terrain.terrainData.size.x) * 2);
             int zDetail = Mathf.RoundToInt((terrain.terrainData.heightmapResolution / terrain.terrainData.size.z) * 2);
+            if (xDetail < 1) {
+                xDetail = 1;
+            }
+            if (zDetail < 1) {
+                zDetail = 1;
+            }
             Vector3 tSize = terrain.terrainData.size;
             Vector3 terrPos = terrain.transform.position;
             Vector3 mapScale = terrain.terrainData.heightmapScale;
@@ -2129,12 +2131,12 @@ public class CiDyGraph : MonoBehaviour {
                         //float pX = (mWidth / tSize.x / mWidth) + terrPos.x + (mapScale.x * ((posXInTerrain - offsetX) + y));
                         //float pZ = (mHeight / tSize.z / mHeight) + terrPos.z + (mapScale.z * ((posYInTerrain - offsetZ) + x));
                         float pY = (oHeight * tSize.y) + (terrPos.y / mapScale.y);//((tSize.y/oHeight) + terrPos.y + mapScale.y);
-                        //Vector3 p0 = new Vector3(pX, pY, pZ);
-                        path[i] = new Vector3(path[i].x, pY+0.1f, path[i].z);
+                        //Vector3 p0 = new Vector3(path[i].x, pY + 0.1f, path[i].z);
+                        path[i] = new Vector3(path[i].x, pY + 0.1f, path[i].z);
                     }
                 }
             }
-        }
+        
     }
 
     //Terrain Functions

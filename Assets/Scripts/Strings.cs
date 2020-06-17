@@ -36,11 +36,9 @@
     public const string InfoMessageTextPath = "Window/InfoMessageText";
     //public const string OnTrackrLocatorPath = "UI/OnTrackLocator";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
-    public const string ActionButton1Path = "Window/ButtonBar/ActionButton1";
-    public const string ActionButton2Path = "Window/ButtonBar/ActionButton2";
+    public const string ActionButtonPath = "Window/ButtonBar/ActionButton";
     public const string CloseButtonLabelPath = "Background/Label";
-    public const string ActionButton1LabelPath = "Window/ButtonBar/ActionButton1/Background/Label";
-    public const string ActionButton2LabelPath = "Window/ButtonBar/ActionButton2/Background/Label";
+    public const string ActionButtonLabelPath = "Window/ButtonBar/ActionButton/Background/Label";
     public const string ButtonBarTogglePath = "Window/ButtonBar/Toggle";
     public const string MapImagePath = "Window/MapPanel/MapBackground/MapImage";
     public const string LevelTextPath = "Window/MapPanel/PlayermarksPanel/Score/LevelText";
@@ -53,6 +51,12 @@
     public const string WindowPath = "Window";
     public const string PopupPath = "Popup";
     public const string PopupMessageTextPath = "Popup/Background/MessageText";
+    public const string PromptPath = "Prompt";
+    public const string PromptMessageTextPath = "Prompt/Background/MessageText";
+    public const string Action1ButtonPath = "Prompt/Background/ButtonBar/Action1Button";
+    public const string Action2ButtonPath = "Prompt/Background/ButtonBar/Action2Button";
+    public const string Action1ButtonLabelPath = "Prompt/Background/ButtonBar/Action1Button/Background/Label";
+    public const string Action2ButtonLabelPath = "Prompt/Background/ButtonBar/Action2Button/Background/Label";
     public const string FloatingMessageTextPath = "FloatingMessage";
     public const string LandmarkOnMap = "LandmarkOnMap";
     public const string ButtonClickAudioSourceName = "ButtonClickAudioSource";
@@ -101,5 +105,10 @@
     public const string CarRevsStatusFormat = "Revs: {0:d3}";
     public const string GetBackOnTrackMessage = "Car is stuck? Press T to get it back on track.";
     public const string StartingInstructionsMessage = "Drive the car using the W, A, S, D or arrow keys (or standard joystick controls).";
-    public const string VictoryLapMessage = "Drive freely anywhere you want to. You can even go offroad.";
+    public const string VictoryLapEndPrompt = "<b><color=#00ff00ff>Victory lap over!</color></b>\r\n\r\nMove to next level or drive around freely for a while?";
+    public const string MoveToNextLevel = "Move to next level";
+    public const string StartFreeDrive = "Drive around freely";
+    public const string VictoryLapMessage = "Relax and bask in the glory of your success!";
+    public const string FreeDriveMessage = "Drive freely anywhere you want to, including offroad. Hit 'Esc' when bored.";
+    public const string GameOverMessage = "<b><color=#00ff00ff>Game Over!\r\n\r\nBye!</color></b>";
 }

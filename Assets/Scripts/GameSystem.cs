@@ -42,7 +42,8 @@ public class GameSystem : MonoBehaviour
 
     // for pausing / resuming game
     private float m_timeScaleSav = 1f;
-    private bool m_paused;
+    private bool m_isGamePaused;
+    private bool m_isGameQuitting = false;
 
     private MainMenuButton m_mainMenuButton;
     private PanelManager m_mainPanelManager;
@@ -60,7 +61,7 @@ public class GameSystem : MonoBehaviour
 
     private AudioSource m_victoryLapAudioSource;
 
-    private bool m_inFreeDriveMode = false; // in free drive mode player can drive freely anywhere without worrying about crossing landmarks or scoring etc.
+    public DrivingMode CurDrivingMode { get; private set; } = DrivingMode.Normal;
 
     private void Awake()
     {
@@ -90,7 +91,7 @@ public class GameSystem : MonoBehaviour
 
         m_victoryLapAudioSource = GetComponent<AudioSource>();
 
-        m_inFreeDriveMode = false;
+        CurDrivingMode = DrivingMode.Normal;
 
         InitGame();
     }
@@ -103,10 +104,7 @@ public class GameSystem : MonoBehaviour
             m_mainPanelManager.OpenInstructionsPanel(true);
         }
 
-        CiDyGraph[] graphs = Resources.FindObjectsOfTypeAll<CiDyGraph>();
-
-        m_graph = Array.Find<CiDyGraph>(graphs, g => g.name == StaticGlobals.CurGameLevel.ToString()).gameObject;
-        m_graph.SetActive(true);
+        m_graph = GameObject.Find(Strings.GraphPath);
  
         // now that we have a graph, we can gather some frequently needed references
         m_tNodeHolder = m_graph.transform.Find(Strings.NodeHolderPath).transform;
@@ -272,6 +270,7 @@ public class GameSystem : MonoBehaviour
 
     private void OnDestroy()
     {
+        m_isGameQuitting = true;
         m_instance = null;
     }
 
@@ -337,6 +336,28 @@ public class GameSystem : MonoBehaviour
         StaticGlobals.TotalNumGames++;
     }
 
+    public void LevelUp()
+    {
+        switch (StaticGlobals.CurGameLevel)
+        {
+            case GameLevel.Downtown:
+                GoToLevel(GameLevel.Smalltown.ToString());
+                break;
+
+            case GameLevel.Smalltown:
+                GoToLevel(GameLevel.Oldtown.ToString());
+                break;
+
+            case GameLevel.Oldtown:
+                GoToLevel(GameLevel.FutureTown.ToString());
+                break;
+
+            case GameLevel.FutureTown:
+                GameOver();
+                break;
+        }
+    }
+
     public void GoToLevel(string gameLevel)
     {
         ContinueGame(false);
@@ -352,11 +373,17 @@ public class GameSystem : MonoBehaviour
                 break;
 
             case "Oldtown":
-                StaticGlobals.CurGameLevel = GameLevel.Oldtown;
+                GameOver();
+                //TODO: StaticGlobals.CurGameLevel = GameLevel.Oldtown;
+                break;
+
+            case "FutureTown":
+                GameOver();
+                //TODO: StaticGlobals.CurGameLevel = GameLevel.FutureTown;
                 break;
         }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(gameLevel);
 
         StaticGlobals.TotalNumGames++;
     }
@@ -373,10 +400,10 @@ public class GameSystem : MonoBehaviour
 
     public void PauseGame()
     {
-        if (m_paused)
+        if (m_isGamePaused)
             return;
 
-        m_paused = true;
+        m_isGamePaused = true;
 
         PauseAllAudio();
 
@@ -389,7 +416,7 @@ public class GameSystem : MonoBehaviour
 
     public void ContinueGame(bool fVictoryLap)
     {
-        if (!m_paused)
+        if (!m_isGamePaused)
             return;
 
         m_carController.StopCar();
@@ -400,29 +427,45 @@ public class GameSystem : MonoBehaviour
 
         if (fVictoryLap)
         {
-            StartFreeDrive();
-
-            // play victory music
-            m_victoryLapAudioSource.Play();
+            StartVictoryLap();
         }
 
-        m_paused = false;
+        m_isGamePaused = false;
     }
 
     public bool IsGamePaused()
     {
-        return m_paused;
+        return m_isGamePaused;
+    }
+
+    public bool IsGameQuitting()
+    {
+        return m_isGameQuitting;
     }
 
     public void QuitGame()
     {
-        Debug.Log("Player quit the game.");
+        //Debug.Log("Player quit the game.");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
 		Application.Quit();
 #endif
+    }
+
+    public void GameOver()
+    {
+        PopupMessage.ShowMessage(PopupMessageType.GameOver, Strings.GameOverMessage);
+        StartCoroutine(GameOverAfterDelay());
+    }
+
+    private IEnumerator GameOverAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(5f);
+
+        PopupMessage.HideMessage();
+        QuitGame();
     }
 
     private List<AudioSource> m_pausedAudioSources = new List<AudioSource>(); 
@@ -454,7 +497,7 @@ public class GameSystem : MonoBehaviour
     // called when the player crosses a landmark
     public void LandmarkCrossed(string landmarkName)
     {
-        if (m_inFreeDriveMode || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or currently processing a landmark?
+        if ((CurDrivingMode != DrivingMode.Normal) || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or victory lap mode or already processing a landmark?
             return;
 
         PauseGame();
@@ -733,7 +776,7 @@ public class GameSystem : MonoBehaviour
         return false;
     }
 
-    private void GetBackOnTrack()
+    public void GetBackOnTrack()
     {
         m_carController.StopCar();
         m_carController.transform.position = m_roadOnTrack.origPoints[m_iOrigPointOnTrack];
@@ -743,8 +786,26 @@ public class GameSystem : MonoBehaviour
     // allow player to freely drive without worrying about landmarks etc.
     private void StartFreeDrive()
     {
-        m_inFreeDriveMode = true;
+        CurDrivingMode = DrivingMode.Free;
+        ShowInfoMessage(Strings.FreeDriveMessage, 3f);
+    }
+
+    private void StartVictoryLap()
+    {
+        CurDrivingMode = DrivingMode.VictoryLap;
+
+        // play victory music
+        m_victoryLapAudioSource.Play();
+        StartCoroutine(TerminateVictoryLap(m_victoryLapAudioSource.clip.length));
+
         ShowInfoMessage(Strings.VictoryLapMessage, 3f);
+    }
+
+    private IEnumerator TerminateVictoryLap(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        PromptMessage.ShowMessage(Strings.VictoryLapEndPrompt, Strings.MoveToNextLevel, Strings.StartFreeDrive, (levelUp) => { if (levelUp) LevelUp(); else StartFreeDrive(); });
     }
 
     public void ShowInfoMessage(string message, float duration)
@@ -771,10 +832,5 @@ public class GameSystem : MonoBehaviour
     {
         Debug.Log(info);
         ShowInfoMessage(info, 3f);
-    }
-
-    public bool InFreeDriveMode()
-    {
-        return m_inFreeDriveMode;
     }
 }
