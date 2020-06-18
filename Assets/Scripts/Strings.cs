@@ -66,10 +66,6 @@
     public const string GraphPath = "CiDyGraph";
     public const string NodeHolderPath = "NodeHolder";
     public const string RoadHolderPath = "RoadHolder";
-    public const string DemoGraphName = "DemoGraph";
-    public const string BeginnerGraphName = "BeginnerGraph";
-    public const string IntermediateGraphName = "IntermediateGraph";
-    public const string AdvancedGraphName = "AdvancedGraph";
 
     // tag names
     public const string MainMenuUITag = "MainMenuUI";

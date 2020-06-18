@@ -59,9 +59,9 @@ public class GameSystem : MonoBehaviour
 
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
 
-    private AudioSource m_victoryLapAudioSource;
+    public GameObject VictoryLap;
 
-    public DrivingMode CurDrivingMode { get; private set; } = DrivingMode.Normal;
+    public DrivingMode CurDrivingMode = DrivingMode.Normal;
 
     private void Awake()
     {
@@ -88,8 +88,6 @@ public class GameSystem : MonoBehaviour
         m_infoMessage = tInfoMessage.gameObject;
         m_infoMessageText = tInfoMessage.Find(Strings.InfoMessageTextPath).GetComponent<TMP_Text>();
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
-
-        m_victoryLapAudioSource = GetComponent<AudioSource>();
 
         CurDrivingMode = DrivingMode.Normal;
 
@@ -784,7 +782,7 @@ public class GameSystem : MonoBehaviour
     }
 
     // allow player to freely drive without worrying about landmarks etc.
-    private void StartFreeDrive()
+    public void StartFreeDrive()
     {
         CurDrivingMode = DrivingMode.Free;
         ShowInfoMessage(Strings.FreeDriveMessage, 3f);
@@ -792,20 +790,7 @@ public class GameSystem : MonoBehaviour
 
     private void StartVictoryLap()
     {
-        CurDrivingMode = DrivingMode.VictoryLap;
-
-        // play victory music
-        m_victoryLapAudioSource.Play();
-        StartCoroutine(TerminateVictoryLap(m_victoryLapAudioSource.clip.length));
-
-        ShowInfoMessage(Strings.VictoryLapMessage, 3f);
-    }
-
-    private IEnumerator TerminateVictoryLap(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-
-        PromptMessage.ShowMessage(Strings.VictoryLapEndPrompt, Strings.MoveToNextLevel, Strings.StartFreeDrive, (levelUp) => { if (levelUp) LevelUp(); else StartFreeDrive(); });
+        VictoryLap.SetActive(true);
     }
 
     public void ShowInfoMessage(string message, float duration)
