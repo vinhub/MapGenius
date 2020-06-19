@@ -300,10 +300,19 @@ public class GameSystem : MonoBehaviour
 
     private void HandleHotkeys()
     {
-        bool fBackOnTrack = Input.GetKeyUp(KeyCode.T);
         bool fShowMap = Input.GetKeyUp(KeyCode.M);
         bool fFreeDrive = Input.GetKeyUp(KeyCode.F);
         bool fEscape = Input.GetKeyUp(KeyCode.Escape);
+        bool fBackOnTrack = false;
+        bool fRunTests = false;
+
+        if (Input.GetKeyUp(KeyCode.T))
+        {
+            if (Debug.isDebugBuild && Input.GetKey(KeyCode.LeftControl))
+                fRunTests = true;
+            else
+                fBackOnTrack = true;
+        }
 
         if (fBackOnTrack && !IsGamePaused())
             GetBackOnTrack();
@@ -317,6 +326,10 @@ public class GameSystem : MonoBehaviour
                 m_mainPanelManager.ClosePanelAndContinue();
             else
                 m_mainMenuButton.Toggle();
+        }
+        else if (fRunTests)
+        {
+            Resources.FindObjectsOfTypeAll<Test>()[0].gameObject.SetActive(true);
         }
     }
 
