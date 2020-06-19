@@ -788,14 +788,14 @@ public class GameSystem : MonoBehaviour
         ShowInfoMessage(Strings.FreeDriveMessage, 3f);
     }
 
-    private void StartVictoryLap()
+    public void StartVictoryLap()
     {
         VictoryLap.SetActive(true);
     }
 
     public void ShowInfoMessage(string message, float duration)
     {
-        if (m_infoMessage.activeSelf)
+        if (!m_infoMessage || m_infoMessage.activeSelf)
             return;
 
         m_infoMessage.SetActive(true);

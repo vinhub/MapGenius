@@ -66,6 +66,7 @@
     public const string GraphPath = "CiDyGraph";
     public const string NodeHolderPath = "NodeHolder";
     public const string RoadHolderPath = "RoadHolder";
+    public const string WaypointCircuit = "WaypointCircuit";
 
     // tag names
     public const string MainMenuUITag = "MainMenuUI";
