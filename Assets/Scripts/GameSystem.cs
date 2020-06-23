@@ -438,7 +438,7 @@ public class GameSystem : MonoBehaviour
 
         if (fVictoryLap)
         {
-            StartVictoryLap();
+            StartCoroutine(DoVictoryLap());
         }
 
         m_isGamePaused = false;
@@ -801,8 +801,14 @@ public class GameSystem : MonoBehaviour
         ShowInfoMessage(Strings.FreeDriveMessage, 3f);
     }
 
-    public void StartVictoryLap()
+    public IEnumerator DoVictoryLap()
     {
+        PopupMessage.ShowMessage(PopupMessageType.VictoryLapStarting, Strings.VictoryLapStartingMessage);
+
+        yield return new WaitForSecondsRealtime(3f);
+
+        PopupMessage.HideMessage();
+
         VictoryLap.SetActive(true);
     }
 

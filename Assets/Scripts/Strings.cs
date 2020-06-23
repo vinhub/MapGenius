@@ -105,7 +105,8 @@
     public const string VictoryLapEndPrompt = "<b><color=#00ff00ff>Victory lap over!</color></b>\r\n\r\nMove to next level or drive around freely for a while?";
     public const string MoveToNextLevel = "Move to next level";
     public const string StartFreeDrive = "Drive around freely";
-    public const string VictoryLapMessage = "Relax and bask in the glory of your success!";
+    public const string VictoryLapInfoMessage = "Relax. You are on auto-drive.";
+    public const string VictoryLapStartingMessage = "Just sit back, relax, and let us drive you as you bask in the glory of your success!";
     public const string FreeDriveMessage = "Drive freely anywhere you want to, including offroad. Hit 'Esc' when bored.";
     public const string GameOverMessage = "<b><color=#00ff00ff>Game Over!\r\n\r\nBye!</color></b>";
 }

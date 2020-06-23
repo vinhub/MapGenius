@@ -12,7 +12,7 @@ public class VictoryLap : MonoBehaviour
     void Start()
     {
         GameSystem.Instance.CurDrivingMode = DrivingMode.VictoryLap;
-        GameSystem.Instance.ShowInfoMessage(Strings.VictoryLapMessage, 3f);
+        GameSystem.Instance.ShowInfoMessage(Strings.VictoryLapInfoMessage, 3f);
 
         // place the car at the first waypoint, looking at the second
         Transform tWaypointCircuit = transform.Find(Strings.WaypointCircuit);
