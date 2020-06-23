@@ -498,7 +498,8 @@ public class GameSystem : MonoBehaviour
     {
         foreach (AudioSource audio in m_pausedAudioSources)
         {
-            audio.Play();
+            if (audio != null)
+                audio.Play();
         }
 
         m_pausedAudioSources.Clear();
@@ -799,6 +800,7 @@ public class GameSystem : MonoBehaviour
     {
         CurDrivingMode = DrivingMode.Free;
         ShowInfoMessage(Strings.FreeDriveMessage, 3f);
+        ContinueGame(false);
     }
 
     public IEnumerator DoVictoryLap()
