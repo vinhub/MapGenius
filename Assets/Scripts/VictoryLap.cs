@@ -6,8 +6,14 @@ using UnityStandardAssets.Vehicles.Car;
 
 public class VictoryLap : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject m_roadsideEmitterLeft, m_roadsideEmitterRight;
+
     private GameObject m_car;
     private AudioSource m_victoryLapAudioSource;
+
+    private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
+    private Vector3 m_lastOrigPoint = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
@@ -53,4 +59,35 @@ public class VictoryLap : MonoBehaviour
             (levelUp) => { if (levelUp) GameSystem.Instance.LevelUp(); else GameSystem.Instance.StartFreeDrive(); });
     }
 
+    private void LateUpdate()
+    {
+        if (Time.time - m_lastUpdateTime < 0.2)
+            return;
+
+        m_lastUpdateTime = Time.time;
+
+        if (GameSystem.Instance.OnTrackRoad)
+        {
+            CiDyRoad onTrackRoad = GameSystem.Instance.OnTrackRoad;
+            Vector3 origPoint = onTrackRoad.origPoints[GameSystem.Instance.OnTrackOrigPoint];
+
+            if (origPoint != m_lastOrigPoint)
+            {
+                Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
+                Vector3 leftEdge, rightEdge, roadWidthVector;
+                GameObject leftEmitter, rightEmitter;
+
+                roadWidthVector = onTrackRotation * Quaternion.Euler(0, -90, 0) * Vector3.forward * onTrackRoad.width / 2;
+
+                leftEdge = origPoint + roadWidthVector;
+                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation * Quaternion.Euler(-45, 0, 0));
+                
+                rightEdge = origPoint - roadWidthVector;
+                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation * Quaternion.Euler(-45, 0, 0));
+
+                m_lastOrigPoint = origPoint;
+            }
+
+        }
+    }
 }
