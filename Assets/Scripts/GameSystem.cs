@@ -54,6 +54,7 @@ public class GameSystem : MonoBehaviour
     public Quaternion OnTrackRotation { get; private set; } = Quaternion.identity;
     public CiDyRoad OnTrackRoad { get; private set; } = null;
     public int OnTrackOrigPoint { get; private set; } = 0;
+    public int OnTrackOrigPointAhead { get; private set; } = 0;
     private Vector3 m_closestPointOnTrack;
 
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
@@ -607,11 +608,13 @@ public class GameSystem : MonoBehaviour
             return false;
 
         // check distance from the current origPoint
+        CiDyRoad roadSav, roadNext;
+        int iOrigPointSav, iOrigPointNext;
         float dist = CarDistanceFromOrigPoint(OnTrackRoad, OnTrackOrigPoint);
 
-        CiDyRoad roadNext = OnTrackRoad;
-        int iOrigPointNext = OnTrackOrigPoint;
         float distNext = dist;
+        roadSav = roadNext = OnTrackRoad;
+        iOrigPointSav = iOrigPointNext = OnTrackOrigPoint;
 
         // do
         // check distance from the next origPoint
@@ -678,6 +681,28 @@ public class GameSystem : MonoBehaviour
         // update closest point on track
         Collider roadCollider = OnTrackRoad.GetComponent<Collider>();
         m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(Car.transform.position);
+
+        // update "ahead" orig point: which is a little ahead of the car
+        if (OnTrackRoad == roadSav)
+        {
+            if (OnTrackOrigPoint < iOrigPointSav)
+                OnTrackOrigPointAhead = OnTrackOrigPoint - 2;
+            else
+            {
+                OnTrackOrigPointAhead = OnTrackOrigPoint + 2;
+                if (OnTrackOrigPointAhead >= OnTrackRoad.origPoints.Length)
+                    OnTrackOrigPointAhead = -1;
+            }
+        }
+        else
+        {
+            if (OnTrackOrigPoint == 1)
+                OnTrackOrigPointAhead = 3;
+            else if (OnTrackOrigPoint == OnTrackRoad.origPoints.Length - 2)
+                OnTrackOrigPointAhead = OnTrackOrigPoint - 2;
+            else
+                OnTrackOrigPointAhead = -1;
+        }
 
         //ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
 

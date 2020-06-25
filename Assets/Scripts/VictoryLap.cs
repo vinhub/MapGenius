@@ -66,10 +66,10 @@ public class VictoryLap : MonoBehaviour
 
         m_lastUpdateTime = Time.time;
 
-        if (GameSystem.Instance.OnTrackRoad)
+        if (GameSystem.Instance.OnTrackRoad && (GameSystem.Instance.OnTrackOrigPointAhead >= 0))
         {
             CiDyRoad onTrackRoad = GameSystem.Instance.OnTrackRoad;
-            Vector3 origPoint = onTrackRoad.origPoints[GameSystem.Instance.OnTrackOrigPoint];
+            Vector3 origPoint = onTrackRoad.origPoints[GameSystem.Instance.OnTrackOrigPointAhead];
 
             if (origPoint != m_lastOrigPoint)
             {
@@ -80,10 +80,10 @@ public class VictoryLap : MonoBehaviour
                 roadWidthVector = onTrackRotation * Quaternion.Euler(0, -90, 0) * Vector3.forward * onTrackRoad.width / 2;
 
                 leftEdge = origPoint + roadWidthVector;
-                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation * Quaternion.Euler(-45, 0, 0));
+                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation * Quaternion.Euler(-90, 0, 0));
                 
                 rightEdge = origPoint - roadWidthVector;
-                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation * Quaternion.Euler(-45, 0, 0));
+                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation * Quaternion.Euler(-90, 0, 0));
 
                 m_lastOrigPoint = origPoint;
             }
