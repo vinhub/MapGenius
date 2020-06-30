@@ -13,7 +13,8 @@ public class VictoryLap : MonoBehaviour
     private AudioSource m_victoryLapAudioSource;
 
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
-    private Vector3 m_lastOrigPoint = Vector3.zero;
+    private CiDyRoad m_roadLast = null;
+    private int m_iOrigPointLast = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -66,31 +67,29 @@ public class VictoryLap : MonoBehaviour
 
         m_lastUpdateTime = Time.time;
 
-        if (GameSystem.Instance.OnTrackRoad && (GameSystem.Instance.OnTrackOrigPointAhead >= 0))
+        CiDyRoad onTrackRoad = GameSystem.Instance.OnTrackRoad;
+        int iOrigPointAhead = GameSystem.Instance.OnTrackOrigPointAhead;
+
+        if (onTrackRoad && (iOrigPointAhead >= 0) && ((onTrackRoad != m_roadLast) || (iOrigPointAhead != m_iOrigPointLast)))
         {
-            CiDyRoad onTrackRoad = GameSystem.Instance.OnTrackRoad;
-            Vector3 origPoint = onTrackRoad.origPoints[GameSystem.Instance.OnTrackOrigPointAhead];
+            Vector3 origPoint = onTrackRoad.origPoints[iOrigPointAhead];
+            Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
+            Vector3 leftEdge, rightEdge, roadWidthVector;
+            GameObject leftEmitter, rightEmitter;
 
-            if (origPoint != m_lastOrigPoint)
-            {
-                Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
-                Vector3 leftEdge, rightEdge, roadWidthVector;
-                GameObject leftEmitter, rightEmitter;
+            roadWidthVector = onTrackRotation * Quaternion.Euler(0, -90, 0) * Vector3.forward * onTrackRoad.width / 2;
 
-                roadWidthVector = onTrackRotation * Quaternion.Euler(0, -90, 0) * Vector3.forward * onTrackRoad.width / 2;
-
-                leftEdge = origPoint + roadWidthVector;
-                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
+            leftEdge = origPoint + roadWidthVector;
+            leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
                 
-                rightEdge = origPoint - roadWidthVector;
-                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
+            rightEdge = origPoint - roadWidthVector;
+            rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
 
-                Destroy(leftEmitter, 2);
-                Destroy(rightEmitter, 2);
+            Destroy(leftEmitter, 2);
+            Destroy(rightEmitter, 2);
 
-                m_lastOrigPoint = origPoint;
-            }
-
+            m_roadLast = onTrackRoad;
+            m_iOrigPointLast = iOrigPointAhead;
         }
     }
 }
