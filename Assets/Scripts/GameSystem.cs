@@ -683,25 +683,21 @@ public class GameSystem : MonoBehaviour
         m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(Car.transform.position);
 
         // update "ahead" orig point: which is a little ahead of the car
+        // make sure it doesn't enter the node that joins two roads i.e. skip the end points
         if (OnTrackRoad == roadSav)
         {
             if (OnTrackOrigPoint < iOrigPointSav)
-                OnTrackOrigPointAhead = OnTrackOrigPoint - 2;
+            {
+                OnTrackOrigPointAhead = Math.Max(OnTrackOrigPoint - 2, 2);
+            }
             else
             {
-                OnTrackOrigPointAhead = OnTrackOrigPoint + 2;
-                if (OnTrackOrigPointAhead >= OnTrackRoad.origPoints.Length)
-                    OnTrackOrigPointAhead = -1;
+                OnTrackOrigPointAhead = Math.Min(OnTrackOrigPoint + 2, OnTrackRoad.origPoints.Length - 3);
             }
         }
         else
         {
-            if (OnTrackOrigPoint <= 1)
-                OnTrackOrigPointAhead = OnTrackOrigPoint + 2;
-            else if (OnTrackOrigPoint >= OnTrackRoad.origPoints.Length - 2)
-                OnTrackOrigPointAhead = OnTrackOrigPoint - 2;
-            else
-                OnTrackOrigPointAhead = -1;
+            OnTrackOrigPointAhead = Math.Max(Math.Min(OnTrackOrigPoint, OnTrackRoad.origPoints.Length - 3), 2);
         }
 
         //ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
