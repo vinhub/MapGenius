@@ -696,9 +696,9 @@ public class GameSystem : MonoBehaviour
         }
         else
         {
-            if (OnTrackOrigPoint == 1)
-                OnTrackOrigPointAhead = 3;
-            else if (OnTrackOrigPoint == OnTrackRoad.origPoints.Length - 2)
+            if (OnTrackOrigPoint <= 1)
+                OnTrackOrigPointAhead = OnTrackOrigPoint + 2;
+            else if (OnTrackOrigPoint >= OnTrackRoad.origPoints.Length - 2)
                 OnTrackOrigPointAhead = OnTrackOrigPoint - 2;
             else
                 OnTrackOrigPointAhead = -1;

@@ -59,7 +59,7 @@ public class VictoryLap : MonoBehaviour
             (levelUp) => { if (levelUp) GameSystem.Instance.LevelUp(); else GameSystem.Instance.StartFreeDrive(); });
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         if (Time.time - m_lastUpdateTime < 0.2)
             return;
@@ -80,10 +80,13 @@ public class VictoryLap : MonoBehaviour
                 roadWidthVector = onTrackRotation * Quaternion.Euler(0, -90, 0) * Vector3.forward * onTrackRoad.width / 2;
 
                 leftEdge = origPoint + roadWidthVector;
-                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation * Quaternion.Euler(-90, 0, 0));
+                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
                 
                 rightEdge = origPoint - roadWidthVector;
-                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation * Quaternion.Euler(-90, 0, 0));
+                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
+
+                Destroy(leftEmitter, 2);
+                Destroy(rightEmitter, 2);
 
                 m_lastOrigPoint = origPoint;
             }
