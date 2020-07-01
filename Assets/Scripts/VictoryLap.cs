@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Utility;
@@ -15,6 +16,7 @@ public class VictoryLap : MonoBehaviour
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
     private CiDyRoad m_roadLast = null;
     private int m_iOrigPointLast = -1;
+    private int m_iOrigPointAheadLast = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -60,36 +62,68 @@ public class VictoryLap : MonoBehaviour
             (levelUp) => { if (levelUp) GameSystem.Instance.LevelUp(); else GameSystem.Instance.StartFreeDrive(); });
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (Time.time - m_lastUpdateTime < 0.2)
             return;
 
         m_lastUpdateTime = Time.time;
 
-        CiDyRoad onTrackRoad = GameSystem.Instance.OnTrackRoad;
-        int iOrigPointAhead = GameSystem.Instance.OnTrackOrigPointAhead;
+        CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
+        int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
+        int iOrigPointAhead;
 
-        if (onTrackRoad && (iOrigPointAhead >= 0) && ((onTrackRoad != m_roadLast) || (iOrigPointAhead != m_iOrigPointLast)))
+        if (!roadCur)
+            return;
+
+        if (!m_roadLast)
         {
-            Vector3 origPoint = onTrackRoad.origPoints[iOrigPointAhead];
+            m_roadLast = roadCur;
+            m_iOrigPointLast = iOrigPointCur;
+        }
+
+        // update "ahead" orig point: which is a little ahead of the car
+        // make sure it doesn't enter the intersection of two roads i.e. skip the end points
+        if (roadCur == m_roadLast)
+        {
+            if (iOrigPointCur < m_iOrigPointLast)
+            {
+                iOrigPointAhead = Math.Max(iOrigPointCur - 2, 2);
+            }
+            else if (iOrigPointCur > m_iOrigPointLast)
+            {
+                iOrigPointAhead = Math.Min(iOrigPointCur + 2, roadCur.origPoints.Length - 3);
+            }
+            else
+                return; // if the last and current origPoints are the same, then there's nothing to do for now.
+        }
+        else
+        {
+            iOrigPointAhead = Math.Max(Math.Min(iOrigPointCur, roadCur.origPoints.Length - 3), 2);
+        }
+
+        if (((roadCur != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
+        {
+            Vector3 origPointAhead = roadCur.origPoints[iOrigPointAhead];
             Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
             Vector3 leftEdge, rightEdge, roadWidthVector;
             GameObject leftEmitter, rightEmitter;
 
-            roadWidthVector = onTrackRotation * Quaternion.Euler(0, -90, 0) * Vector3.forward * onTrackRoad.width / 2;
+            roadWidthVector = onTrackRotation * Quaternion.Euler(0, -90, 0) * Vector3.forward * roadCur.width / 2;
 
-            leftEdge = origPoint + roadWidthVector;
+            leftEdge = origPointAhead + roadWidthVector;
             leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
                 
-            rightEdge = origPoint - roadWidthVector;
+            rightEdge = origPointAhead - roadWidthVector;
             rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
 
             Destroy(leftEmitter, 2);
             Destroy(rightEmitter, 2);
 
-            m_roadLast = onTrackRoad;
-            m_iOrigPointLast = iOrigPointAhead;
+            m_roadLast = roadCur;
+            m_iOrigPointAheadLast = iOrigPointAhead;
         }
+
+        m_iOrigPointLast = iOrigPointCur;
     }
 }

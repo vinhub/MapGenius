@@ -608,13 +608,13 @@ public class GameSystem : MonoBehaviour
             return false;
 
         // check distance from the current origPoint
-        CiDyRoad roadSav, roadNext;
-        int iOrigPointSav, iOrigPointNext;
+        CiDyRoad roadNext;
+        int iOrigPointNext;
         float dist = CarDistanceFromOrigPoint(OnTrackRoad, OnTrackOrigPoint);
 
         float distNext = dist;
-        roadSav = roadNext = OnTrackRoad;
-        iOrigPointSav = iOrigPointNext = OnTrackOrigPoint;
+        roadNext = OnTrackRoad;
+        iOrigPointNext = OnTrackOrigPoint;
 
         // do
         // check distance from the next origPoint
@@ -681,24 +681,6 @@ public class GameSystem : MonoBehaviour
         // update closest point on track
         Collider roadCollider = OnTrackRoad.GetComponent<Collider>();
         m_closestPointOnTrack = roadCollider.ClosestPointOnBounds(Car.transform.position);
-
-        // update "ahead" orig point: which is a little ahead of the car
-        // make sure it doesn't enter the node that joins two roads i.e. skip the end points
-        if (OnTrackRoad == roadSav)
-        {
-            if (OnTrackOrigPoint < iOrigPointSav)
-            {
-                OnTrackOrigPointAhead = Math.Max(OnTrackOrigPoint - 2, 2);
-            }
-            else
-            {
-                OnTrackOrigPointAhead = Math.Min(OnTrackOrigPoint + 2, OnTrackRoad.origPoints.Length - 3);
-            }
-        }
-        else
-        {
-            OnTrackOrigPointAhead = Math.Max(Math.Min(OnTrackOrigPoint, OnTrackRoad.origPoints.Length - 3), 2);
-        }
 
         //ShowDebugInfo("road: " + m_roadOnTrack.name + ", orig: " + m_iOrigPointOnTrack + ", dist: " + dist.ToString("F3"));
 
