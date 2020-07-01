@@ -116,7 +116,7 @@ public class VictoryLap : MonoBehaviour
         if (nodeAhead != null)
         {
             GameObject nodeEmitter = Instantiate(m_nodeEmitter, nodeAhead.position, Quaternion.identity);
-            Destroy(nodeEmitter, 2);
+            Destroy(nodeEmitter, 3);
         }
         else if (((roadCur != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
         {
