@@ -8,7 +8,7 @@ using UnityStandardAssets.Vehicles.Car;
 public class VictoryLap : MonoBehaviour
 {
     [SerializeField]
-    private GameObject m_roadsideEmitterLeft, m_roadsideEmitterRight;
+    private GameObject m_roadsideEmitterLeft, m_roadsideEmitterRight, m_nodeEmitter;
 
     private GameObject m_car;
     private AudioSource m_victoryLapAudioSource;
@@ -72,6 +72,7 @@ public class VictoryLap : MonoBehaviour
         CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
         int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
         int iOrigPointAhead;
+        CiDyNode nodeAhead = null;
 
         if (!roadCur)
             return;
@@ -88,11 +89,21 @@ public class VictoryLap : MonoBehaviour
         {
             if (iOrigPointCur < m_iOrigPointLast)
             {
-                iOrigPointAhead = Math.Max(iOrigPointCur - 2, 2);
+                iOrigPointAhead = iOrigPointCur - 2;
+                if (iOrigPointAhead <= 2)
+                {
+                    iOrigPointAhead = -1;
+                    nodeAhead = roadCur.nodeA;
+                }
             }
             else if (iOrigPointCur > m_iOrigPointLast)
             {
-                iOrigPointAhead = Math.Min(iOrigPointCur + 2, roadCur.origPoints.Length - 3);
+                iOrigPointAhead = iOrigPointCur + 2;
+                if (iOrigPointAhead >= roadCur.origPoints.Length - 3)
+                {
+                    iOrigPointAhead = -1;
+                    nodeAhead = roadCur.nodeB;
+                }
             }
             else
                 return; // if the last and current origPoints are the same, then there's nothing to do for now.
@@ -102,7 +113,12 @@ public class VictoryLap : MonoBehaviour
             iOrigPointAhead = Math.Max(Math.Min(iOrigPointCur, roadCur.origPoints.Length - 3), 2);
         }
 
-        if (((roadCur != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
+        if (nodeAhead != null)
+        {
+            GameObject nodeEmitter = Instantiate(m_nodeEmitter, nodeAhead.position, Quaternion.identity);
+            Destroy(nodeEmitter, 2);
+        }
+        else if (((roadCur != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
         {
             Vector3 origPointAhead = roadCur.origPoints[iOrigPointAhead];
             Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
@@ -119,11 +135,10 @@ public class VictoryLap : MonoBehaviour
 
             Destroy(leftEmitter, 2);
             Destroy(rightEmitter, 2);
-
-            m_roadLast = roadCur;
-            m_iOrigPointAheadLast = iOrigPointAhead;
         }
 
+        m_roadLast = roadCur;
+        m_iOrigPointAheadLast = iOrigPointAhead;
         m_iOrigPointLast = iOrigPointCur;
     }
 }
