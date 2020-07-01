@@ -10,6 +10,9 @@ public class VictoryLap : MonoBehaviour
     [SerializeField]
     private GameObject m_roadsideEmitterLeft, m_roadsideEmitterRight, m_nodeEmitter;
 
+    [SerializeField]
+    private GameObject[] m_audienceMembers = new GameObject[6];
+
     private GameObject m_car;
     private AudioSource m_victoryLapAudioSource;
 
@@ -123,18 +126,22 @@ public class VictoryLap : MonoBehaviour
             Vector3 origPointAhead = roadCur.origPoints[iOrigPointAhead];
             Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
             Vector3 leftEdge, rightEdge, roadWidthVector;
-            GameObject leftEmitter, rightEmitter;
+            GameObject leftEmitter, rightEmitter, audienceMember1, audienceMember2;
 
             roadWidthVector = onTrackRotation * Quaternion.Euler(0, -90, 0) * Vector3.forward * roadCur.width / 2;
 
             leftEdge = origPointAhead + roadWidthVector;
             leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
+            audienceMember1 = Instantiate(m_audienceMembers[0], leftEdge, onTrackRotation);
                 
             rightEdge = origPointAhead - roadWidthVector;
             rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
+            audienceMember2 = Instantiate(m_audienceMembers[1], rightEdge, onTrackRotation);
 
             Destroy(leftEmitter, 2);
             Destroy(rightEmitter, 2);
+            Destroy(audienceMember1, 2);
+            Destroy(audienceMember2, 2);
         }
 
         m_roadLast = roadCur;
