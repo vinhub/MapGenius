@@ -67,15 +67,16 @@ public class VictoryLap : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (Time.time - m_lastUpdateTime < 0.2)
+        if (Time.time - m_lastUpdateTime < 0.2f)
             return;
 
         m_lastUpdateTime = Time.time;
 
         CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
         int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
-        int iOrigPointAhead;
         CiDyNode nodeAhead = null;
+        CiDyRoad roadAhead;
+        int iOrigPointAhead;
 
         if (!roadCur)
             return;
@@ -88,38 +89,13 @@ public class VictoryLap : MonoBehaviour
 
         // update "ahead" orig point: which is a little ahead of the car
         // make sure it doesn't enter the intersection of two roads i.e. skip the end points
-        if (roadCur == m_roadLast)
-        {
-            if (iOrigPointCur < m_iOrigPointLast)
-            {
-                iOrigPointAhead = iOrigPointCur - 2;
-                if (iOrigPointAhead <= 2)
-                {
-                    iOrigPointAhead = -1;
-                    nodeAhead = roadCur.nodeA;
-                }
-            }
-            else if (iOrigPointCur > m_iOrigPointLast)
-            {
-                iOrigPointAhead = iOrigPointCur + 2;
-                if (iOrigPointAhead >= roadCur.origPoints.Length - 3)
-                {
-                    iOrigPointAhead = -1;
-                    nodeAhead = roadCur.nodeB;
-                }
-            }
-            else
-                return; // if the last and current origPoints are the same, then there's nothing to do for now.
-        }
-        else
-        {
-            iOrigPointAhead = Math.Max(Math.Min(iOrigPointCur, roadCur.origPoints.Length - 3), 2);
-        }
+        if (!CalcOrigPointAhead(2, out roadAhead, out iOrigPointAhead))
+            return;
 
         if (nodeAhead != null)
         {
             GameObject nodeEmitter = Instantiate(m_nodeEmitter, nodeAhead.position, Quaternion.identity);
-            Destroy(nodeEmitter, 3);
+            Destroy(nodeEmitter, 3f);
         }
         else if (((roadCur != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
         {
@@ -128,7 +104,7 @@ public class VictoryLap : MonoBehaviour
             Vector3 leftEdge, rightEdge, roadWidthVector;
             GameObject leftEmitter, rightEmitter, audienceMember1, audienceMember2;
 
-            roadWidthVector = onTrackRotation * Quaternion.Euler(0, -90, 0) * Vector3.forward * roadCur.width / 2;
+            roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadCur.width / 2f;
 
             leftEdge = origPointAhead + roadWidthVector;
             leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
@@ -138,14 +114,54 @@ public class VictoryLap : MonoBehaviour
             rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
             audienceMember2 = Instantiate(m_audienceMembers[1], rightEdge, onTrackRotation);
 
-            Destroy(leftEmitter, 2);
-            Destroy(rightEmitter, 2);
-            Destroy(audienceMember1, 2);
-            Destroy(audienceMember2, 2);
+            Destroy(leftEmitter, 2f);
+            Destroy(rightEmitter, 2f);
+            Destroy(audienceMember1, 2f);
+            Destroy(audienceMember2, 2f);
         }
 
         m_roadLast = roadCur;
         m_iOrigPointAheadLast = iOrigPointAhead;
         m_iOrigPointLast = iOrigPointCur;
+    }
+
+    // calculate couth'th orig point ahead of the current orig point
+    private bool CalcOrigPointAhead(int count, out CiDyRoad roadAhead, out int iOrigPointAhead)
+    {
+        CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
+        int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
+        CiDyNode nodeAhead = null;
+
+        roadAhead = roadCur;
+        iOrigPointAhead = iOrigPointCur;
+        if (roadCur == m_roadLast)
+        {
+            if (iOrigPointCur < m_iOrigPointLast)
+            {
+                iOrigPointAhead = iOrigPointCur - count;
+                if (iOrigPointAhead <= count)
+                {
+                    iOrigPointAhead = -1;
+                    nodeAhead = roadCur.nodeA;
+                }
+            }
+            else if (iOrigPointCur > m_iOrigPointLast)
+            {
+                iOrigPointAhead = iOrigPointCur + count;
+                if (iOrigPointAhead >= roadCur.origPoints.Length - count - 1)
+                {
+                    iOrigPointAhead = -1;
+                    nodeAhead = roadCur.nodeB;
+                }
+            }
+            else
+                return false; // if the last and current origPoints are the same, then there's nothing to do for now.
+        }
+        else
+        {
+            iOrigPointAhead = Math.Max(Math.Min(iOrigPointCur, roadCur.origPoints.Length - count - 1), count);
+        }
+
+        return true;
     }
 }
