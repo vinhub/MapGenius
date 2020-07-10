@@ -11,7 +11,7 @@ public class VictoryLap : MonoBehaviour
     private GameObject m_roadsideEmitterLeft, m_roadsideEmitterRight, m_nodeEmitter;
 
     [SerializeField]
-    private GameObject[] m_audienceMembers = new GameObject[6];
+    private GameObject[] m_audienceMembers = new GameObject[2];
 
     private GameObject m_car;
     private AudioSource m_victoryLapAudioSource;
@@ -19,7 +19,9 @@ public class VictoryLap : MonoBehaviour
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
     private CiDyRoad m_roadLast = null;
     private int m_iOrigPointLast = -1;
-    private int m_iOrigPointAheadLast = -1;
+    private int m_iOrigPointAheadEmitterLast = -1;
+    private int m_iOrigPointAheadAudienceLast = -1;
+    private CiDyNode m_nodeAheadLast = null;
 
     // Start is called before the first frame update
     void Start()
@@ -74,9 +76,9 @@ public class VictoryLap : MonoBehaviour
 
         CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
         int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
-        CiDyNode nodeAhead = null;
-        CiDyRoad roadAhead;
-        int iOrigPointAhead;
+        CiDyRoad roadAheadEmitter, roadAheadAudience;
+        int iOrigPointAheadEmitter, iOrigPointAheadAudience;
+        CiDyNode nodeAhead;
 
         if (!roadCur)
             return;
@@ -87,71 +89,99 @@ public class VictoryLap : MonoBehaviour
             m_iOrigPointLast = iOrigPointCur;
         }
 
-        // update "ahead" orig point: which is a little ahead of the car
-        // make sure it doesn't enter the intersection of two roads i.e. skip the end points
-        if (!CalcOrigPointAhead(2, out roadAhead, out iOrigPointAhead))
-            return;
-
-        if (nodeAhead != null)
+        // calc the node coming up ahead if we are getting close to it.
+        nodeAhead = CalcNodeAhead();
+        if ((nodeAhead != null) && (nodeAhead != m_nodeAheadLast))
         {
+            // place a node emitter at the node
             GameObject nodeEmitter = Instantiate(m_nodeEmitter, nodeAhead.position, Quaternion.identity);
             Destroy(nodeEmitter, 3f);
+            m_nodeAheadLast = nodeAhead;
         }
-        else if (((roadCur != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
+
+        // calculate the orig point at 2 orig points ahead of the car
+        if (CalcOrigPointAhead(2, out roadAheadEmitter, out iOrigPointAheadEmitter))
         {
-            Vector3 origPointAhead = roadCur.origPoints[iOrigPointAhead];
-            Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
-            Vector3 leftEdge, rightEdge, roadWidthVector;
-            GameObject leftEmitter, rightEmitter, audienceMember1, audienceMember2;
+            if ((iOrigPointAheadEmitter >= 0) && ((roadAheadEmitter != m_roadLast) || (iOrigPointAheadEmitter != m_iOrigPointAheadEmitterLast)))
+            {
+                // place emitters on both sides of the road
+                Vector3 origPointAhead = roadAheadEmitter.origPoints[iOrigPointAheadEmitter];
+                Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
+                Vector3 leftEdge, rightEdge, roadWidthVector;
+                GameObject leftEmitter, rightEmitter, audienceMember1, audienceMember2;
 
-            roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadCur.width / 2f;
+                roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadEmitter.width / 2f;
 
-            leftEdge = origPointAhead + roadWidthVector;
-            leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
-            audienceMember1 = Instantiate(m_audienceMembers[0], leftEdge, onTrackRotation);
-                
-            rightEdge = origPointAhead - roadWidthVector;
-            rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
-            audienceMember2 = Instantiate(m_audienceMembers[1], rightEdge, onTrackRotation);
+                leftEdge = origPointAhead + roadWidthVector;
+                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
+                audienceMember1 = Instantiate(m_audienceMembers[0], leftEdge, onTrackRotation);
 
-            Destroy(leftEmitter, 2f);
-            Destroy(rightEmitter, 2f);
-            Destroy(audienceMember1, 2f);
-            Destroy(audienceMember2, 2f);
+                rightEdge = origPointAhead - roadWidthVector;
+                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
+                audienceMember2 = Instantiate(m_audienceMembers[1], rightEdge, onTrackRotation);
+
+                Destroy(leftEmitter, 2f);
+                Destroy(rightEmitter, 2f);
+                Destroy(audienceMember1, 2f);
+                Destroy(audienceMember2, 2f);
+
+                m_iOrigPointAheadEmitterLast = iOrigPointAheadEmitter;
+            }
+        }
+
+        // calculate the orig point at 3 orig points ahead of the car
+        if (CalcOrigPointAhead(5, out roadAheadAudience, out iOrigPointAheadAudience))
+        {
+            if ((iOrigPointAheadAudience >= 0) && ((roadAheadAudience != m_roadLast) || (iOrigPointAheadAudience != m_iOrigPointAheadAudienceLast)))
+            {
+                // place audience on both sides of the road
+                Vector3 origPointAhead = roadAheadAudience.origPoints[iOrigPointAheadAudience];
+                Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
+                Vector3 leftEdge, rightEdge, roadWidthVector;
+                GameObject audienceMemberLeft, audienceMemberEight;
+
+                roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadAudience.width / 2f;
+
+                leftEdge = origPointAhead + roadWidthVector;
+                audienceMemberLeft = Instantiate(m_audienceMembers[0], leftEdge, onTrackRotation);
+
+                rightEdge = origPointAhead - roadWidthVector;
+                audienceMemberEight = Instantiate(m_audienceMembers[1], rightEdge, onTrackRotation);
+
+                Destroy(audienceMemberLeft, 5f);
+                Destroy(audienceMemberEight, 5f);
+
+                m_iOrigPointAheadAudienceLast = iOrigPointAheadAudience;
+            }
         }
 
         m_roadLast = roadCur;
-        m_iOrigPointAheadLast = iOrigPointAhead;
         m_iOrigPointLast = iOrigPointCur;
     }
 
     // calculate couth'th orig point ahead of the current orig point
+    // make sure it doesn't enter the intersection of two roads i.e. skip the end points
+    // iOrigPointAhed will be negative if there is no such point.
     private bool CalcOrigPointAhead(int count, out CiDyRoad roadAhead, out int iOrigPointAhead)
     {
         CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
         int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
-        CiDyNode nodeAhead = null;
 
         roadAhead = roadCur;
         iOrigPointAhead = iOrigPointCur;
-        if (roadCur == m_roadLast)
+
+        if (roadAhead == m_roadLast)
         {
             if (iOrigPointCur < m_iOrigPointLast)
             {
                 iOrigPointAhead = iOrigPointCur - count;
-                if (iOrigPointAhead <= count)
-                {
-                    iOrigPointAhead = -1;
-                    nodeAhead = roadCur.nodeA;
-                }
             }
             else if (iOrigPointCur > m_iOrigPointLast)
             {
                 iOrigPointAhead = iOrigPointCur + count;
-                if (iOrigPointAhead >= roadCur.origPoints.Length - count - 1)
+                if (iOrigPointAhead >= roadCur.origPoints.Length - 3)
                 {
                     iOrigPointAhead = -1;
-                    nodeAhead = roadCur.nodeB;
                 }
             }
             else
@@ -159,9 +189,37 @@ public class VictoryLap : MonoBehaviour
         }
         else
         {
-            iOrigPointAhead = Math.Max(Math.Min(iOrigPointCur, roadCur.origPoints.Length - count - 1), count);
+            iOrigPointAhead = Math.Max(Math.Min(iOrigPointAhead, roadAhead.origPoints.Length - count - 1), count);
         }
 
         return true;
+    }
+
+    private CiDyNode CalcNodeAhead()
+    {
+        CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
+        int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
+
+        CiDyNode nodeAhead = null;
+
+        if (roadCur == m_roadLast)
+        {
+            if (iOrigPointCur < m_iOrigPointLast)
+            {
+                if (iOrigPointCur <= 3)
+                {
+                    nodeAhead = roadCur.nodeA;
+                }
+            }
+            else if (iOrigPointCur > m_iOrigPointLast)
+            {
+                if (iOrigPointCur >= roadCur.origPoints.Length - 4)
+                {
+                    nodeAhead = roadCur.nodeB;
+                }
+            }
+        }
+
+        return nodeAhead;
     }
 }
