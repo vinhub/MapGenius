@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Audience : MonoBehaviour
 {
-    private string[] names = { "idle", "applause", "applause2", "celebration", "celebration2", "celebration3" };
+    private string[] animationNames = { "idle", "applause", "applause2", "celebration", "celebration2", "celebration3" };
 
     // Use this for initialization
     void Start()
     {
-        Animation[] AudienceMembers = gameObject.GetComponentsInChildren<Animation>();
-        foreach (Animation anim in AudienceMembers)
+        Animation[] audienceAnimations = gameObject.GetComponentsInChildren<Animation>();
+        foreach (Animation anim in audienceAnimations)
         {
-            string thisAnimation = names[Random.Range(0, 5)];
+            string animationName = animationNames[Random.Range(0, 6)];
 
             anim.wrapMode = WrapMode.Loop;
-            anim.GetComponent<Animation>().CrossFade(thisAnimation);
-            anim[thisAnimation].time = Random.Range(0f, 3f);
+            anim.GetComponent<Animation>().CrossFade(animationName);
+            anim[animationName].time = Random.Range(0f, 3f);
         }
     }
 }

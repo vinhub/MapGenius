@@ -143,10 +143,10 @@ public class VictoryLap : MonoBehaviour
                 roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadAudience.width / 2f;
 
                 leftEdge = origPointAhead + roadWidthVector;
-                audienceMemberLeft = Instantiate(m_audienceMembers[0], leftEdge, onTrackRotation);
+                audienceMemberLeft = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, 2)], leftEdge, onTrackRotation * Quaternion.Euler(0f, 90f, 0f));
 
                 rightEdge = origPointAhead - roadWidthVector;
-                audienceMemberEight = Instantiate(m_audienceMembers[1], rightEdge, onTrackRotation);
+                audienceMemberEight = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, 2)], rightEdge, onTrackRotation * Quaternion.Euler(0f, -90f, 0f));
 
                 Destroy(audienceMemberLeft, 5f);
                 Destroy(audienceMemberEight, 5f);
