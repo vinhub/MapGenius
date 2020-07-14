@@ -11,7 +11,7 @@ public class VictoryLap : MonoBehaviour
     private GameObject m_roadsideEmitterLeft, m_roadsideEmitterRight, m_nodeEmitter;
 
     [SerializeField]
-    private GameObject[] m_audienceMembers = new GameObject[2];
+    private GameObject[] m_audienceMembers = new GameObject[4];
 
     private GameObject m_car;
     private AudioSource m_victoryLapAudioSource;
@@ -139,10 +139,12 @@ public class VictoryLap : MonoBehaviour
                 roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadAudience.width / 2f;
 
                 leftEdge = origPointAhead + roadWidthVector;
-                audienceMemberLeft = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, 2)], leftEdge, onTrackRotation * Quaternion.Euler(0f, 90f, 0f));
+                audienceMemberLeft = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], leftEdge, onTrackRotation * Quaternion.Euler(0f, 90f, 0f));
+                audienceMemberLeft.transform.localScale *= 1.3f;
 
                 rightEdge = origPointAhead - roadWidthVector;
-                audienceMemberRight = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, 2)], rightEdge, onTrackRotation * Quaternion.Euler(0f, -90f, 0f));
+                audienceMemberRight = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], rightEdge, onTrackRotation * Quaternion.Euler(0f, -90f, 0f));
+                audienceMemberRight.transform.localScale *= 1.3f;
 
                 Destroy(audienceMemberLeft, 5f);
                 Destroy(audienceMemberRight, 5f);
