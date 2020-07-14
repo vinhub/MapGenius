@@ -89,7 +89,7 @@ public class VictoryLap : MonoBehaviour
             m_iOrigPointLast = iOrigPointCur;
         }
 
-        // calc the node coming up ahead if we are getting close to it.
+        // calc the node coming up ahead if we are getting close to it and place a fountain there
         nodeAhead = CalcNodeAhead();
         if ((nodeAhead != null) && (nodeAhead != m_nodeAheadLast))
         {
@@ -99,7 +99,7 @@ public class VictoryLap : MonoBehaviour
             m_nodeAheadLast = nodeAhead;
         }
 
-        // calculate the orig point at 2 orig points ahead of the car
+        // calculate the orig point at 2 orig points ahead of the car and place the confetti there
         if (CalcOrigPointAhead(2, out roadAheadEmitter, out iOrigPointAheadEmitter))
         {
             if ((iOrigPointAheadEmitter >= 0) && ((roadAheadEmitter != m_roadLast) || (iOrigPointAheadEmitter != m_iOrigPointAheadEmitterLast)))
@@ -125,7 +125,7 @@ public class VictoryLap : MonoBehaviour
             }
         }
 
-        // calculate the orig point at 3 orig points ahead of the car
+        // calculate the orig point at 3 orig points ahead of the car and place the audience there
         if (CalcOrigPointAhead(5, out roadAheadAudience, out iOrigPointAheadAudience))
         {
             if ((iOrigPointAheadAudience >= 0) && ((roadAheadAudience != m_roadLast) || (iOrigPointAheadAudience != m_iOrigPointAheadAudienceLast)))
@@ -140,11 +140,9 @@ public class VictoryLap : MonoBehaviour
 
                 leftEdge = origPointAhead + roadWidthVector;
                 audienceMemberLeft = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], leftEdge, onTrackRotation * Quaternion.Euler(0f, 90f, 0f));
-                audienceMemberLeft.transform.localScale *= 1.3f;
 
                 rightEdge = origPointAhead - roadWidthVector;
                 audienceMemberRight = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], rightEdge, onTrackRotation * Quaternion.Euler(0f, -90f, 0f));
-                audienceMemberRight.transform.localScale *= 1.3f;
 
                 Destroy(audienceMemberLeft, 5f);
                 Destroy(audienceMemberRight, 5f);
