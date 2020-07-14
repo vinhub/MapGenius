@@ -12,7 +12,7 @@ public class Audience : MonoBehaviour
         Animation[] audienceAnimations = gameObject.GetComponentsInChildren<Animation>();
         foreach (Animation anim in audienceAnimations)
         {
-            string animationName = animationNames[Random.Range(0, 6)];
+            string animationName = animationNames[Random.Range(1, 6)];
 
             anim.wrapMode = WrapMode.Loop;
             anim.GetComponent<Animation>().CrossFade(animationName);
