@@ -79,6 +79,7 @@ public class VictoryLap : MonoBehaviour
         CiDyRoad roadAheadEmitter, roadAheadAudience;
         int iOrigPointAheadEmitter, iOrigPointAheadAudience;
         CiDyNode nodeAhead;
+        Quaternion rotationAheadEmitter, rotationAheadAudience;
 
         if (!roadCur)
             return;
@@ -100,23 +101,22 @@ public class VictoryLap : MonoBehaviour
         }
 
         // calculate the orig point at 2 orig points ahead of the car and place the confetti there
-        if (CalcOrigPointAhead(2, out roadAheadEmitter, out iOrigPointAheadEmitter))
+        if (CalcOrigPointAhead(2, out roadAheadEmitter, out iOrigPointAheadEmitter, out rotationAheadEmitter))
         {
             if ((iOrigPointAheadEmitter >= 0) && ((roadAheadEmitter != m_roadLast) || (iOrigPointAheadEmitter != m_iOrigPointAheadEmitterLast)))
             {
                 // place emitters on both sides of the road
                 Vector3 origPointAhead = roadAheadEmitter.origPoints[iOrigPointAheadEmitter];
-                Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
                 Vector3 leftEdge, rightEdge, roadWidthVector;
                 GameObject leftEmitter, rightEmitter;
 
-                roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadEmitter.width / 2f;
+                roadWidthVector = rotationAheadEmitter * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadEmitter.width / 2f;
 
                 leftEdge = origPointAhead + roadWidthVector;
-                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
+                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, rotationAheadEmitter);
 
                 rightEdge = origPointAhead - roadWidthVector;
-                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
+                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, rotationAheadEmitter);
 
                 Destroy(leftEmitter, 2f);
                 Destroy(rightEmitter, 2f);
@@ -126,23 +126,22 @@ public class VictoryLap : MonoBehaviour
         }
 
         // calculate the orig point at 3 orig points ahead of the car and place the audience there
-        if (CalcOrigPointAhead(5, out roadAheadAudience, out iOrigPointAheadAudience))
+        if (CalcOrigPointAhead(5, out roadAheadAudience, out iOrigPointAheadAudience, out rotationAheadAudience))
         {
             if ((iOrigPointAheadAudience >= 0) && ((roadAheadAudience != m_roadLast) || (iOrigPointAheadAudience != m_iOrigPointAheadAudienceLast)))
             {
                 // place audience on both sides of the road
                 Vector3 origPointAhead = roadAheadAudience.origPoints[iOrigPointAheadAudience];
-                Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
                 Vector3 leftEdge, rightEdge, roadWidthVector;
                 GameObject audienceMemberLeft, audienceMemberRight;
 
-                roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadAudience.width / 2f;
+                roadWidthVector = rotationAheadAudience * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * (1.3f + roadAheadAudience.width / 2f);
 
                 leftEdge = origPointAhead + roadWidthVector;
-                audienceMemberLeft = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], leftEdge, onTrackRotation * Quaternion.Euler(0f, 90f, 0f));
+                audienceMemberLeft = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], leftEdge, rotationAheadAudience * Quaternion.Euler(0f, 90f, 0f));
 
                 rightEdge = origPointAhead - roadWidthVector;
-                audienceMemberRight = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], rightEdge, onTrackRotation * Quaternion.Euler(0f, -90f, 0f));
+                audienceMemberRight = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], rightEdge, rotationAheadAudience * Quaternion.Euler(0f, -90f, 0f));
 
                 Destroy(audienceMemberLeft, 5f);
                 Destroy(audienceMemberRight, 5f);
@@ -158,26 +157,30 @@ public class VictoryLap : MonoBehaviour
     // calculate couth'th orig point ahead of the current orig point
     // make sure it doesn't enter the intersection of two roads i.e. skip the end points
     // iOrigPointAhed will be negative if there is no such point.
-    private bool CalcOrigPointAhead(int count, out CiDyRoad roadAhead, out int iOrigPointAhead)
+    private bool CalcOrigPointAhead(int count, out CiDyRoad roadAhead, out int iOrigPointAhead, out Quaternion rotationAhead)
     {
         CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
         int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
+        int iOrigPointAheadNext;
 
         roadAhead = roadCur;
         iOrigPointAhead = iOrigPointCur;
+        rotationAhead = Quaternion.identity;
 
         if (roadAhead == m_roadLast)
         {
             if (iOrigPointCur < m_iOrigPointLast)
             {
                 iOrigPointAhead = iOrigPointCur - count;
+                iOrigPointAheadNext = iOrigPointAhead - 1;
             }
             else if (iOrigPointCur > m_iOrigPointLast)
             {
                 iOrigPointAhead = iOrigPointCur + count;
+                iOrigPointAheadNext = iOrigPointAhead + 1;
                 if (iOrigPointAhead >= roadCur.origPoints.Length - 3)
                 {
-                    iOrigPointAhead = -1;
+                    iOrigPointAhead = iOrigPointAheadNext = -1;
                 }
             }
             else
@@ -185,8 +188,22 @@ public class VictoryLap : MonoBehaviour
         }
         else
         {
-            iOrigPointAhead = Math.Max(Math.Min(iOrigPointAhead, roadAhead.origPoints.Length - count - 1), count);
+            if (iOrigPointAhead > roadAhead.origPoints.Length - count - 1)
+            {
+                iOrigPointAhead = roadAhead.origPoints.Length - count - 1;
+                iOrigPointAheadNext = iOrigPointAhead - 1;
+            }
+            else if (iOrigPointAhead < count)
+            {
+                iOrigPointAhead = count;
+                iOrigPointAheadNext = iOrigPointAhead + 1;
+            }
+            else
+                iOrigPointAheadNext = iOrigPointAhead + 1;
         }
+
+        if ((iOrigPointAhead >= 0) && (iOrigPointAheadNext >= 0))
+            rotationAhead = Quaternion.LookRotation(roadAhead.origPoints[iOrigPointAheadNext] - roadAhead.origPoints[iOrigPointAhead], Vector3.up);
 
         return true;
     }
