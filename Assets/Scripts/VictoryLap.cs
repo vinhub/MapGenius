@@ -108,22 +108,18 @@ public class VictoryLap : MonoBehaviour
                 Vector3 origPointAhead = roadAheadEmitter.origPoints[iOrigPointAheadEmitter];
                 Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
                 Vector3 leftEdge, rightEdge, roadWidthVector;
-                GameObject leftEmitter, rightEmitter, audienceMember1, audienceMember2;
+                GameObject leftEmitter, rightEmitter;
 
                 roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadEmitter.width / 2f;
 
                 leftEdge = origPointAhead + roadWidthVector;
                 leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, onTrackRotation);
-                audienceMember1 = Instantiate(m_audienceMembers[0], leftEdge, onTrackRotation);
 
                 rightEdge = origPointAhead - roadWidthVector;
                 rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, onTrackRotation);
-                audienceMember2 = Instantiate(m_audienceMembers[1], rightEdge, onTrackRotation);
 
                 Destroy(leftEmitter, 2f);
                 Destroy(rightEmitter, 2f);
-                Destroy(audienceMember1, 2f);
-                Destroy(audienceMember2, 2f);
 
                 m_iOrigPointAheadEmitterLast = iOrigPointAheadEmitter;
             }
@@ -138,7 +134,7 @@ public class VictoryLap : MonoBehaviour
                 Vector3 origPointAhead = roadAheadAudience.origPoints[iOrigPointAheadAudience];
                 Quaternion onTrackRotation = GameSystem.Instance.OnTrackRotation;
                 Vector3 leftEdge, rightEdge, roadWidthVector;
-                GameObject audienceMemberLeft, audienceMemberEight;
+                GameObject audienceMemberLeft, audienceMemberRight;
 
                 roadWidthVector = onTrackRotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadAudience.width / 2f;
 
@@ -146,10 +142,10 @@ public class VictoryLap : MonoBehaviour
                 audienceMemberLeft = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, 2)], leftEdge, onTrackRotation * Quaternion.Euler(0f, 90f, 0f));
 
                 rightEdge = origPointAhead - roadWidthVector;
-                audienceMemberEight = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, 2)], rightEdge, onTrackRotation * Quaternion.Euler(0f, -90f, 0f));
+                audienceMemberRight = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, 2)], rightEdge, onTrackRotation * Quaternion.Euler(0f, -90f, 0f));
 
                 Destroy(audienceMemberLeft, 5f);
-                Destroy(audienceMemberEight, 5f);
+                Destroy(audienceMemberRight, 5f);
 
                 m_iOrigPointAheadAudienceLast = iOrigPointAheadAudience;
             }
