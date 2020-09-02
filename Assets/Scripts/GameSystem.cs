@@ -832,4 +832,14 @@ public class GameSystem : MonoBehaviour
         Debug.Log(info);
         ShowInfoMessage(info, 3f);
     }
+
+    public Transform GetNodeHolder()
+    {
+        return m_tNodeHolder;
+    }
+
+    public Transform GetRoadHolder()
+    {
+        return m_tRoadHolder;
+    }
 }

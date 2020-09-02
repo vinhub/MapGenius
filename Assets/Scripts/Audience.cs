@@ -6,17 +6,12 @@ public class Audience : MonoBehaviour
 {
     private string[] animationNames = { "idle", "applause", "applause2", "celebration", "celebration2", "celebration3" };
 
-    // Use this for initialization
-    void Start()
+    public void Play()
     {
-        Animation[] audienceAnimations = gameObject.GetComponentsInChildren<Animation>();
-        foreach (Animation anim in audienceAnimations)
-        {
-            string animationName = animationNames[1]; // animationNames[Random.Range(1, 6)];
+        Animation anim = gameObject.GetComponent<Animation>();
 
-            anim.wrapMode = WrapMode.Loop;
-            anim.GetComponent<Animation>().CrossFade(animationName);
-            anim[animationName].time = Random.Range(0f, 3f);
-        }
+        anim.wrapMode = WrapMode.Loop;
+        //m_anim[animationNames[1]].time = Random.Range(0f, 3f);
+        anim.Play(animationNames[1]);
     }
 }

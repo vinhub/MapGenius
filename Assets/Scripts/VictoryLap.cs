@@ -19,20 +19,33 @@ public class VictoryLap : MonoBehaviour
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
     private CiDyRoad m_roadLast = null;
     private int m_iOrigPointLast = -1;
-    private int m_iOrigPointAheadEmitterLast = -1;
+    private int m_iOrigPointAheadLast = -1;
     private int m_iOrigPointAheadAudienceLast = -1;
     private CiDyNode m_nodeAheadLast = null;
+
+    private Dictionary<CiDyRoad, List<GameObject>> m_leftEmittersDict, m_rightEmittersDict, m_leftAudienceMembersDict, m_rightAudienceMembersDict;
+    private Dictionary<string, GameObject> m_nodeEmittersDict;
 
     // Start is called before the first frame update
     void Start()
     {
+        m_leftEmittersDict = new Dictionary<CiDyRoad, List<GameObject>>();
+        m_rightEmittersDict = new Dictionary<CiDyRoad, List<GameObject>>();
+        m_leftAudienceMembersDict = new Dictionary<CiDyRoad, List<GameObject>>();
+        m_rightAudienceMembersDict = new Dictionary<CiDyRoad, List<GameObject>>();
+        m_nodeEmittersDict = new Dictionary<string, GameObject>();
+
         m_car = GameSystem.Instance.Car;
 
         GameSystem.Instance.CurDrivingMode = DrivingMode.VictoryLap;
         GameSystem.Instance.ShowInfoMessage(Strings.VictoryLapInfoMessage, 3f);
 
-        // place the car at the first waypoint, looking at the second
         Transform tWaypointCircuit = transform.Find(Strings.WaypointCircuit);
+
+        // create the audience and emitters
+        CreateCelebratoryElements(tWaypointCircuit);
+
+        // place the car at the first waypoint, looking at the second
         Vector3 position = tWaypointCircuit.GetChild(0).position;
         Quaternion rotation = Quaternion.LookRotation(tWaypointCircuit.GetChild(1).position - tWaypointCircuit.GetChild(0).position, Vector3.up);
 
@@ -50,6 +63,92 @@ public class VictoryLap : MonoBehaviour
         m_car.GetComponent<CarAIControl>().enabled = true;
 
         StartCoroutine(TerminateVictoryLap(m_victoryLapAudioSource.clip.length));
+    }
+
+    // create various celebratory elements such as confetti and audience etc.
+    private void CreateCelebratoryElements(Transform tWaypointCircuit)
+    {
+        List<CiDyRoad> roads = new List<CiDyRoad>();
+        
+        for (int iChild = 0; iChild < tWaypointCircuit.childCount - 1; iChild++)
+        {
+            Transform tWaypoint = tWaypointCircuit.GetChild(iChild);
+            Transform tWaypointNext = tWaypointCircuit.GetChild(iChild + 1);
+            CiDyRoad road = RoadFromPositions(tWaypoint.position, tWaypointNext.position);
+            roads.Add(road);
+
+            Transform tNode = NodeFromPosition(tWaypoint.position);
+            m_nodeEmittersDict.Add(tNode.name, Instantiate(m_nodeEmitter, tNode.position, Quaternion.identity));
+        }
+
+        for (int iRoad = 0; iRoad < roads.Count; iRoad++)
+        {
+            CiDyRoad road = roads[iRoad];
+            List<GameObject> leftEmitters = new List<GameObject>();
+            List<GameObject> rightEmitters = new List<GameObject>();
+            List<GameObject> leftAudienceMembers = new List<GameObject>();
+            List<GameObject> rightAudienceMembers = new List<GameObject>();
+
+            // for each origPoint
+            for (int iOrigPoint = 2; iOrigPoint < road.origPoints.Length - 2; iOrigPoint++)
+            {
+                Vector3 origPoint = road.origPoints[iOrigPoint];
+
+                // place emitters and audience on both sides of the road
+                Vector3 leftEdge, rightEdge, roadWidthVector;
+                GameObject leftEmitter, rightEmitter, leftAudienceMember, rightAudienceMember;
+                
+                Quaternion rotation = Quaternion.LookRotation(road.origPoints[iOrigPoint + 1] - origPoint, Vector3.up);
+                roadWidthVector = rotation * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * (road.width / 2f);
+
+                leftEdge = origPoint + roadWidthVector;
+                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, rotation);
+                leftEmitters.Add(leftEmitter);
+
+                rightEdge = origPoint - roadWidthVector;
+                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, rotation);
+                rightEmitters.Add(rightEmitter);
+
+                roadWidthVector *= 1.3f;
+
+                leftEdge = origPoint + roadWidthVector;
+                leftAudienceMember = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], leftEdge, rotation * Quaternion.Euler(0f, 90f, 0f));
+                leftAudienceMembers.Add(leftAudienceMember);
+
+                rightEdge = origPoint - roadWidthVector;
+                rightAudienceMember = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], rightEdge, rotation * Quaternion.Euler(0f, -90f, 0f));
+                rightAudienceMembers.Add(rightAudienceMember);
+            }
+
+            m_leftEmittersDict.Add(road, leftEmitters);
+            m_rightEmittersDict.Add(road, rightEmitters);
+            m_leftAudienceMembersDict.Add(road, leftAudienceMembers);
+            m_rightAudienceMembersDict.Add(road, rightAudienceMembers);
+        }
+    }
+
+    private Transform NodeFromPosition(Vector3 position)
+    {
+        foreach (Transform tNode in GameSystem.Instance.GetNodeHolder())
+        {
+            if (Vector3.Distance(tNode.position, position) < 0.1)
+                return tNode;
+        }
+
+        return null;
+    }
+
+    private CiDyRoad RoadFromPositions(Vector3 position1, Vector3 position2)
+    {
+        foreach (Transform tRoad in GameSystem.Instance.GetRoadHolder())
+        {
+            CiDyRoad road = tRoad.GetComponent<CiDyRoad>();
+            if (((Vector3.Distance(road.nodeA.position, position1) < 0.1) && (Vector3.Distance(road.nodeB.position, position2) < 0.1)) ||
+                ((Vector3.Distance(road.nodeA.position, position2) < 0.1) && (Vector3.Distance(road.nodeB.position, position1) < 0.1)))
+                return road;
+        }
+
+        return null;
     }
 
     private IEnumerator TerminateVictoryLap(float duration)
@@ -76,10 +175,10 @@ public class VictoryLap : MonoBehaviour
 
         CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
         int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
-        CiDyRoad roadAheadEmitter, roadAheadAudience;
-        int iOrigPointAheadEmitter, iOrigPointAheadAudience;
+        CiDyRoad roadAhead;
+        int iOrigPointAhead;
         CiDyNode nodeAhead;
-        Quaternion rotationAheadEmitter, rotationAheadAudience;
+        Quaternion rotationAhead;
 
         if (!roadCur)
             return;
@@ -95,58 +194,34 @@ public class VictoryLap : MonoBehaviour
         if ((nodeAhead != null) && (nodeAhead != m_nodeAheadLast))
         {
             // place a node emitter at the node
-            GameObject nodeEmitter = Instantiate(m_nodeEmitter, nodeAhead.position, Quaternion.identity);
-            Destroy(nodeEmitter, 3f);
+            NodeEmitter nodeEmitter = m_nodeEmittersDict[nodeAhead.name].GetComponent<NodeEmitter>();
+            nodeEmitter.Play();
             m_nodeAheadLast = nodeAhead;
         }
 
-        // calculate the orig point at 2 orig points ahead of the car and place the confetti there
-        if (CalcOrigPointAhead(2, out roadAheadEmitter, out iOrigPointAheadEmitter, out rotationAheadEmitter))
+        // calculate the orig point at 2 orig points ahead of the car and play the emitters and audience there
+        if (CalcOrigPointAhead(2, out roadAhead, out iOrigPointAhead, out rotationAhead))
         {
-            if ((iOrigPointAheadEmitter >= 0) && ((roadAheadEmitter != m_roadLast) || (iOrigPointAheadEmitter != m_iOrigPointAheadEmitterLast)))
+            if ((iOrigPointAhead >= 0) && ((roadAhead != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
             {
-                // place emitters on both sides of the road
-                Vector3 origPointAhead = roadAheadEmitter.origPoints[iOrigPointAheadEmitter];
-                Vector3 leftEdge, rightEdge, roadWidthVector;
+                // play emitters on both sides of the road
                 GameObject leftEmitter, rightEmitter;
 
-                roadWidthVector = rotationAheadEmitter * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * roadAheadEmitter.width / 2f;
+                leftEmitter = m_leftEmittersDict[roadAhead][iOrigPointAhead - 2];
+                leftEmitter.GetComponent<RoadsideEmitter>().Play();
 
-                leftEdge = origPointAhead + roadWidthVector;
-                leftEmitter = Instantiate(m_roadsideEmitterLeft, leftEdge, rotationAheadEmitter);
+                rightEmitter = m_rightEmittersDict[roadAhead][iOrigPointAhead - 2];
+                rightEmitter.GetComponent<RoadsideEmitter>().Play();
 
-                rightEdge = origPointAhead - roadWidthVector;
-                rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, rotationAheadEmitter);
+                GameObject leftAudienceMember, rightAudienceMember;
 
-                Destroy(leftEmitter, 2f);
-                Destroy(rightEmitter, 2f);
+                leftAudienceMember = m_leftAudienceMembersDict[roadAhead][iOrigPointAhead - 2];
+                leftAudienceMember.GetComponent<Audience>().Play();
 
-                m_iOrigPointAheadEmitterLast = iOrigPointAheadEmitter;
-            }
-        }
+                rightAudienceMember = m_rightAudienceMembersDict[roadAhead][iOrigPointAhead - 2];
+                rightAudienceMember.GetComponent<Audience>().Play();
 
-        // calculate the orig point at 3 orig points ahead of the car and place the audience there
-        if (CalcOrigPointAhead(5, out roadAheadAudience, out iOrigPointAheadAudience, out rotationAheadAudience))
-        {
-            if ((iOrigPointAheadAudience >= 0) && ((roadAheadAudience != m_roadLast) || (iOrigPointAheadAudience != m_iOrigPointAheadAudienceLast)))
-            {
-                // place audience on both sides of the road
-                Vector3 origPointAhead = roadAheadAudience.origPoints[iOrigPointAheadAudience];
-                Vector3 leftEdge, rightEdge, roadWidthVector;
-                GameObject audienceMemberLeft, audienceMemberRight;
-
-                roadWidthVector = rotationAheadAudience * Quaternion.Euler(0f, -90f, 0f) * Vector3.forward * (1.3f + roadAheadAudience.width / 2f);
-
-                leftEdge = origPointAhead + roadWidthVector;
-                audienceMemberLeft = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], leftEdge, rotationAheadAudience * Quaternion.Euler(0f, 90f, 0f));
-
-                rightEdge = origPointAhead - roadWidthVector;
-                audienceMemberRight = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], rightEdge, rotationAheadAudience * Quaternion.Euler(0f, -90f, 0f));
-
-                Destroy(audienceMemberLeft, 5f);
-                Destroy(audienceMemberRight, 5f);
-
-                m_iOrigPointAheadAudienceLast = iOrigPointAheadAudience;
+                m_iOrigPointAheadLast = iOrigPointAhead;
             }
         }
 
@@ -154,7 +229,7 @@ public class VictoryLap : MonoBehaviour
         m_iOrigPointLast = iOrigPointCur;
     }
 
-    // calculate couth'th orig point ahead of the current orig point
+    // calculate count'th orig point ahead of the current orig point
     // make sure it doesn't enter the intersection of two roads i.e. skip the end points
     // iOrigPointAhed will be negative if there is no such point.
     private bool CalcOrigPointAhead(int count, out CiDyRoad roadAhead, out int iOrigPointAhead, out Quaternion rotationAhead)
