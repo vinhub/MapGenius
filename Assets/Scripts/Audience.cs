@@ -10,7 +10,7 @@ public class Audience : MonoBehaviour
     {
         Animation anim = gameObject.GetComponent<Animation>();
 
-        anim.wrapMode = WrapMode.Loop;
+        anim.wrapMode = WrapMode.Once;
         //m_anim[animationNames[1]].time = Random.Range(0f, 3f);
         anim.Play(animationNames[1]);
     }
