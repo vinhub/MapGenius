@@ -8,7 +8,7 @@ using UnityStandardAssets.Vehicles.Car;
 public class VictoryLap : MonoBehaviour
 {
     [SerializeField]
-    private GameObject m_roadsideEmitterLeft, m_roadsideEmitterRight, m_nodeEmitter;
+    private GameObject m_roadsideEmitterLeft = null, m_roadsideEmitterRight = null, m_nodeEmitter = null;
 
     [SerializeField]
     private GameObject[] m_audienceMembers = new GameObject[4];
@@ -90,7 +90,7 @@ public class VictoryLap : MonoBehaviour
             List<GameObject> rightAudienceMembers = new List<GameObject>();
 
             // for each origPoint
-            for (int iOrigPoint = 2; iOrigPoint < road.origPoints.Length - 2; iOrigPoint++)
+            for (int iOrigPoint = 3; iOrigPoint < road.origPoints.Length - 3; iOrigPoint++)
             {
                 Vector3 origPoint = road.origPoints[iOrigPoint];
 
@@ -178,7 +178,6 @@ public class VictoryLap : MonoBehaviour
         CiDyRoad roadAhead;
         int iOrigPointAhead;
         CiDyNode nodeAhead;
-        Quaternion rotationAhead;
 
         if (!roadCur)
             return;
@@ -200,25 +199,25 @@ public class VictoryLap : MonoBehaviour
         }
 
         // calculate the orig point at 2 orig points ahead of the car and play the emitters and audience there
-        if (CalcOrigPointAhead(2, out roadAhead, out iOrigPointAhead, out rotationAhead))
+        if (CalcOrigPointAhead(2, out roadAhead, out iOrigPointAhead))
         {
-            if ((iOrigPointAhead >= 0) && ((roadAhead != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
+            if ((iOrigPointAhead >= 3) && ((roadAhead != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
             {
                 // play emitters on both sides of the road
                 GameObject leftEmitter, rightEmitter;
 
-                leftEmitter = m_leftEmittersDict[roadAhead][iOrigPointAhead - 2];
+                leftEmitter = m_leftEmittersDict[roadAhead][iOrigPointAhead - 3];
                 leftEmitter.GetComponent<RoadsideEmitter>().Play();
 
-                rightEmitter = m_rightEmittersDict[roadAhead][iOrigPointAhead - 2];
+                rightEmitter = m_rightEmittersDict[roadAhead][iOrigPointAhead - 3];
                 rightEmitter.GetComponent<RoadsideEmitter>().Play();
 
                 GameObject leftAudienceMember, rightAudienceMember;
 
-                leftAudienceMember = m_leftAudienceMembersDict[roadAhead][iOrigPointAhead - 2];
+                leftAudienceMember = m_leftAudienceMembersDict[roadAhead][iOrigPointAhead - 3];
                 leftAudienceMember.GetComponent<Audience>().Play();
 
-                rightAudienceMember = m_rightAudienceMembersDict[roadAhead][iOrigPointAhead - 2];
+                rightAudienceMember = m_rightAudienceMembersDict[roadAhead][iOrigPointAhead - 3];
                 rightAudienceMember.GetComponent<Audience>().Play();
 
                 m_iOrigPointAheadLast = iOrigPointAhead;
@@ -232,30 +231,26 @@ public class VictoryLap : MonoBehaviour
     // calculate count'th orig point ahead of the current orig point
     // make sure it doesn't enter the intersection of two roads i.e. skip the end points
     // iOrigPointAhed will be negative if there is no such point.
-    private bool CalcOrigPointAhead(int count, out CiDyRoad roadAhead, out int iOrigPointAhead, out Quaternion rotationAhead)
+    private bool CalcOrigPointAhead(int count, out CiDyRoad roadAhead, out int iOrigPointAhead)
     {
         CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
         int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
-        int iOrigPointAheadNext;
 
         roadAhead = roadCur;
         iOrigPointAhead = iOrigPointCur;
-        rotationAhead = Quaternion.identity;
 
         if (roadAhead == m_roadLast)
         {
             if (iOrigPointCur < m_iOrigPointLast)
             {
                 iOrigPointAhead = iOrigPointCur - count;
-                iOrigPointAheadNext = iOrigPointAhead - 1;
             }
             else if (iOrigPointCur > m_iOrigPointLast)
             {
                 iOrigPointAhead = iOrigPointCur + count;
-                iOrigPointAheadNext = iOrigPointAhead + 1;
                 if (iOrigPointAhead >= roadCur.origPoints.Length - 3)
                 {
-                    iOrigPointAhead = iOrigPointAheadNext = -1;
+                    iOrigPointAhead = -1;
                 }
             }
             else
@@ -266,19 +261,12 @@ public class VictoryLap : MonoBehaviour
             if (iOrigPointAhead > roadAhead.origPoints.Length - count - 1)
             {
                 iOrigPointAhead = roadAhead.origPoints.Length - count - 1;
-                iOrigPointAheadNext = iOrigPointAhead - 1;
             }
             else if (iOrigPointAhead < count)
             {
-                iOrigPointAhead = count;
-                iOrigPointAheadNext = iOrigPointAhead + 1;
+                iOrigPointAhead = count - 1;
             }
-            else
-                iOrigPointAheadNext = iOrigPointAhead + 1;
         }
-
-        if ((iOrigPointAhead >= 0) && (iOrigPointAheadNext >= 0))
-            rotationAhead = Quaternion.LookRotation(roadAhead.origPoints[iOrigPointAheadNext] - roadAhead.origPoints[iOrigPointAhead], Vector3.up);
 
         return true;
     }
@@ -294,14 +282,14 @@ public class VictoryLap : MonoBehaviour
         {
             if (iOrigPointCur < m_iOrigPointLast)
             {
-                if (iOrigPointCur <= 3)
+                if (iOrigPointCur <= 4)
                 {
                     nodeAhead = roadCur.nodeA;
                 }
             }
             else if (iOrigPointCur > m_iOrigPointLast)
             {
-                if (iOrigPointCur >= roadCur.origPoints.Length - 4)
+                if (iOrigPointCur >= roadCur.origPoints.Length - 5)
                 {
                     nodeAhead = roadCur.nodeB;
                 }
