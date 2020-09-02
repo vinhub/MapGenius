@@ -127,6 +127,42 @@ public class VictoryLap : MonoBehaviour
         }
     }
 
+    private void DestroyCelebratoryElements()
+    {
+        DestroyDictionaryObjects(m_leftEmittersDict);
+        DestroyDictionaryObjects(m_rightEmittersDict);
+        DestroyDictionaryObjects(m_leftAudienceMembersDict);
+        DestroyDictionaryObjects(m_rightAudienceMembersDict);
+        DestroyNodeEmitters(m_nodeEmittersDict);
+
+        m_leftEmittersDict = m_rightEmittersDict = m_leftAudienceMembersDict = m_rightAudienceMembersDict = null;
+        m_nodeEmittersDict = null;
+    }
+
+    private bool DoCelebratoryElementsExist()
+    {
+        return m_leftEmittersDict != null;
+    }
+
+    private void DestroyDictionaryObjects(Dictionary<CiDyRoad, List<GameObject>> dict)
+    {
+        foreach (CiDyRoad road in dict.Keys)
+        {
+            foreach (GameObject go in dict[road])
+            {
+                Destroy(go);
+            }
+        }
+    }
+
+    private void DestroyNodeEmitters(Dictionary<string, GameObject> dict)
+    {
+        foreach (string name in dict.Keys)
+        {
+            Destroy(dict[name]);
+        }
+    }
+
     private Transform NodeFromPosition(Vector3 position)
     {
         foreach (Transform tNode in GameSystem.Instance.GetNodeHolder())
@@ -162,6 +198,8 @@ public class VictoryLap : MonoBehaviour
         m_car.GetComponent<WaypointProgressTracker>().enabled = false;
         m_car.GetComponent<CarUserControl>().enabled = true;
 
+        DestroyCelebratoryElements();
+
         PromptMessage.ShowMessage(Strings.VictoryLapEndPrompt, Strings.MoveToNextLevel, Strings.StartFreeDrive, 
             (levelUp) => { if (levelUp) GameSystem.Instance.LevelUp(); else GameSystem.Instance.StartFreeDrive(); });
     }
@@ -173,6 +211,10 @@ public class VictoryLap : MonoBehaviour
 
         m_lastUpdateTime = Time.time;
 
+        if (!DoCelebratoryElementsExist()) // celebration over?
+            return;
+
+        // handle celebration
         CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
         int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
         CiDyRoad roadAhead;
