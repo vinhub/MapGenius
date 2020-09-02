@@ -182,12 +182,6 @@ public class VictoryLap : MonoBehaviour
         if (!roadCur)
             return;
 
-        if (!m_roadLast)
-        {
-            m_roadLast = roadCur;
-            m_iOrigPointLast = iOrigPointCur;
-        }
-
         // calc the node coming up ahead if we are getting close to it and place a fountain there
         nodeAhead = CalcNodeAhead();
         if ((nodeAhead != null) && (nodeAhead != m_nodeAheadLast))
@@ -201,7 +195,7 @@ public class VictoryLap : MonoBehaviour
         // calculate the orig point at 2 orig points ahead of the car and play the emitters and audience there
         if (CalcOrigPointAhead(2, out roadAhead, out iOrigPointAhead))
         {
-            if ((iOrigPointAhead >= 3) && ((roadAhead != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)))
+            if ((iOrigPointAhead > 2) && ((roadAhead != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)) && m_leftEmittersDict.ContainsKey(roadAhead))
             {
                 // play emitters on both sides of the road
                 GameObject leftEmitter, rightEmitter;
@@ -239,7 +233,7 @@ public class VictoryLap : MonoBehaviour
         roadAhead = roadCur;
         iOrigPointAhead = iOrigPointCur;
 
-        if (roadAhead == m_roadLast)
+        if ((m_roadLast != null) && (roadAhead == m_roadLast))
         {
             if (iOrigPointCur < m_iOrigPointLast)
             {
@@ -264,7 +258,7 @@ public class VictoryLap : MonoBehaviour
             }
             else if (iOrigPointAhead < count)
             {
-                iOrigPointAhead = count - 1;
+                iOrigPointAhead = count;
             }
         }
 
@@ -278,7 +272,7 @@ public class VictoryLap : MonoBehaviour
 
         CiDyNode nodeAhead = null;
 
-        if (roadCur == m_roadLast)
+        if ((m_roadLast != null) && (roadCur == m_roadLast))
         {
             if (iOrigPointCur < m_iOrigPointLast)
             {
