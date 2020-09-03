@@ -20,11 +20,13 @@ public class VictoryLap : MonoBehaviour
     private CiDyRoad m_roadLast = null;
     private int m_iOrigPointLast = -1;
     private int m_iOrigPointAheadLast = -1;
-    private int m_iOrigPointAheadAudienceLast = -1;
     private CiDyNode m_nodeAheadLast = null;
 
     private Dictionary<CiDyRoad, List<GameObject>> m_leftEmittersDict, m_rightEmittersDict, m_leftAudienceMembersDict, m_rightAudienceMembersDict;
     private Dictionary<string, GameObject> m_nodeEmittersDict;
+    private bool m_isReady = false;
+
+    private const int c_skipPoints = 3; // number of origPoints we skip from both the ends of each road to keep the corners clear of celebratory elements
 
     // Start is called before the first frame update
     void Start()
@@ -63,6 +65,8 @@ public class VictoryLap : MonoBehaviour
         m_car.GetComponent<CarAIControl>().enabled = true;
 
         StartCoroutine(TerminateVictoryLap(m_victoryLapAudioSource.clip.length));
+
+        m_isReady = true;
     }
 
     // create various celebratory elements such as confetti and audience etc.
@@ -90,7 +94,7 @@ public class VictoryLap : MonoBehaviour
             List<GameObject> rightAudienceMembers = new List<GameObject>();
 
             // for each origPoint
-            for (int iOrigPoint = 3; iOrigPoint < road.origPoints.Length - 3; iOrigPoint++)
+            for (int iOrigPoint = c_skipPoints; iOrigPoint < road.origPoints.Length - c_skipPoints; iOrigPoint++)
             {
                 Vector3 origPoint = road.origPoints[iOrigPoint];
 
@@ -137,11 +141,6 @@ public class VictoryLap : MonoBehaviour
 
         m_leftEmittersDict = m_rightEmittersDict = m_leftAudienceMembersDict = m_rightAudienceMembersDict = null;
         m_nodeEmittersDict = null;
-    }
-
-    private bool DoCelebratoryElementsExist()
-    {
-        return m_leftEmittersDict != null;
     }
 
     private void DestroyDictionaryObjects(Dictionary<CiDyRoad, List<GameObject>> dict)
@@ -191,6 +190,8 @@ public class VictoryLap : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
 
+        m_isReady = false;
+
         // disable auto driving, enable manual driving
         m_car.GetComponent<CarController>().StopCar();
         GameSystem.Instance.PauseGame();
@@ -206,13 +207,13 @@ public class VictoryLap : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!m_isReady)
+            return;
+
         if (Time.time - m_lastUpdateTime < 0.2f)
             return;
 
         m_lastUpdateTime = Time.time;
-
-        if (!DoCelebratoryElementsExist()) // celebration over?
-            return;
 
         // handle celebration
         CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
@@ -235,25 +236,25 @@ public class VictoryLap : MonoBehaviour
         }
 
         // calculate the orig point at 2 orig points ahead of the car and play the emitters and audience there
-        if (CalcOrigPointAhead(2, out roadAhead, out iOrigPointAhead))
+        if (CalcOrigPointAhead(c_skipPoints, out roadAhead, out iOrigPointAhead))
         {
-            if ((iOrigPointAhead > 2) && ((roadAhead != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)) && m_leftEmittersDict.ContainsKey(roadAhead))
+            if (((roadAhead != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)) && m_leftEmittersDict.ContainsKey(roadAhead))
             {
                 // play emitters on both sides of the road
                 GameObject leftEmitter, rightEmitter;
 
-                leftEmitter = m_leftEmittersDict[roadAhead][iOrigPointAhead - 3];
+                leftEmitter = m_leftEmittersDict[roadAhead][iOrigPointAhead - c_skipPoints];
                 leftEmitter.GetComponent<RoadsideEmitter>().Play();
 
-                rightEmitter = m_rightEmittersDict[roadAhead][iOrigPointAhead - 3];
+                rightEmitter = m_rightEmittersDict[roadAhead][iOrigPointAhead - c_skipPoints];
                 rightEmitter.GetComponent<RoadsideEmitter>().Play();
 
                 GameObject leftAudienceMember, rightAudienceMember;
 
-                leftAudienceMember = m_leftAudienceMembersDict[roadAhead][iOrigPointAhead - 3];
+                leftAudienceMember = m_leftAudienceMembersDict[roadAhead][iOrigPointAhead - c_skipPoints];
                 leftAudienceMember.GetComponent<Audience>().Play();
 
-                rightAudienceMember = m_rightAudienceMembersDict[roadAhead][iOrigPointAhead - 3];
+                rightAudienceMember = m_rightAudienceMembersDict[roadAhead][iOrigPointAhead - c_skipPoints];
                 rightAudienceMember.GetComponent<Audience>().Play();
 
                 m_iOrigPointAheadLast = iOrigPointAhead;
@@ -269,36 +270,29 @@ public class VictoryLap : MonoBehaviour
     // iOrigPointAhed will be negative if there is no such point.
     private bool CalcOrigPointAhead(int count, out CiDyRoad roadAhead, out int iOrigPointAhead)
     {
-        CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
-        int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
+        roadAhead = GameSystem.Instance.OnTrackRoad;
+        iOrigPointAhead = GameSystem.Instance.OnTrackOrigPoint;
 
-        roadAhead = roadCur;
-        iOrigPointAhead = iOrigPointCur;
-
-        if ((m_roadLast != null) && (roadAhead == m_roadLast))
+        if (roadAhead == m_roadLast)
         {
-            if (iOrigPointCur < m_iOrigPointLast)
+            if (iOrigPointAhead < m_iOrigPointLast)
             {
-                iOrigPointAhead = iOrigPointCur - count;
+                iOrigPointAhead = Mathf.Max(iOrigPointAhead - count, count);
             }
-            else if (iOrigPointCur > m_iOrigPointLast)
+            else if (iOrigPointAhead > m_iOrigPointLast)
             {
-                iOrigPointAhead = iOrigPointCur + count;
-                if (iOrigPointAhead >= roadCur.origPoints.Length - 3)
-                {
-                    iOrigPointAhead = -1;
-                }
+                iOrigPointAhead = Mathf.Min(iOrigPointAhead + count, roadAhead.origPoints.Length - count - 1);
             }
             else
                 return false; // if the last and current origPoints are the same, then there's nothing to do for now.
         }
         else
         {
-            if (iOrigPointAhead > roadAhead.origPoints.Length - count - 1)
+            if (iOrigPointAhead > roadAhead.origPoints.Length / 2)
             {
                 iOrigPointAhead = roadAhead.origPoints.Length - count - 1;
             }
-            else if (iOrigPointAhead < count)
+            else
             {
                 iOrigPointAhead = count;
             }
