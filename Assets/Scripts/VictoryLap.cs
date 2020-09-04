@@ -28,6 +28,8 @@ public class VictoryLap : MonoBehaviour
     private bool m_isReady = false;
     private const int c_skipPoints = 3; // number of origPoints we skip from both the ends of each road to keep the corners clear of celebratory elements
 
+    private const int c_victoryLapDuration = 60; // duration of entire victory lap
+
     // Start is called before the first frame update
     void Start()
     {
@@ -59,7 +61,7 @@ public class VictoryLap : MonoBehaviour
         m_car.GetComponent<WaypointProgressTracker>().enabled = true;
         m_car.GetComponent<CarAIControl>().enabled = true;
 
-        StartCoroutine(TerminateVictoryLap(60f));
+        StartCoroutine(TerminateVictoryLap());
 
         m_isReady = true; // this will start the celebration
 
@@ -185,9 +187,9 @@ public class VictoryLap : MonoBehaviour
         return null;
     }
 
-    private IEnumerator TerminateVictoryLap(float duration)
+    private IEnumerator TerminateVictoryLap()
     {
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(c_victoryLapDuration);
 
         m_isReady = false;
 
