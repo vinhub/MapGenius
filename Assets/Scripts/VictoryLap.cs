@@ -14,7 +14,8 @@ public class VictoryLap : MonoBehaviour
     private GameObject[] m_audienceMembers = new GameObject[4];
 
     private GameObject m_car;
-    private AudioSource m_victoryLapAudioSource;
+    private AudioSource[] m_audioSources;
+    private bool m_isClappingAudioPlaying = false;
 
     private float m_lastUpdateTime = 0f; // used to ensure we don't do complex calcs on every update
     private CiDyRoad m_roadLast = null;
@@ -25,7 +26,6 @@ public class VictoryLap : MonoBehaviour
     private Dictionary<CiDyRoad, List<GameObject>> m_leftEmittersDict, m_rightEmittersDict, m_leftAudienceMembersDict, m_rightAudienceMembersDict;
     private Dictionary<string, GameObject> m_nodeEmittersDict;
     private bool m_isReady = false;
-
     private const int c_skipPoints = 3; // number of origPoints we skip from both the ends of each road to keep the corners clear of celebratory elements
 
     // Start is called before the first frame update
@@ -54,19 +54,18 @@ public class VictoryLap : MonoBehaviour
         m_car.transform.position = GameSystem.Instance.CarCameraRig.transform.position = position;
         m_car.transform.rotation = GameSystem.Instance.CarCameraRig.transform.rotation = rotation;
 
-        m_victoryLapAudioSource = GetComponent<AudioSource>();
-
-        // play victory music
-        m_victoryLapAudioSource.Play();
-
         // disable manual driving, enable victory lap scripts to start car
         m_car.GetComponent<CarUserControl>().enabled = false;
         m_car.GetComponent<WaypointProgressTracker>().enabled = true;
         m_car.GetComponent<CarAIControl>().enabled = true;
 
-        StartCoroutine(TerminateVictoryLap(m_victoryLapAudioSource.clip.length));
+        StartCoroutine(TerminateVictoryLap(60f));
 
-        m_isReady = true;
+        m_isReady = true; // this will start the celebration
+
+        // play victory music
+        m_audioSources = GetComponents<AudioSource>();
+        m_audioSources[0].Play();
     }
 
     // create various celebratory elements such as confetti and audience etc.
@@ -240,6 +239,12 @@ public class VictoryLap : MonoBehaviour
         {
             if (((roadAhead != m_roadLast) || (iOrigPointAhead != m_iOrigPointAheadLast)) && m_leftEmittersDict.ContainsKey(roadAhead))
             {
+                if (!m_isClappingAudioPlaying)
+                {
+                    m_audioSources[1].Play();
+                    m_isClappingAudioPlaying = true;
+                }
+
                 // play emitters on both sides of the road
                 GameObject leftEmitter, rightEmitter;
 
