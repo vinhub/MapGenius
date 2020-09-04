@@ -257,12 +257,17 @@ public class VictoryLap : MonoBehaviour
                 rightAudienceMember = m_rightAudienceMembersDict[roadAhead][iOrigPointAhead - c_skipPoints];
                 rightAudienceMember.GetComponent<Audience>().Play();
 
+                // TODO: HACK: OrigPoints start from 1 instead of 0. This messes up the sequencing and leads to the second celebration item on each road not going off.
+                // So we force the saved OrigPoint to 0, this sets up the sequence correctly and everything goes off.
+                if (roadAhead != m_roadLast)
+                    m_iOrigPointLast = (iOrigPointCur <= roadCur.origPoints.Length / 2) ? 0 : (roadCur.origPoints.Length - 1);
+                else
+                    m_iOrigPointLast = iOrigPointCur;
+
                 m_iOrigPointAheadLast = iOrigPointAhead;
+                m_roadLast = roadCur;
             }
         }
-
-        m_roadLast = roadCur;
-        m_iOrigPointLast = iOrigPointCur;
     }
 
     // calculate count'th orig point ahead of the current orig point
