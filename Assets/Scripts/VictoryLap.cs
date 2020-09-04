@@ -113,7 +113,7 @@ public class VictoryLap : MonoBehaviour
                 rightEmitter = Instantiate(m_roadsideEmitterRight, rightEdge, rotation);
                 rightEmitters.Add(rightEmitter);
 
-                roadWidthVector *= 1.3f;
+                roadWidthVector *= 1.2f;
 
                 leftEdge = origPoint + roadWidthVector;
                 leftAudienceMember = Instantiate(m_audienceMembers[UnityEngine.Random.Range(0, m_audienceMembers.Length)], leftEdge, rotation * Quaternion.Euler(0f, 90f, 0f));
@@ -270,32 +270,42 @@ public class VictoryLap : MonoBehaviour
     // iOrigPointAhed will be negative if there is no such point.
     private bool CalcOrigPointAhead(int count, out CiDyRoad roadAhead, out int iOrigPointAhead)
     {
-        roadAhead = GameSystem.Instance.OnTrackRoad;
-        iOrigPointAhead = GameSystem.Instance.OnTrackOrigPoint;
+        CiDyRoad roadCur = GameSystem.Instance.OnTrackRoad;
+        int iOrigPointCur = GameSystem.Instance.OnTrackOrigPoint;
 
-        if (roadAhead == m_roadLast)
+        roadAhead = roadCur;
+        iOrigPointAhead = iOrigPointCur;
+
+        //Debug.Log("Cur, Last, AheadLast, roadLast " + iOrigPointCur + ", " + m_iOrigPointLast + ", " + m_iOrigPointAheadLast + ", " + m_roadLast);
+
+        if (roadCur == m_roadLast)
         {
-            if (iOrigPointAhead < m_iOrigPointLast)
+            if (iOrigPointCur < m_iOrigPointLast)
             {
-                iOrigPointAhead = Mathf.Max(iOrigPointAhead - count, count);
+                iOrigPointAhead = Mathf.Max(iOrigPointCur - count, count);
             }
-            else if (iOrigPointAhead > m_iOrigPointLast)
+            else if (iOrigPointCur > m_iOrigPointLast)
             {
-                iOrigPointAhead = Mathf.Min(iOrigPointAhead + count, roadAhead.origPoints.Length - count - 1);
+                iOrigPointAhead = Mathf.Min(iOrigPointCur + count, roadCur.origPoints.Length - count - 1);
             }
             else
+            {
+                //Debug.Log("OrigPoint(false): " + iOrigPointAhead);
                 return false; // if the last and current origPoints are the same, then there's nothing to do for now.
+            }
+            //Debug.Log("OrigPoint1: " + iOrigPointAhead);
         }
         else
         {
-            if (iOrigPointAhead > roadAhead.origPoints.Length / 2)
+            if (iOrigPointCur > roadCur.origPoints.Length / 2)
             {
-                iOrigPointAhead = roadAhead.origPoints.Length - count - 1;
+                iOrigPointAhead = roadCur.origPoints.Length - count - 1;
             }
             else
             {
                 iOrigPointAhead = count;
             }
+            //Debug.Log("OrigPoint2: " + iOrigPointAhead);
         }
 
         return true;
