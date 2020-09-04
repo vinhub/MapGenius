@@ -193,17 +193,26 @@ public class VictoryLap : MonoBehaviour
 
         m_isReady = false;
 
+        // stop all audio
+        m_audioSources[0].Stop();
+        m_audioSources[1].Stop();
+
         // disable auto driving, enable manual driving
         m_car.GetComponent<CarController>().StopCar();
-        GameSystem.Instance.PauseGame();
         m_car.GetComponent<CarAIControl>().enabled = false;
         m_car.GetComponent<WaypointProgressTracker>().enabled = false;
         m_car.GetComponent<CarUserControl>().enabled = true;
 
-        DestroyCelebratoryElements();
+        GameSystem.Instance.PauseGame();
 
         PromptMessage.ShowMessage(Strings.VictoryLapEndPrompt, Strings.MoveToNextLevel, Strings.StartFreeDrive, 
-            (levelUp) => { if (levelUp) GameSystem.Instance.LevelUp(); else GameSystem.Instance.StartFreeDrive(); });
+            (levelUp) => {
+                DestroyCelebratoryElements();
+                if (levelUp)
+                    GameSystem.Instance.LevelUp();
+                else
+                    GameSystem.Instance.StartFreeDrive();
+            });
     }
 
     private void LateUpdate()
