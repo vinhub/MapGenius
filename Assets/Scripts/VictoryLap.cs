@@ -167,7 +167,7 @@ public class VictoryLap : MonoBehaviour
     {
         foreach (Transform tNode in GameSystem.Instance.GetNodeHolder())
         {
-            if (Vector3.Distance(tNode.position, position) < 0.1)
+            if (Vector3.Distance(tNode.position, position) < 10) // we may adjust node positions a little to make the circuit smoother or more fun, so allow for some fuzz factor
                 return tNode;
         }
 
@@ -179,8 +179,10 @@ public class VictoryLap : MonoBehaviour
         foreach (Transform tRoad in GameSystem.Instance.GetRoadHolder())
         {
             CiDyRoad road = tRoad.GetComponent<CiDyRoad>();
-            if (((Vector3.Distance(road.nodeA.position, position1) < 0.1) && (Vector3.Distance(road.nodeB.position, position2) < 0.1)) ||
-                ((Vector3.Distance(road.nodeA.position, position2) < 0.1) && (Vector3.Distance(road.nodeB.position, position1) < 0.1)))
+
+            // we may adjust node positions a little to make the circuit smoother or more fun, so allow for some fuzz factor
+            if (((Vector3.Distance(road.nodeA.position, position1) < 10) && (Vector3.Distance(road.nodeB.position, position2) < 10)) ||
+                ((Vector3.Distance(road.nodeA.position, position2) < 10) && (Vector3.Distance(road.nodeB.position, position1) < 10)))
                 return road;
         }
 

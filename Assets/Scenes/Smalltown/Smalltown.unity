@@ -24808,7 +24808,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1637900060}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 162.04749, y: 20.120754, z: 76.201355}
+  m_LocalPosition: {x: 157.07, y: 20.120754, z: 76.201355}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 372672538}
@@ -31444,7 +31444,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3683c1517cab04341bed1a0b634c2570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LandmarkOnMap: {fileID: 0}
+  LandmarkOnMap: {fileID: 4050659092559315246, guid: 1a93ee5abea8c0b4fbbb46799284a3f4,
+    type: 3}
 --- !u!82 &2113245628
 AudioSource:
   m_ObjectHideFlags: 0
