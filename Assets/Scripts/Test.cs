@@ -33,7 +33,9 @@ public class Test : MonoBehaviour
 
         //RunInfoMessageTest();
 
-        StartCoroutine(RunMapPanelTest());
+        //StartCoroutine(RunMapPanelTest());
+
+        RunVictoryLapTest();
     }
 
     private void RunPopupMessageTest()
@@ -67,5 +69,10 @@ public class Test : MonoBehaviour
                 yield return new WaitForSecondsRealtime(1f);
             }
         }
+    }
+
+    private void RunVictoryLapTest()
+    {
+        StartCoroutine(GameSystem.Instance.DoVictoryLap());
     }
 }
