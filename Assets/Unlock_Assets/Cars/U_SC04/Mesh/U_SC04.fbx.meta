@@ -1,0 +1,444 @@
+fileFormatVersion: 2
+guid: 54b70b3e19c58824bb581bdacfb3399a
+timeCreated: 1513177411
+licenseType: Store
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: caliper_FL
+    100002: caliper_FR
+    100004: caliper_RL
+    100006: caliper_RR
+    100008: Calipers
+    100010: Interior_Chrome
+    100012: Interior_Geo_lodA6
+    100014: Interior_HI
+    100016: Interior_Low
+    100018: Lights
+    100020: Needle_RPM
+    100022: Needle_SPEED
+    100024: Speedometer
+    100026: Steering_Badge
+    100028: Steering_Details_01
+    100030: Steering_Details_02
+    100032: Steering_Leather
+    100034: Steering_Paint
+    100036: Steering_Wheel
+    100038: Tire
+    100040: Tire 1
+    100042: Tire 2
+    100044: Tire 3
+    100046: U_SC02_BackLight
+    100048: U_SC02_BackLight_ON
+    100050: U_SC02_black
+    100052: U_SC02_blackShinne
+    100054: U_SC02_carbody
+    100056: U_SC02_carbonFiber
+    100058: U_SC02_carbonFiber_01
+    100060: U_SC02_carBottom
+    100062: U_SC02_FrontLight
+    100064: U_SC02_FrontLight_Details
+    100066: U_SC02_FrontLight_ON
+    100068: U_SC02_grille_shdr
+    100070: U_SC02_interior_black
+    100072: U_SC02_interior_Low
+    100074: U_SC02_interior_Low_SW
+    100076: U_SC02_lightGlass
+    100078: U_SC02_ReverseLight_ON
+    100080: U_SC02_windows
+    100082: //RootNode
+    100084: U_SC04_Black
+    100086: U_SC04_Black1
+    100088: U_SC04_Black2
+    100090: U_SC04_BV
+    100092: U_SC04_carbonFiber
+    100094: U_SC04_Chrome_01
+    100096: U_SC04_InteriorDetails
+    100098: U_SC04_InteriorDetails1
+    100100: U_SC04_InteriorDetails2
+    100102: U_SC04_InteriorDetails3
+    100104: U_SC04_InteriorDetails4
+    100106: U_SC04_InteriorDetails5
+    100108: U_SC04_InteriorDetails6
+    100110: U_SC04_Leather
+    100112: U_SC04_Leather_sewing
+    100114: U_SC04_plasticPanel
+    100116: U_SC04_plasticPanel1
+    100118: U_SC04_plasticPanel2
+    100120: U_SC04_RearViews
+    100122: U_SC04_SeatBelt_01
+    100124: U_SC04_SeatBelt_03
+    100126: U_SC04_Speedometer
+    100128: U_SC04_Window
+    100130: Wheel
+    100132: Wheel 1
+    100134: Wheel 2
+    100136: Wheel 3
+    100138: wheel_FL
+    100140: wheel_FR
+    100142: wheel_RL
+    100144: wheel_RR
+    100146: Wheels
+    400000: caliper_FL
+    400002: caliper_FR
+    400004: caliper_RL
+    400006: caliper_RR
+    400008: Calipers
+    400010: Interior_Chrome
+    400012: Interior_Geo_lodA6
+    400014: Interior_HI
+    400016: Interior_Low
+    400018: Lights
+    400020: Needle_RPM
+    400022: Needle_SPEED
+    400024: Speedometer
+    400026: Steering_Badge
+    400028: Steering_Details_01
+    400030: Steering_Details_02
+    400032: Steering_Leather
+    400034: Steering_Paint
+    400036: Steering_Wheel
+    400038: Tire
+    400040: Tire 1
+    400042: Tire 2
+    400044: Tire 3
+    400046: U_SC02_BackLight
+    400048: U_SC02_BackLight_ON
+    400050: U_SC02_black
+    400052: U_SC02_blackShinne
+    400054: U_SC02_carbody
+    400056: U_SC02_carbonFiber
+    400058: U_SC02_carbonFiber_01
+    400060: U_SC02_carBottom
+    400062: U_SC02_FrontLight
+    400064: U_SC02_FrontLight_Details
+    400066: U_SC02_FrontLight_ON
+    400068: U_SC02_grille_shdr
+    400070: U_SC02_interior_black
+    400072: U_SC02_interior_Low
+    400074: U_SC02_interior_Low_SW
+    400076: U_SC02_lightGlass
+    400078: U_SC02_ReverseLight_ON
+    400080: U_SC02_windows
+    400082: //RootNode
+    400084: U_SC04_Black
+    400086: U_SC04_Black1
+    400088: U_SC04_Black2
+    400090: U_SC04_BV
+    400092: U_SC04_carbonFiber
+    400094: U_SC04_Chrome_01
+    400096: U_SC04_InteriorDetails
+    400098: U_SC04_InteriorDetails1
+    400100: U_SC04_InteriorDetails2
+    400102: U_SC04_InteriorDetails3
+    400104: U_SC04_InteriorDetails4
+    400106: U_SC04_InteriorDetails5
+    400108: U_SC04_InteriorDetails6
+    400110: U_SC04_Leather
+    400112: U_SC04_Leather_sewing
+    400114: U_SC04_plasticPanel
+    400116: U_SC04_plasticPanel1
+    400118: U_SC04_plasticPanel2
+    400120: U_SC04_RearViews
+    400122: U_SC04_SeatBelt_01
+    400124: U_SC04_SeatBelt_03
+    400126: U_SC04_Speedometer
+    400128: U_SC04_Window
+    400130: Wheel
+    400132: Wheel 1
+    400134: Wheel 2
+    400136: Wheel 3
+    400138: wheel_FL
+    400140: wheel_FR
+    400142: wheel_RL
+    400144: wheel_RR
+    400146: Wheels
+    2100000: U_SC04_Carbody_shdr
+    2100002: U_SC04_blackShinne_shdr
+    2100004: U_SC04_carbonFiber_shdr
+    2100006: U_SC04_windows_shdr
+    2100008: U_SC04_lightGlass_shdr
+    2100010: U_SC04_Grille_shdr
+    2100012: U_SC04_light_shdr
+    2100014: U_SC04_LightDetails_shdr
+    2100016: U_SC04_Lights_ON_SHDR
+    2100018: U_SC04_Wheel_shdr
+    2100020: U_SC04_Rotor_shdr
+    2100022: U_SC04_tire_shdr
+    2100024: U_SC04_Calipers_shdr
+    2100026: U_SC04_Black_SHDR
+    2100028: U_SC04_carbonFiber_shdr1
+    2100030: U_SC04_Interior_Chrome_shdr
+    2100032: U_SC04_InteriorTranspIcons_shdr
+    2100034: U_SC03_Leather_shdr
+    2100036: U_SC04_Interior_Details_shdr
+    2100038: U_SC04_Leather_sewing_shdr
+    2100040: U_SC04_plasticPanel_shdr
+    2100042: U_SC04_RearViews_SHDR
+    2100044: U_SC03_Leather_shdr1
+    2100046: U_SC04_interior_Low_shdr
+    2100048: U_SC04_black_shdr
+    2300000: caliper_FL
+    2300002: caliper_FR
+    2300004: caliper_RL
+    2300006: caliper_RR
+    2300008: Interior_Chrome
+    2300010: Interior_Geo_lodA6
+    2300012: Needle_RPM
+    2300014: Needle_SPEED
+    2300016: Steering_Badge
+    2300018: Steering_Details_01
+    2300020: Steering_Details_02
+    2300022: Steering_Leather
+    2300024: Steering_Paint
+    2300026: Tire
+    2300028: Tire 1
+    2300030: Tire 2
+    2300032: Tire 3
+    2300034: U_SC02_BackLight
+    2300036: U_SC02_BackLight_ON
+    2300038: U_SC02_black
+    2300040: U_SC02_blackShinne
+    2300042: U_SC02_carbody
+    2300044: U_SC02_carbonFiber
+    2300046: U_SC02_carbonFiber_01
+    2300048: U_SC02_carBottom
+    2300050: U_SC02_FrontLight
+    2300052: U_SC02_FrontLight_Details
+    2300054: U_SC02_FrontLight_ON
+    2300056: U_SC02_grille_shdr
+    2300058: U_SC02_interior_black
+    2300060: U_SC02_interior_Low
+    2300062: U_SC02_interior_Low_SW
+    2300064: U_SC02_lightGlass
+    2300066: U_SC02_ReverseLight_ON
+    2300068: U_SC02_windows
+    2300070: U_SC04_Black
+    2300072: U_SC04_Black1
+    2300074: U_SC04_Black2
+    2300076: U_SC04_BV
+    2300078: U_SC04_carbonFiber
+    2300080: U_SC04_Chrome_01
+    2300082: U_SC04_InteriorDetails
+    2300084: U_SC04_InteriorDetails1
+    2300086: U_SC04_InteriorDetails2
+    2300088: U_SC04_InteriorDetails3
+    2300090: U_SC04_InteriorDetails4
+    2300092: U_SC04_InteriorDetails5
+    2300094: U_SC04_InteriorDetails6
+    2300096: U_SC04_Leather
+    2300098: U_SC04_Leather_sewing
+    2300100: U_SC04_plasticPanel
+    2300102: U_SC04_plasticPanel1
+    2300104: U_SC04_plasticPanel2
+    2300106: U_SC04_RearViews
+    2300108: U_SC04_SeatBelt_01
+    2300110: U_SC04_SeatBelt_03
+    2300112: U_SC04_Speedometer
+    2300114: U_SC04_Window
+    2300116: Wheel
+    2300118: Wheel 1
+    2300120: Wheel 2
+    2300122: Wheel 3
+    3300000: caliper_FL
+    3300002: caliper_FR
+    3300004: caliper_RL
+    3300006: caliper_RR
+    3300008: Interior_Chrome
+    3300010: Interior_Geo_lodA6
+    3300012: Needle_RPM
+    3300014: Needle_SPEED
+    3300016: Steering_Badge
+    3300018: Steering_Details_01
+    3300020: Steering_Details_02
+    3300022: Steering_Leather
+    3300024: Steering_Paint
+    3300026: Tire
+    3300028: Tire 1
+    3300030: Tire 2
+    3300032: Tire 3
+    3300034: U_SC02_BackLight
+    3300036: U_SC02_BackLight_ON
+    3300038: U_SC02_black
+    3300040: U_SC02_blackShinne
+    3300042: U_SC02_carbody
+    3300044: U_SC02_carbonFiber
+    3300046: U_SC02_carbonFiber_01
+    3300048: U_SC02_carBottom
+    3300050: U_SC02_FrontLight
+    3300052: U_SC02_FrontLight_Details
+    3300054: U_SC02_FrontLight_ON
+    3300056: U_SC02_grille_shdr
+    3300058: U_SC02_interior_black
+    3300060: U_SC02_interior_Low
+    3300062: U_SC02_interior_Low_SW
+    3300064: U_SC02_lightGlass
+    3300066: U_SC02_ReverseLight_ON
+    3300068: U_SC02_windows
+    3300070: U_SC04_Black
+    3300072: U_SC04_Black1
+    3300074: U_SC04_Black2
+    3300076: U_SC04_BV
+    3300078: U_SC04_carbonFiber
+    3300080: U_SC04_Chrome_01
+    3300082: U_SC04_InteriorDetails
+    3300084: U_SC04_InteriorDetails1
+    3300086: U_SC04_InteriorDetails2
+    3300088: U_SC04_InteriorDetails3
+    3300090: U_SC04_InteriorDetails4
+    3300092: U_SC04_InteriorDetails5
+    3300094: U_SC04_InteriorDetails6
+    3300096: U_SC04_Leather
+    3300098: U_SC04_Leather_sewing
+    3300100: U_SC04_plasticPanel
+    3300102: U_SC04_plasticPanel1
+    3300104: U_SC04_plasticPanel2
+    3300106: U_SC04_RearViews
+    3300108: U_SC04_SeatBelt_01
+    3300110: U_SC04_SeatBelt_03
+    3300112: U_SC04_Speedometer
+    3300114: U_SC04_Window
+    3300116: Wheel
+    3300118: Wheel 1
+    3300120: Wheel 2
+    3300122: Wheel 3
+    4300000: U_SC02_carbody
+    4300002: U_SC02_blackShinne
+    4300004: U_SC02_carbonFiber
+    4300006: U_SC02_windows
+    4300008: U_SC02_lightGlass
+    4300010: U_SC02_carbonFiber_01
+    4300012: U_SC02_grille_shdr
+    4300014: U_SC02_BackLight
+    4300016: U_SC02_FrontLight_Details
+    4300018: U_SC02_FrontLight
+    4300020: U_SC02_ReverseLight_ON
+    4300022: U_SC02_BackLight_ON
+    4300024: U_SC02_FrontLight_ON
+    4300026: Wheel
+    4300028: Tire
+    4300030: Wheel
+    4300032: Tire
+    4300034: Wheel
+    4300036: Tire
+    4300038: Wheel
+    4300040: Tire
+    4300042: caliper_RR
+    4300044: caliper_FR
+    4300046: caliper_RL
+    4300048: caliper_FL
+    4300050: U_SC02_carBottom
+    4300052: U_SC04_Black2
+    4300054: U_SC04_carbonFiber
+    4300056: U_SC04_Window
+    4300058: Interior_Chrome
+    4300060: Steering_Paint
+    4300062: Steering_Details_02
+    4300064: Steering_Badge
+    4300066: Steering_Leather
+    4300068: Steering_Details_01
+    4300070: Interior_Geo_lodA6
+    4300072: U_SC04_Speedometer
+    4300074: U_SC04_plasticPanel
+    4300076: U_SC04_InteriorDetails
+    4300078: U_SC04_InteriorDetails1
+    4300080: U_SC04_Leather_sewing
+    4300082: U_SC04_InteriorDetails2
+    4300084: U_SC04_Leather
+    4300086: U_SC04_plasticPanel1
+    4300088: U_SC04_InteriorDetails3
+    4300090: U_SC04_InteriorDetails4
+    4300092: U_SC04_InteriorDetails5
+    4300094: U_SC04_Chrome_01
+    4300096: U_SC04_SeatBelt_01
+    4300098: U_SC04_InteriorDetails6
+    4300100: U_SC04_Black
+    4300102: U_SC04_plasticPanel2
+    4300104: U_SC04_Black1
+    4300106: U_SC04_SeatBelt_03
+    4300108: U_SC04_RearViews
+    4300110: Needle_SPEED
+    4300112: Needle_RPM
+    4300114: U_SC04_BV
+    4300116: U_SC02_interior_Low_SW
+    4300118: U_SC02_interior_black
+    4300120: U_SC02_interior_Low
+    4300122: U_SC02_black
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 4.432
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
