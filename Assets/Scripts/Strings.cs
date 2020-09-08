@@ -3,7 +3,7 @@
     // non-localizable
 
     // general non-localizable strings
-    public static readonly string[] CarColliderNames = { "ColliderBody" }; // TODO: Do we need them all? { "ColliderBody", "ColliderFront", "ColliderBottom" };
+    public static readonly string[] CarColliderNames = { "ColliderFront" };
     public const string HideInstructionsAtStart = "HideInstructionsAtStart";
 
     // panel names
