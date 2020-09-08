@@ -12,7 +12,11 @@ public class CarComponents : MonoBehaviour {
 	[Header("Lights")]
 	public bool frontLightsOn;
 	public bool brakeEffectsOn;
-
+	[Space(5)]
+	public GameObject 			brakeEffects;
+	public GameObject 			frontLightEffects;
+	public GameObject 			reverseEffect;
+	[Header("Needles")]
 	public Transform			SpeedNeedle;
 	public Vector2				SpeedNeedleRotateRange	= Vector3.zero; 
 	private Vector3 			SpeedEulers				=   Vector3.zero;
@@ -21,12 +25,14 @@ public class CarComponents : MonoBehaviour {
 	private Vector3 			RpmdEulers				=   Vector3.zero;
 	public float				_NeedleSmoothing 		= 1.0f;
 	public Transform 			steeringWheel;
-	public GameObject 			brakeEffects;
-	public GameObject 			frontLightEffects;
-	public GameObject 			reverseEffect;
-	private float 				rotateNeedles			= 0.0f;
 
+	private float 				rotateNeedles			= 0.0f;
+	[Header("Wheels")]
+	public Transform 			wheel_FR;
+	public Transform 			wheel_FL;
+	[Header("Panel Texts")]
 	public Text txtSpeed, txtRPM;
+	public Slider sliderRPM;
 
 	private IEnumerator coroutine;
 
@@ -67,14 +73,26 @@ public class CarComponents : MonoBehaviour {
 
 		if (steeringWheel != null) {
 			Vector3 eulers = steeringWheel.localRotation.eulerAngles;
+			Vector3 wheelsEulers = wheel_FL.localRotation.eulerAngles;
 			eulers.z = rotateNeedles * 15.0f;
+			wheelsEulers.y = -rotateNeedles * 15.0f;
+
 
 			steeringWheel.localRotation = Quaternion.Slerp (steeringWheel.localRotation, Quaternion.Euler (eulers), Time.deltaTime * 2.5f);
 
+			wheel_FL.localRotation = Quaternion.Slerp (wheel_FL.localRotation, Quaternion.Euler (wheelsEulers), Time.deltaTime * 2.5f);
+			wheel_FR.localRotation = Quaternion.Slerp (wheel_FR.localRotation, Quaternion.Euler (wheelsEulers), Time.deltaTime * 2.5f);
+
+
+
 		}
 
-		txtSpeed.text = ((int)(rotateNeedles * 100.0f)).ToString () + " km/h";
+		if (txtSpeed)
+			txtSpeed.text = ((int)(rotateNeedles * 100.0f)).ToString ();// + " km/h";
+		if (txtRPM) 
 		txtRPM.text = ((int)(rotateNeedles * 1000.0f)).ToString ();
+		if (sliderRPM)
+			sliderRPM.value = (rotateNeedles * 1000.0f);
 		
 	}
 
