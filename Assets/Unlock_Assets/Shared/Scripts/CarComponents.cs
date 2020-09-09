@@ -2,13 +2,15 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-
-
-
+using UnityStandardAssets.Vehicles.Car;
 
 public class CarComponents : MonoBehaviour {
 
-	public bool blink;
+    // VINMOD: BEGIN
+    public CarController car; // reference to the car controller, must be dragged in inspector
+    // VINMOD: END
+
+    public bool blink;
 	[Header("Lights")]
 	public bool frontLightsOn;
 	public bool brakeEffectsOn;
@@ -62,7 +64,12 @@ public class CarComponents : MonoBehaviour {
 			TurnOnBackLights ();
 		}
 
-		if (SpeedNeedle) {
+        // VINMOD: BEGIN
+        brakeEffectsOn = (car.BrakeInput > 0f);
+        TurnOnBackLights();
+        // VINMOD: END
+
+        if (SpeedNeedle) {
 
 				Vector3 temp = new Vector3 (SpeedEulers.x, SpeedEulers.y, Mathf.Lerp (SpeedNeedleRotateRange.x, SpeedNeedleRotateRange.y, (rotateNeedles)));
 				SpeedNeedle.localEulerAngles = Vector3.Lerp (SpeedNeedle.localEulerAngles, temp, Time.deltaTime * _NeedleSmoothing);
