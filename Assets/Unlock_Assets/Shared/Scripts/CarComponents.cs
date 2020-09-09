@@ -38,21 +38,25 @@ public class CarComponents : MonoBehaviour {
 
 
 	void Start () {
-		blink 			= true;
-		frontLightsOn 	= true;
-		brakeEffectsOn 	= true;
+        // VINMOD: BEGIN
+        blink 			= false;
+		frontLightsOn 	= false;
+		brakeEffectsOn 	= false;
+        brakeEffects.SetActive(false);
+        frontLightEffects.SetActive(false);
+        // VINMOD: END
 
-		if (SpeedNeedle) SpeedEulers = SpeedNeedle.localEulerAngles;
+        if (SpeedNeedle) SpeedEulers = SpeedNeedle.localEulerAngles;
 		if (RpmNeedle) RpmdEulers = RpmNeedle.localEulerAngles;
 
-		coroutine = WaitLights(2.0f);
-		StartCoroutine(coroutine);
+        // VINMOD: BEGIN
+        //coroutine = WaitLights(2.0f);
+        //StartCoroutine(coroutine);
+        // VINMOD: END
+    }
 
-	
-	}
-	
 
-	void Update () {
+    void Update () {
 		if (blink) {
 			TurnOnFrontLights ();
 			TurnOnBackLights ();
