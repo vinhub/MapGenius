@@ -16,7 +16,6 @@ public class PanelManager : MonoBehaviour {
     private GameObject m_instructionsPanel, m_aboutPanel, m_mapPanel;
     private TMP_Text m_scoreText, m_timeText;
     private MapPanelHelper m_mpHelper;
-    private bool m_isGameStarting = true;
     private AudioSource m_buttonClickAudioSource;
 
     // intructions panel specific items
@@ -82,10 +81,12 @@ public class PanelManager : MonoBehaviour {
         return true;
     }
 
-    // this is called when game is started
-    public void OpenInstructionsPanel(bool isGameStarting = false)
+    // instructions for playing the game
+    public void OpenInstructionsPanel(bool isUserInvoked)
     {
-        m_isGameStarting = isGameStarting;
+        // show instructions only at the beginning of the game or if explicitly invoked by user
+        if (!isUserInvoked && !StaticGlobals.isGameStarting)
+            return;
 
         OpenPanel(m_instructionsPanel);
 
@@ -95,7 +96,7 @@ public class PanelManager : MonoBehaviour {
         hideInstructionsToggle.GetComponent<Toggle>().isOn = (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 1);
 
         // show the "don't show this again" toggle only when starting the game
-        hideInstructionsToggle.gameObject.SetActive(m_isGameStarting);
+        hideInstructionsToggle.gameObject.SetActive(StaticGlobals.isGameStarting);
     }
 
     private void SetupInstructionsPanel()
@@ -114,7 +115,7 @@ public class PanelManager : MonoBehaviour {
 
         TMP_Text closePanelText = tCloseButton.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
 
-        closePanelText.text = isLastInstruction ? (m_isGameStarting ? Strings.StartGame : Strings.ContinueGame) : Strings.Next;
+        closePanelText.text = isLastInstruction ? (StaticGlobals.isGameStarting ? Strings.StartGame : Strings.ContinueGame) : Strings.Next;
 
         Button closeButton = tCloseButton.GetComponent<Button>();
         
@@ -142,7 +143,7 @@ public class PanelManager : MonoBehaviour {
 
         Debug.Assert(m_goPanel == m_instructionsPanel);
 
-        if (m_isGameStarting) // instructions panel is being shown at the start of the game
+        if (StaticGlobals.isGameStarting) // instructions panel is being shown at the start of the game
         {
             Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
             if (hideInstructionsToggle.gameObject.activeInHierarchy)
@@ -153,7 +154,7 @@ public class PanelManager : MonoBehaviour {
 
             GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
 
-            m_isGameStarting = false;
+            StaticGlobals.isGameStarting = false;
         }
 
         m_iInstructionStep = 0;

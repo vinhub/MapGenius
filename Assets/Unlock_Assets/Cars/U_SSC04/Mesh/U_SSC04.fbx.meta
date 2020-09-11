@@ -1,0 +1,479 @@
+fileFormatVersion: 2
+guid: 1b329d1b4acf07642924cce9e211e48c
+timeCreated: 1514903836
+licenseType: Store
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Base_Geo_lodB
+    100002: CarBody
+    100004: Grille2_Geo_lodB
+    100006: Grille3_Geo_lodB
+    100008: Interior
+    100010: Light_Geo_lodB
+    100012: LightEmissive_Geo_lodB
+    100014: Paint_Geo_lodB
+    100016: //RootNode
+    100018: U_SSC04_aluminium
+    100020: U_SSC04_Black
+    100022: U_SSC04_Black 1
+    100024: U_SSC04_Caliper_front
+    100026: U_SSC04_Caliper_front 1
+    100028: U_SSC04_caliper_rear
+    100030: U_SSC04_caliper_rear 1
+    100032: U_SSC04_CarbonFiber
+    100034: U_SSC04_carbonFiber
+    100036: U_SSC04_interior_transpIcons
+    100038: U_SSC04_interiorDetails
+    100040: U_SSC04_InteriorSeam
+    100042: U_SSC04_Leather
+    100044: U_SSC04_lightGlass
+    100046: U_SSC04_Mirror
+    100048: U_SSC04_plasticPanel
+    100050: U_SSC04_RedLeather
+    100052: U_SSC04_RedSeam
+    100054: U_SSC04_Rotor
+    100056: U_SSC04_Rotor 1
+    100058: U_SSC04_Rotor 2
+    100060: U_SSC04_Rotor 3
+    100062: U_SSC04_RPM_Needle
+    100064: U_SSC04_SeatBelt
+    100066: U_SSC04_Speed_Needle
+    100068: U_SSC04_SteeringWheel_mesh
+    100070: U_SSC04_Tire
+    100072: U_SSC04_Tire 1
+    100074: U_SSC04_Tire 2
+    100076: U_SSC04_Tire 3
+    100078: U_SSC04_Wheel
+    100080: U_SSC04_Wheel 1
+    100082: U_SSC04_Wheel 2
+    100084: U_SSC04_Wheel 3
+    100086: U_SSC04_windows
+    100088: wheel_FL
+    100090: wheel_FR
+    100092: wheel_RL
+    100094: wheel_RR
+    100096: wheels
+    100098: ilum
+    100100: U_SSC04_BrakeLights_on
+    100102: U_SSC04_carPaint
+    100104: U_SSC04_details
+    100106: U_SSC04_fontLights_On
+    100108: U_SSC04_interior_low
+    100110: U_SSC04_lightDetails
+    100112: U_SSC04_Lights
+    100114: U_SSC04_reverseLight_on
+    100116: U_SSC04_Interior_details
+    100118: U_SSC04_SteeringWheel_transpIcons
+    400000: Base_Geo_lodB
+    400002: CarBody
+    400004: Grille2_Geo_lodB
+    400006: Grille3_Geo_lodB
+    400008: Interior
+    400010: Light_Geo_lodB
+    400012: LightEmissive_Geo_lodB
+    400014: Paint_Geo_lodB
+    400016: //RootNode
+    400018: U_SSC04_aluminium
+    400020: U_SSC04_Black
+    400022: U_SSC04_Black 1
+    400024: U_SSC04_Caliper_front
+    400026: U_SSC04_Caliper_front 1
+    400028: U_SSC04_caliper_rear
+    400030: U_SSC04_caliper_rear 1
+    400032: U_SSC04_CarbonFiber
+    400034: U_SSC04_carbonFiber
+    400036: U_SSC04_interior_transpIcons
+    400038: U_SSC04_interiorDetails
+    400040: U_SSC04_InteriorSeam
+    400042: U_SSC04_Leather
+    400044: U_SSC04_lightGlass
+    400046: U_SSC04_Mirror
+    400048: U_SSC04_plasticPanel
+    400050: U_SSC04_RedLeather
+    400052: U_SSC04_RedSeam
+    400054: U_SSC04_Rotor
+    400056: U_SSC04_Rotor 1
+    400058: U_SSC04_Rotor 2
+    400060: U_SSC04_Rotor 3
+    400062: U_SSC04_RPM_Needle
+    400064: U_SSC04_SeatBelt
+    400066: U_SSC04_Speed_Needle
+    400068: U_SSC04_SteeringWheel_mesh
+    400070: U_SSC04_Tire
+    400072: U_SSC04_Tire 1
+    400074: U_SSC04_Tire 2
+    400076: U_SSC04_Tire 3
+    400078: U_SSC04_Wheel
+    400080: U_SSC04_Wheel 1
+    400082: U_SSC04_Wheel 2
+    400084: U_SSC04_Wheel 3
+    400086: U_SSC04_windows
+    400088: wheel_FL
+    400090: wheel_FR
+    400092: wheel_RL
+    400094: wheel_RR
+    400096: wheels
+    400098: ilum
+    400100: U_SSC04_BrakeLights_on
+    400102: U_SSC04_carPaint
+    400104: U_SSC04_details
+    400106: U_SSC04_fontLights_On
+    400108: U_SSC04_interior_low
+    400110: U_SSC04_lightDetails
+    400112: U_SSC04_Lights
+    400114: U_SSC04_reverseLight_on
+    400116: U_SSC04_Interior_details
+    400118: U_SSC04_SteeringWheel_transpIcons
+    2100000: Chevrolet_CorvetteZR1Reward_2018Light_Material1
+    2100002: U_SSC04_windows_shdr
+    2100004: U_SSC04_Black_shdr
+    2100006: Chevrolet_CorvetteZR1Reward_2018Grille3_Material1
+    2100008: Chevrolet_CorvetteZR1Reward_2018Base_Material1
+    2100010: Chevrolet_CorvetteZR1Reward_2018Paint_Material1
+    2100012: Chevrolet_CorvetteZR1Reward_2018Grille2_Material1
+    2100014: U_SSC04_carbonFiber_shdr
+    2100016: U_SSC04_lightGlass_shdr
+    2100018: U_SSC04_Calipers_shdr
+    2100020: U_SSC04_Rotor_shdr
+    2100022: U_SSC04_Tire_shdr
+    2100024: U_SSC04_Wheel_shdr
+    2100026: U_SSC04_aluminium_shdr
+    2100028: U_SSC04_RedSeam_shdr
+    2100030: U_SSC04_plasticPanel_shdr
+    2100032: U_SSC04_InteriorTranspIcons_shdr
+    2100034: U_SSC04_RedLeather_shdr
+    2100036: U_SSC04_interiorDetails_shdr
+    2100038: U_SSC04_Leather_shdr
+    2100040: AA_2018Interior_Material
+    2300000: Base_Geo_lodB
+    2300002: Grille2_Geo_lodB
+    2300004: Grille3_Geo_lodB
+    2300006: Light_Geo_lodB
+    2300008: LightEmissive_Geo_lodB
+    2300010: Paint_Geo_lodB
+    2300012: U_SSC04_aluminium
+    2300014: U_SSC04_Black
+    2300016: U_SSC04_Black 1
+    2300018: U_SSC04_Caliper_front
+    2300020: U_SSC04_Caliper_front 1
+    2300022: U_SSC04_caliper_rear
+    2300024: U_SSC04_caliper_rear 1
+    2300026: U_SSC04_CarbonFiber
+    2300028: U_SSC04_carbonFiber
+    2300030: U_SSC04_interior_transpIcons
+    2300032: U_SSC04_interiorDetails
+    2300034: U_SSC04_InteriorSeam
+    2300036: U_SSC04_Leather
+    2300038: U_SSC04_lightGlass
+    2300040: U_SSC04_Mirror
+    2300042: U_SSC04_plasticPanel
+    2300044: U_SSC04_RedLeather
+    2300046: U_SSC04_RedSeam
+    2300048: U_SSC04_Rotor
+    2300050: U_SSC04_Rotor 1
+    2300052: U_SSC04_Rotor 2
+    2300054: U_SSC04_Rotor 3
+    2300056: U_SSC04_RPM_Needle
+    2300058: U_SSC04_SeatBelt
+    2300060: U_SSC04_Speed_Needle
+    2300062: U_SSC04_SteeringWheel_mesh
+    2300064: U_SSC04_Tire
+    2300066: U_SSC04_Tire 1
+    2300068: U_SSC04_Tire 2
+    2300070: U_SSC04_Tire 3
+    2300072: U_SSC04_Wheel
+    2300074: U_SSC04_Wheel 1
+    2300076: U_SSC04_Wheel 2
+    2300078: U_SSC04_Wheel 3
+    2300080: U_SSC04_windows
+    2300082: U_SSC04_BrakeLights_on
+    2300084: U_SSC04_carPaint
+    2300086: U_SSC04_details
+    2300088: U_SSC04_fontLights_On
+    2300090: U_SSC04_interior_low
+    2300092: U_SSC04_lightDetails
+    2300094: U_SSC04_Lights
+    2300096: U_SSC04_reverseLight_on
+    2300098: U_SSC04_Interior_details
+    2300100: U_SSC04_SteeringWheel_transpIcons
+    3300000: Base_Geo_lodB
+    3300002: Grille2_Geo_lodB
+    3300004: Grille3_Geo_lodB
+    3300006: Light_Geo_lodB
+    3300008: LightEmissive_Geo_lodB
+    3300010: Paint_Geo_lodB
+    3300012: U_SSC04_aluminium
+    3300014: U_SSC04_Black
+    3300016: U_SSC04_Black 1
+    3300018: U_SSC04_Caliper_front
+    3300020: U_SSC04_Caliper_front 1
+    3300022: U_SSC04_caliper_rear
+    3300024: U_SSC04_caliper_rear 1
+    3300026: U_SSC04_CarbonFiber
+    3300028: U_SSC04_carbonFiber
+    3300030: U_SSC04_interior_transpIcons
+    3300032: U_SSC04_interiorDetails
+    3300034: U_SSC04_InteriorSeam
+    3300036: U_SSC04_Leather
+    3300038: U_SSC04_lightGlass
+    3300040: U_SSC04_Mirror
+    3300042: U_SSC04_plasticPanel
+    3300044: U_SSC04_RedLeather
+    3300046: U_SSC04_RedSeam
+    3300048: U_SSC04_Rotor
+    3300050: U_SSC04_Rotor 1
+    3300052: U_SSC04_Rotor 2
+    3300054: U_SSC04_Rotor 3
+    3300056: U_SSC04_RPM_Needle
+    3300058: U_SSC04_SeatBelt
+    3300060: U_SSC04_Speed_Needle
+    3300062: U_SSC04_SteeringWheel_mesh
+    3300064: U_SSC04_Tire
+    3300066: U_SSC04_Tire 1
+    3300068: U_SSC04_Tire 2
+    3300070: U_SSC04_Tire 3
+    3300072: U_SSC04_Wheel
+    3300074: U_SSC04_Wheel 1
+    3300076: U_SSC04_Wheel 2
+    3300078: U_SSC04_Wheel 3
+    3300080: U_SSC04_windows
+    3300082: U_SSC04_BrakeLights_on
+    3300084: U_SSC04_carPaint
+    3300086: U_SSC04_details
+    3300088: U_SSC04_fontLights_On
+    3300090: U_SSC04_interior_low
+    3300092: U_SSC04_lightDetails
+    3300094: U_SSC04_Lights
+    3300096: U_SSC04_reverseLight_on
+    3300098: U_SSC04_Interior_details
+    3300100: U_SSC04_SteeringWheel_transpIcons
+    4300000: Light_Geo_lodB
+    4300002: U_SSC04_windows
+    4300004: U_SSC04_Black
+    4300006: Grille3_Geo_lodB
+    4300008: LightEmissive_Geo_lodB
+    4300010: Base_Geo_lodB
+    4300012: Paint_Geo_lodB
+    4300014: Grille2_Geo_lodB
+    4300016: U_SSC04_CarbonFiber
+    4300018: U_SSC04_lightGlass
+    4300020: U_SSC04_Caliper_front
+    4300022: U_SSC04_Rotor
+    4300024: U_SSC04_Tire
+    4300026: U_SSC04_Wheel
+    4300028: U_SSC04_caliper_rear
+    4300030: U_SSC04_Rotor
+    4300032: U_SSC04_Tire
+    4300034: U_SSC04_Wheel
+    4300036: U_SSC04_Caliper_front
+    4300038: U_SSC04_Rotor
+    4300040: U_SSC04_Tire
+    4300042: U_SSC04_Wheel
+    4300044: U_SSC04_caliper_rear
+    4300046: U_SSC04_Rotor
+    4300048: U_SSC04_Tire
+    4300050: U_SSC04_Wheel
+    4300052: U_SSC04_carbonFiber
+    4300054: U_SSC04_aluminium
+    4300056: U_SSC04_RedSeam
+    4300058: U_SSC04_plasticPanel
+    4300060: U_SSC04_interior_transpIcons
+    4300062: U_SSC04_RedLeather
+    4300064: U_SSC04_interiorDetails
+    4300066: U_SSC04_Leather
+    4300068: U_SSC04_SeatBelt
+    4300070: U_SSC04_Black
+    4300072: U_SSC04_InteriorSeam
+    4300074: U_SSC04_SteeringWheel_mesh
+    4300076: U_SSC04_Mirror
+    4300078: U_SSC04_Speed_Needle
+    4300080: U_SSC04_RPM_Needle
+    4300082: U_SSC04_Lights
+    4300084: U_SSC04_details
+    4300086: U_SSC04_interior_low
+    4300088: U_SSC04_carPaint
+    4300090: U_SSC04_lightDetails
+    4300092: U_SSC04_fontLights_On
+    4300094: U_SSC04_BrakeLights_on
+    4300096: U_SSC04_reverseLight_on
+    4300098: U_SSC04_SteeringWheel_transpIcons
+    4300100: U_SSC04_Interior_details
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Default_Material
+    second: {fileID: 2100000, guid: 9ccdb71921b52cb4f87268035cb0ded3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_Black_shdr
+    second: {fileID: 2100000, guid: ea68b95c74b11a440bae555d7e6f6947, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_Calipers_shdr
+    second: {fileID: 2100000, guid: e11311ba145497f41a44c615150c4ab9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_InteriorTranspIcons_shdr
+    second: {fileID: 2100000, guid: aef08df08fc2d5c42841ebea96ae1867, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_Leather_shdr
+    second: {fileID: 2100000, guid: 6635a49bb100e5049b10fb4eeae4025d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_RedLeather_shdr
+    second: {fileID: 2100000, guid: fc7e3e489cf64b04e9edb0b6aef58276, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_RedSeam_shdr
+    second: {fileID: 2100000, guid: a23bd1464310dc1469b934938e009bc0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_Rotor_shdr
+    second: {fileID: 2100000, guid: bc7d546b24a8db641bccc6f58fed2d5b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_Tire_shdr
+    second: {fileID: 2100000, guid: 60376df3badc7ce4e8dcd8cb74c02166, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_Wheel_shdr
+    second: {fileID: 2100000, guid: c56254b65f0226146bce9c71d968102d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_aluminium_shdr
+    second: {fileID: 2100000, guid: 06604f4a45d5f5641ba6260ed3b854b9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_carBotton_shdr
+    second: {fileID: 2100000, guid: b45e462607c670348bf649c4b0ba69dc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_carPaint_shdr
+    second: {fileID: 2100000, guid: 9eb792cf8e0a937409a81033e4b6d889, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_carbonFiber_shdr
+    second: {fileID: 2100000, guid: 0897d9cdf7852bd49b7ce4e6e117f137, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_interiorDetails_shdr
+    second: {fileID: 2100000, guid: ea0d7527f2b5b504983a27810a3b5219, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_interior_low_shdr
+    second: {fileID: 2100000, guid: cacc8161e81f0264d9e7430437b43007, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_lightGlass_shdr
+    second: {fileID: 2100000, guid: d858e6e3120941f418053d90a04ec09b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_lights_shdr
+    second: {fileID: 2100000, guid: 6c39f2a663d576d4b8dc98722fe77d9f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_plasticPanel_shdr
+    second: {fileID: 2100000, guid: 7801dcd418de5f4488adbe01ecf2dda1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: U_SSC04_windows_shdr
+    second: {fileID: 2100000, guid: a2afb451cf5957c4194b9a508befae7e, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 4.518
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

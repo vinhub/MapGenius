@@ -17,6 +17,7 @@ public struct SavedLandmark
 public static class StaticGlobals
 {
     // general globals
+    public static bool isGameStarting = true; // true only when the game is just starting, set to false when the insutructions dialog is closed.
     public const int MaxLevelScore = 100; // max score for a level
     public static GameLevel CurGameLevel { get; set; } = GameLevel.Downtown;
     public static int TotalNumGames { get; set; } = 1; // total number of games attempted by the player so far

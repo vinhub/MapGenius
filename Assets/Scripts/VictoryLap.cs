@@ -41,8 +41,12 @@ public class VictoryLap : MonoBehaviour
 
         m_car = GameSystem.Instance.Car;
 
+        // disable manual driving, enable victory lap scripts to start car
+        m_car.GetComponent<CarUserControl>().enabled = false;
+        m_car.GetComponent<WaypointProgressTracker>().enabled = true;
+        m_car.GetComponent<CarAIControl>().enabled = true;
+
         GameSystem.Instance.CurDrivingMode = DrivingMode.VictoryLap;
-        GameSystem.Instance.ShowInfoMessage(Strings.VictoryLapInfoMessage, 3f);
 
         Transform tWaypointCircuit = transform.Find(Strings.WaypointCircuit);
 
@@ -56,11 +60,6 @@ public class VictoryLap : MonoBehaviour
         m_car.transform.position = GameSystem.Instance.CarCameraRig.transform.position = position;
         m_car.transform.rotation = GameSystem.Instance.CarCameraRig.transform.rotation = rotation;
 
-        // disable manual driving, enable victory lap scripts to start car
-        m_car.GetComponent<CarUserControl>().enabled = false;
-        m_car.GetComponent<WaypointProgressTracker>().enabled = true;
-        m_car.GetComponent<CarAIControl>().enabled = true;
-
         StartCoroutine(TerminateVictoryLap());
 
         m_isReady = true; // this will start the celebration
@@ -68,6 +67,7 @@ public class VictoryLap : MonoBehaviour
         // play victory music
         m_audioSources = GetComponents<AudioSource>();
         m_audioSources[0].Play();
+        GameSystem.Instance.ShowInfoMessage(Strings.VictoryLapInfoMessage, 5f);
     }
 
     // create various celebratory elements such as confetti and audience etc.
