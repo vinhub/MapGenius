@@ -97,7 +97,7 @@ public class GameSystem : MonoBehaviour
         // show game instructions at start unless user has asked to hide them
         if (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0)
         {
-            m_mainPanelManager.OpenInstructionsPanel(true);
+            m_mainPanelManager.OpenInstructionsPanel(false);
         }
 
         m_graph = GameObject.Find(Strings.GraphPath);
