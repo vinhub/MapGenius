@@ -800,7 +800,7 @@ public class GameSystem : MonoBehaviour
     {
         PopupMessage.ShowMessage(PopupMessageType.VictoryLapStarting, Strings.VictoryLapStartingMessage);
 
-        yield return new WaitForSecondsRealtime(3f);
+        yield return new WaitForSecondsRealtime(6f);
 
         PopupMessage.HideMessage();
 
