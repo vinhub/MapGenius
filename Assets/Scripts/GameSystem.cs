@@ -798,6 +798,8 @@ public class GameSystem : MonoBehaviour
 
     public IEnumerator DoVictoryLap()
     {
+        m_carController.StopCar();
+
         PopupMessage.ShowMessage(PopupMessageType.VictoryLapStarting, Strings.VictoryLapStartingMessage);
 
         yield return new WaitForSecondsRealtime(6f);
