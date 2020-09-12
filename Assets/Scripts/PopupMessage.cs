@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 
-public enum PopupMessageType { FirstLandmarkCrossed, OtherLandmarkCrossed, LevelLost, LevelWon, VictoryLapStarting, GameOver };
+public enum PopupMessageType { LevelStarting, FirstLandmarkCrossed, OtherLandmarkCrossed, LevelLost, LevelWon, VictoryLapStarting, GameOver };
 
 public class PopupMessage : MonoBehaviour
 {
@@ -29,7 +29,7 @@ public class PopupMessage : MonoBehaviour
         m_audioSources = GetComponents<AudioSource>();
     }
 
-    private void _ShowMessage(PopupMessageType type, string message)
+    private void _ShowMessage(PopupMessageType type, string message, float duration)
     {
         int iAudioSource;
 
@@ -37,6 +37,10 @@ public class PopupMessage : MonoBehaviour
         {
             default:
                 iAudioSource = 0;
+                break;
+
+            case PopupMessageType.LevelStarting:
+                iAudioSource = 4;
                 break;
 
             case PopupMessageType.LevelLost:
@@ -64,6 +68,15 @@ public class PopupMessage : MonoBehaviour
         m_popup.transform.DOScale(1f, 0.6f).SetUpdate(true);
 
         m_audioSources[iAudioSource].Play();
+
+        if (duration > 0.01f)
+            StartCoroutine(_HideMessageAfterDelay(duration));
+    }
+
+    private IEnumerator _HideMessageAfterDelay(float duration)
+    {
+        yield return new WaitForSecondsRealtime(duration);
+        _HideMessage();
     }
 
     private void _HideMessage()
@@ -74,9 +87,9 @@ public class PopupMessage : MonoBehaviour
         m_popup.transform.DOScale(0f, 0.25f).SetUpdate(true).OnComplete(() => m_popup.SetActive(false));
     }
 
-    public static void ShowMessage(PopupMessageType type, string message)
+    public static void ShowMessage(PopupMessageType type, string message, float duration = 0f)
     {
-        Instance._ShowMessage(type, message);
+        Instance._ShowMessage(type, message, duration);
     }
 
     public static void HideMessage()

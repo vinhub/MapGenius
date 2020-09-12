@@ -191,8 +191,8 @@ public class MapPanelHelper : MonoBehaviour
     private IEnumerator ShowLevelCompleteMessage()
     {
         PopupMessageType type = IsLevelWon() ? PopupMessageType.LevelWon : PopupMessageType.LevelLost;
-        string message = IsLevelWon() ? string.Format(Strings.LevelWonMessageFormat, GameSystem.Instance.LevelScore, (int)Time.fixedTime) :
-            string.Format(Strings.LevelLostMessageFormat, GameSystem.Instance.LevelScore, (int)Time.fixedTime);
+        string message = IsLevelWon() ? string.Format(Strings.LevelWonMessageFormat, GameSystem.Instance.LevelScore, (int)Time.timeSinceLevelLoad) :
+            string.Format(Strings.LevelLostMessageFormat, GameSystem.Instance.LevelScore, (int)Time.timeSinceLevelLoad);
 
         PopupMessage.ShowMessage(type, message);
 

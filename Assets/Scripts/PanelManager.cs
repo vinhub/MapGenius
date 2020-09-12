@@ -82,12 +82,8 @@ public class PanelManager : MonoBehaviour {
     }
 
     // instructions for playing the game
-    public void OpenInstructionsPanel(bool isUserInvoked)
+    public void OpenInstructionsPanel()
     {
-        // show instructions only at the beginning of the game or if explicitly invoked by user
-        if (!isUserInvoked && !StaticGlobals.isGameStarting)
-            return;
-
         OpenPanel(m_instructionsPanel);
 
         SetupInstructionsPanel();

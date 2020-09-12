@@ -50,7 +50,7 @@ public class MainMenuButton : MonoBehaviour
                 break;
 
             case Strings.InstructionsPanelName:
-                m_mainPanelManager.OpenInstructionsPanel(true);
+                m_mainPanelManager.OpenInstructionsPanel();
                 break;
 
             case Strings.AboutPanelName:
