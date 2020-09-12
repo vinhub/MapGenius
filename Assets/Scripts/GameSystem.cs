@@ -462,6 +462,8 @@ public class GameSystem : MonoBehaviour
 
     public void GameOver()
     {
+        m_carController.Move(0, 0, -1, 1);
+        m_carController.StopCar();
         PopupMessage.ShowMessage(PopupMessageType.GameOver, Strings.GameOverMessage);
         StartCoroutine(GameOverAfterDelay());
     }
@@ -802,6 +804,7 @@ public class GameSystem : MonoBehaviour
 
     public IEnumerator DoVictoryLap()
     {
+        m_carController.Move(0, 0, -1, 1);
         m_carController.StopCar();
 
         PopupMessage.ShowMessage(PopupMessageType.VictoryLapStarting, Strings.VictoryLapStartingMessage);
