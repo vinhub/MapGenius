@@ -73,9 +73,6 @@
     public const string LandmarkTag = "Landmark";
     public const string PlayermarkTag = "Playermark";
 
-    // level names
-    public const string Springfield = "Springfield";
-
     // landmark names
     public static readonly string[] LandmarkNames = { "School", "Library", "Museum", "City Hall", "Post Office" };
 
@@ -96,6 +93,7 @@
     public const string LevelTextFormat = "Level: {0}";
     public const string FirstLandmarkCrossedMessageFormat = "You just crossed the  <b><color=#00ffffff>\"{0}\"</color></b>  landmark!\r\n\r\nWe will now demonstrate how to mark its position on the map.";
     public const string OtherLandmarkCrossedMessageFormat = "You just crossed the  <b><color=#00ffffff>\"{0}\"</color></b>  landmark!\r\n\r\nDrag and drop the blinking marker to the appropriate position on the map.";
+    public const string LevelStartingMessageFormat = "<b><color=#00ff00ff>Welcome to {0}.</color></b>";
     public const string LevelWonMessageFormat = "<b><color=#00ff00ff>Congratulations! You won!</color></b>\r\n\r\nYou scored {0} points in {1} seconds!";
     public const string LevelLostMessageFormat = "<b><color=#ff5733ff>Map completed, but with some mistakes.</color></b>\r\n\r\nYou scored {0} points in {1} seconds.";
     public const string CarSpeedStatusFormat = "Speed: {0:F0}";

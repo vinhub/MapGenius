@@ -94,10 +94,14 @@ public class GameSystem : MonoBehaviour
 
     private void InitGame()
     {
-        // show game instructions at start unless user has asked to hide them
-        if (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0)
+        // show game instructions at the start of the game unless user has asked to hide them
+        if (StaticGlobals.isGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
         {
-            m_mainPanelManager.OpenInstructionsPanel(false);
+            m_mainPanelManager.OpenInstructionsPanel();
+        }
+        else
+        {
+            PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, StaticGlobals.CurGameLevel.ToString()), 1f);
         }
 
         m_graph = GameObject.Find(Strings.GraphPath);
