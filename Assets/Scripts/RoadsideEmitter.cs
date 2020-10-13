@@ -16,6 +16,9 @@ public class RoadsideEmitter : MonoBehaviour
 
     public void Play()
     {
+        if (m_pSystems == null)
+            return;
+
         foreach(ParticleSystem ps in m_pSystems)
         {
             ps.Play();
