@@ -62,12 +62,12 @@ public class VictoryLap : MonoBehaviour
 
         StartCoroutine(TerminateVictoryLap());
 
-        m_isReady = true; // this will start the celebration
-
         // play victory music
         m_audioSources = GetComponents<AudioSource>();
         m_audioSources[0].Play();
         GameSystem.Instance.ShowInfoMessage(Strings.VictoryLapInfoMessage, 5f);
+
+        m_isReady = true; // this will start the celebration
     }
 
     // create various celebratory elements such as confetti and audience etc.
