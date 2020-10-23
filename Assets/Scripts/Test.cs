@@ -73,6 +73,7 @@ public class Test : MonoBehaviour
 
     private void RunVictoryLapTest()
     {
-        StartCoroutine(GameSystem.Instance.DoVictoryLap());
+        GameSystem.Instance.PauseGame();
+        GameSystem.Instance.ContinueGame(true);
     }
 }
