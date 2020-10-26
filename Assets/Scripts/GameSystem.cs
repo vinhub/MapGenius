@@ -19,8 +19,6 @@ public class GameSystem : MonoBehaviour
     private const int m_landmarksLayerIndex = 11; // TODO: remove this hardcoding
     private const int m_UILayerIndex = 5; // TODO: remove this hardcoding
 
-    public float LevelScore { get; private set; } // player's score so far for the current level
-
     public GameObject Car; // the car being driven by the player
     public GameObject CarCameraRig; // the car camera rig
     private CarController m_carController;
@@ -128,9 +126,6 @@ public class GameSystem : MonoBehaviour
         // place car some distance from the first landmark
         Car.transform.position = CarCameraRig.transform.position = OnTrackRoad.origPoints[OnTrackOrigPoint];
         Car.transform.rotation = CarCameraRig.transform.rotation = OnTrackRotation;
-
-        // init score
-        SetLevelScore(0);
     }
 
     private void InitGameState()
@@ -338,8 +333,6 @@ public class GameSystem : MonoBehaviour
         ContinueGame(false);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-        StaticGlobals.TotalNumGames++;
     }
 
     public void LevelUp()
@@ -390,8 +383,6 @@ public class GameSystem : MonoBehaviour
         }
 
         SceneManager.LoadScene(gameLevel);
-
-        StaticGlobals.TotalNumGames++;
     }
 
     // retry the same level without changing anything
@@ -535,7 +526,6 @@ public class GameSystem : MonoBehaviour
 
     public void SetLevelScore(float levelScore)
     {
-        GameSystem.Instance.LevelScore = levelScore;
         StaticGlobals.TotalScore += levelScore;
 
         m_mainPanelManager.DisplayScore();

@@ -20,9 +20,7 @@ public static class StaticGlobals
     public static bool isGameStarting = true; // true only when the game is just starting, set to false when the insutructions dialog is closed.
     public const int MaxLevelScore = 100; // max score for a level
     public static GameLevel CurGameLevel { get; set; } = GameLevel.Downtown;
-    public static int TotalNumGames { get; set; } = 1; // total number of games attempted by the player so far
     public static float TotalScore { get; set; } = 0f; // player's total score so far
-    public static float TotalScoreMax = StaticGlobals.MaxLevelScore * StaticGlobals.TotalNumGames;
 
     // saved game state related items
     public static bool RetryingGame { get; set; }
