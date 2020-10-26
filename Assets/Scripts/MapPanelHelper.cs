@@ -119,14 +119,13 @@ public class MapPanelHelper : MonoBehaviour
             // Calculate and display score
             float levelScore = CalcLevelScore();
 
-            GameSystem.Instance.SetLevelScore(levelScore);
-
             StartCoroutine(ShowLevelCompleteMessage(levelScore));
-
-            DisplayScore(true);
 
             if (levelScore == StaticGlobals.MaxLevelScore) // max score achieved
             {
+                GameSystem.Instance.SetLevelScore(levelScore);
+                DisplayScore(true);
+
                 m_actionButtonText.text = Strings.VictoryLap;
                 m_tActionButton.GetComponent<Button>().onClick.RemoveAllListeners();
                 m_tActionButton.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickVictoryLap);
