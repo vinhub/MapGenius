@@ -130,7 +130,7 @@ public class GameSystem : MonoBehaviour
         Car.transform.rotation = CarCameraRig.transform.rotation = OnTrackRotation;
 
         // init score
-        SetScore(0);
+        SetLevelScore(0);
     }
 
     private void InitGameState()
@@ -533,12 +533,12 @@ public class GameSystem : MonoBehaviour
         m_firstLandmarkCrossed = false;
     }
 
-    public void SetScore(float levelScore)
+    public void SetLevelScore(float levelScore)
     {
         GameSystem.Instance.LevelScore = levelScore;
         StaticGlobals.TotalScore += levelScore;
 
-        m_mainPanelManager.UpdateScore();
+        m_mainPanelManager.DisplayScore();
     }
 
     private void SaveGameState()

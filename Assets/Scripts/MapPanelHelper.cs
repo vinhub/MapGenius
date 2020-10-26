@@ -119,9 +119,9 @@ public class MapPanelHelper : MonoBehaviour
             // Calculate and display score
             float levelScore = CalcLevelScore();
 
-            GameSystem.Instance.SetScore(levelScore);
+            GameSystem.Instance.SetLevelScore(levelScore);
 
-            StartCoroutine(ShowLevelCompleteMessage());
+            StartCoroutine(ShowLevelCompleteMessage(levelScore));
 
             DisplayScore(true);
 
@@ -188,11 +188,11 @@ public class MapPanelHelper : MonoBehaviour
         }
     }
 
-    private IEnumerator ShowLevelCompleteMessage()
+    private IEnumerator ShowLevelCompleteMessage(float levelScore)
     {
-        PopupMessageType type = IsLevelWon() ? PopupMessageType.LevelWon : PopupMessageType.LevelLost;
-        string message = IsLevelWon() ? string.Format(Strings.LevelWonMessageFormat, GameSystem.Instance.LevelScore, (int)Time.timeSinceLevelLoad) :
-            string.Format(Strings.LevelLostMessageFormat, GameSystem.Instance.LevelScore, (int)Time.timeSinceLevelLoad);
+        PopupMessageType type = IsLevelWon(levelScore) ? PopupMessageType.LevelWon : PopupMessageType.LevelLost;
+        string message = IsLevelWon(levelScore) ? string.Format(Strings.LevelWonMessageFormat, levelScore, (int)Time.timeSinceLevelLoad) :
+            string.Format(Strings.LevelLostMessageFormat, levelScore, (int)Time.timeSinceLevelLoad);
 
         PopupMessage.ShowMessage(type, message);
 
@@ -382,8 +382,8 @@ public class MapPanelHelper : MonoBehaviour
         return allPlayermarksVisited;
     }
 
-    private static bool IsLevelWon()
+    private static bool IsLevelWon(float levelScore)
     {
-        return (GameSystem.Instance.LevelScore == StaticGlobals.MaxLevelScore);
+        return (levelScore == StaticGlobals.MaxLevelScore);
     }
 }

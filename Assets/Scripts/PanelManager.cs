@@ -230,7 +230,7 @@ public class PanelManager : MonoBehaviour {
         NewGame();
     }
 
-    public void UpdateScore()
+    public void DisplayScore()
     {
         m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero));
     }
