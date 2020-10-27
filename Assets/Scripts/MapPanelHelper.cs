@@ -58,7 +58,7 @@ public class MapPanelHelper : MonoBehaviour
             // add landmarks to the map help player know where they are (without telling them which landmark is which)
             AddLandmarksToMap();
 
-            if (StaticGlobals.CurGameLevel <= GameLevel.Smalltown)
+            if (PlayerState.CurGameLevel <= GameLevel.Smalltown)
             {
                 // for lower levels, always show hint
                 Transform tHint = m_tMapPanel.Find(Strings.HintPath);
@@ -114,16 +114,16 @@ public class MapPanelHelper : MonoBehaviour
         SavePlayermarkChanges();
 
         // if level is complete, we should not close the panel but show the results
-        if (fCheckOkToClose && m_isLevelComplete && (GameSystem.Instance.CurDrivingMode == DrivingMode.Normal))
+        if (fCheckOkToClose && m_isLevelComplete && (GameState.CurDrivingMode == DrivingMode.Normal))
         {
             // Calculate and display score
             float levelScore = CalcLevelScore();
 
             StartCoroutine(ShowLevelCompleteMessage(levelScore));
 
-            if (levelScore == StaticGlobals.MaxLevelScore) // max score achieved
+            if (levelScore == GameState.MaxLevelScore) // max score achieved
             {
-                GameSystem.Instance.SetLevelScore(levelScore);
+                PlayerState.IncrementScore(levelScore);
                 DisplayScore(true);
 
                 m_actionButtonText.text = Strings.VictoryLap;
@@ -205,7 +205,7 @@ public class MapPanelHelper : MonoBehaviour
         float levelScore = 0f;
 
         int numLandmarksInLevel = m_goLandmarks.Length;
-        float maxLandmarkScore = (float)StaticGlobals.MaxLevelScore / numLandmarksInLevel;
+        float maxLandmarkScore = (float)GameState.MaxLevelScore / numLandmarksInLevel;
         int maxSlopDistance = 30; // amount of slop allowed in placement of playermark
 
         // calculate and add up the score for each landmark
@@ -253,9 +253,11 @@ public class MapPanelHelper : MonoBehaviour
 
     private void DisplayScore(bool isNewScore)
     {
-        m_levelText.text = String.Format(Strings.LevelTextFormat, StaticGlobals.CurGameLevel);
+        m_levelText.text = String.Format(Strings.LevelTextFormat, PlayerState.CurGameLevel);
         m_totalScoreText.text = String.Format(Strings.ScoreTextFormat,
-            (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero));
+            (int)Math.Round(PlayerState.TotalScore, MidpointRounding.AwayFromZero));
+
+        m_panelManager.DisplayScore();
 
         if (isNewScore)
         {
@@ -358,7 +360,7 @@ public class MapPanelHelper : MonoBehaviour
         if ((m_phCur != null) && (m_phCur.State == PlayermarkHandler.PlayermarkState.CurrentlyVisiting))
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.Visited);
-            m_phCur.SetScoreFactor(((StaticGlobals.CurGameLevel > GameLevel.Smalltown) && m_revealedLandmarksOnMap) ? 50f : 100f);
+            m_phCur.SetScoreFactor(((PlayerState.CurGameLevel > GameLevel.Smalltown) && m_revealedLandmarksOnMap) ? 50f : 100f);
         }
 
         // check if level is complete
@@ -383,6 +385,6 @@ public class MapPanelHelper : MonoBehaviour
 
     private static bool IsLevelWon(float levelScore)
     {
-        return (levelScore == StaticGlobals.MaxLevelScore);
+        return (levelScore == GameState.MaxLevelScore);
     }
 }

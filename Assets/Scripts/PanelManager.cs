@@ -92,7 +92,7 @@ public class PanelManager : MonoBehaviour {
         hideInstructionsToggle.GetComponent<Toggle>().isOn = (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 1);
 
         // show the "don't show this again" toggle only when starting the game
-        hideInstructionsToggle.gameObject.SetActive(StaticGlobals.isGameStarting);
+        hideInstructionsToggle.gameObject.SetActive(GameState.isGameStarting);
     }
 
     private void SetupInstructionsPanel()
@@ -111,7 +111,7 @@ public class PanelManager : MonoBehaviour {
 
         TMP_Text closePanelText = tCloseButton.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
 
-        closePanelText.text = isLastInstruction ? (StaticGlobals.isGameStarting ? Strings.StartGame : Strings.ContinueGame) : Strings.Next;
+        closePanelText.text = isLastInstruction ? (GameState.isGameStarting ? Strings.StartGame : Strings.ContinueGame) : Strings.Next;
 
         Button closeButton = tCloseButton.GetComponent<Button>();
         
@@ -139,7 +139,7 @@ public class PanelManager : MonoBehaviour {
 
         Debug.Assert(m_goPanel == m_instructionsPanel);
 
-        if (StaticGlobals.isGameStarting) // instructions panel is being shown at the start of the game
+        if (GameState.isGameStarting) // instructions panel is being shown at the start of the game
         {
             Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
             if (hideInstructionsToggle.gameObject.activeInHierarchy)
@@ -150,7 +150,7 @@ public class PanelManager : MonoBehaviour {
 
             GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
 
-            StaticGlobals.isGameStarting = false;
+            GameState.isGameStarting = false;
         }
 
         m_iInstructionStep = 0;
@@ -232,7 +232,7 @@ public class PanelManager : MonoBehaviour {
 
     public void DisplayScore()
     {
-        m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero));
+        m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(PlayerState.TotalScore, MidpointRounding.AwayFromZero));
     }
 
     public void ContinueGame(bool fVictoryLap)

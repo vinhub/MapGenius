@@ -14,13 +14,12 @@ public struct SavedLandmark
     public Quaternion rotation;
 }
 
-public static class StaticGlobals
+public static class GameState
 {
     // general globals
-    public static bool isGameStarting = true; // true only when the game is just starting, set to false when the insutructions dialog is closed.
+    public static bool isGameStarting = true; // true only when the game is just starting, set to false when the instructions dialog is closed.
     public const int MaxLevelScore = 100; // max score for a level
-    public static GameLevel CurGameLevel { get; set; } = GameLevel.Downtown;
-    public static float TotalScore { get; set; } = 0f; // player's total score so far
+    public static DrivingMode CurDrivingMode = DrivingMode.Normal;
 
     // saved game state related items
     public static bool RetryingGame { get; set; }

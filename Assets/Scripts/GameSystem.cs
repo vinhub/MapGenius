@@ -59,8 +59,6 @@ public class GameSystem : MonoBehaviour
 
     public GameObject VictoryLap;
 
-    public DrivingMode CurDrivingMode = DrivingMode.Normal;
-
     private void Awake()
     {
         m_instance = this;
@@ -85,7 +83,7 @@ public class GameSystem : MonoBehaviour
         m_infoMessageText = tInfoMessage.Find(Strings.InfoMessageTextPath).GetComponent<TMP_Text>();
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
 
-        CurDrivingMode = DrivingMode.Normal;
+        GameState.CurDrivingMode = DrivingMode.Normal;
 
         InitGame();
     }
@@ -93,13 +91,13 @@ public class GameSystem : MonoBehaviour
     private void InitGame()
     {
         // show game instructions at the start of the game unless user has asked to hide them
-        if (StaticGlobals.isGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
+        if (GameState.isGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
         {
             m_mainPanelManager.OpenInstructionsPanel();
         }
         else
         {
-            PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, StaticGlobals.CurGameLevel.ToString()), 1f);
+            PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, PlayerState.CurGameLevel.ToString()), 1f);
         }
 
         m_graph = GameObject.Find(Strings.GraphPath);
@@ -109,11 +107,11 @@ public class GameSystem : MonoBehaviour
         m_tRoadHolder = m_graph.transform.Find(Strings.RoadHolderPath).transform;
         m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
 
-        if (StaticGlobals.RetryingGame)
+        if (GameState.RetryingGame)
         {
             LoadGameState();
 
-            StaticGlobals.RetryingGame = false;
+            GameState.RetryingGame = false;
         }
         else
         {
@@ -337,7 +335,7 @@ public class GameSystem : MonoBehaviour
 
     public void LevelUp()
     {
-        switch (StaticGlobals.CurGameLevel)
+        switch (PlayerState.CurGameLevel)
         {
             case GameLevel.Downtown:
                 GoToLevel(GameLevel.Smalltown.ToString());
@@ -364,11 +362,11 @@ public class GameSystem : MonoBehaviour
         switch (gameLevel)
         {
             case "Downtown":
-                StaticGlobals.CurGameLevel = GameLevel.Downtown;
+                PlayerState.CurGameLevel = GameLevel.Downtown;
                 break;
 
             case "Smalltown":
-                StaticGlobals.CurGameLevel = GameLevel.Smalltown;
+                PlayerState.CurGameLevel = GameLevel.Smalltown;
                 break;
 
             case "Oldtown":
@@ -390,7 +388,7 @@ public class GameSystem : MonoBehaviour
     {
         ContinueGame(false);
 
-        StaticGlobals.RetryingGame = true;
+        GameState.RetryingGame = true;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -497,7 +495,7 @@ public class GameSystem : MonoBehaviour
     // called when the player crosses a landmark
     public void LandmarkCrossed(string landmarkName)
     {
-        if ((CurDrivingMode != DrivingMode.Normal) || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or victory lap mode or already processing a landmark?
+        if ((GameState.CurDrivingMode != DrivingMode.Normal) || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or victory lap mode or already processing a landmark?
             return;
 
         PauseGame();
@@ -524,19 +522,12 @@ public class GameSystem : MonoBehaviour
         m_firstLandmarkCrossed = false;
     }
 
-    public void SetLevelScore(float levelScore)
-    {
-        StaticGlobals.TotalScore += levelScore;
-
-        m_mainPanelManager.DisplayScore();
-    }
-
     private void SaveGameState()
     {
-        if (StaticGlobals.SavedStateExists)
+        if (GameState.SavedStateExists)
             ClearGameState();
 
-        StaticGlobals.SavedLandmarks = new List<SavedLandmark>();
+        GameState.SavedLandmarks = new List<SavedLandmark>();
 
         foreach(Transform tLandmark in m_tLandmarks)
         {
@@ -547,37 +538,37 @@ public class GameSystem : MonoBehaviour
             sl.pos = tLandmark.position;
             sl.rotation = tLandmark.rotation;
 
-            StaticGlobals.SavedLandmarks.Add(sl);
+            GameState.SavedLandmarks.Add(sl);
         }
 
-        StaticGlobals.SavedRoadOnTrack = OnTrackRoad;
-        StaticGlobals.SavedOrigPointIndexOnTrack = OnTrackOrigPoint;
-        StaticGlobals.SavedRotationOnTrack = OnTrackRotation;
+        GameState.SavedRoadOnTrack = OnTrackRoad;
+        GameState.SavedOrigPointIndexOnTrack = OnTrackOrigPoint;
+        GameState.SavedRotationOnTrack = OnTrackRotation;
     }
 
     private void LoadGameState()
     {
-        if (!StaticGlobals.SavedStateExists)
+        if (!GameState.SavedStateExists)
             return;
 
-        for (int iLandmark = 0; iLandmark < StaticGlobals.SavedLandmarks.Count; iLandmark++)
+        for (int iLandmark = 0; iLandmark < GameState.SavedLandmarks.Count; iLandmark++)
         {
-            CreateLandmark(iLandmark, StaticGlobals.SavedLandmarks[iLandmark].pos, StaticGlobals.SavedLandmarks[iLandmark].rotation);
+            CreateLandmark(iLandmark, GameState.SavedLandmarks[iLandmark].pos, GameState.SavedLandmarks[iLandmark].rotation);
         }
 
-        OnTrackRoad = StaticGlobals.SavedRoadOnTrack;
-        OnTrackOrigPoint = StaticGlobals.SavedOrigPointIndexOnTrack;
-        OnTrackRotation = StaticGlobals.SavedRotationOnTrack;
+        OnTrackRoad = GameState.SavedRoadOnTrack;
+        OnTrackOrigPoint = GameState.SavedOrigPointIndexOnTrack;
+        OnTrackRotation = GameState.SavedRotationOnTrack;
     }
 
     private void ClearGameState()
     {
-        StaticGlobals.SavedLandmarks.Clear();
-        StaticGlobals.SavedLandmarks = null;
+        GameState.SavedLandmarks.Clear();
+        GameState.SavedLandmarks = null;
 
-        StaticGlobals.SavedRoadOnTrack = null;
-        StaticGlobals.SavedOrigPointIndexOnTrack = -1;
-        StaticGlobals.SavedRotationOnTrack = Quaternion.identity;
+        GameState.SavedRoadOnTrack = null;
+        GameState.SavedOrigPointIndexOnTrack = -1;
+        GameState.SavedRotationOnTrack = Quaternion.identity;
     }
 
     private bool UpdateCarStatus()
@@ -787,7 +778,7 @@ public class GameSystem : MonoBehaviour
     // allow player to freely drive without worrying about landmarks etc.
     public void StartFreeDrive()
     {
-        CurDrivingMode = DrivingMode.Free;
+        GameState.CurDrivingMode = DrivingMode.Free;
         ShowInfoMessage(Strings.FreeDriveMessage, 3f);
         ContinueGame(false);
     }

@@ -46,7 +46,7 @@ public class VictoryLap : MonoBehaviour
         m_car.GetComponent<WaypointProgressTracker>().enabled = true;
         m_car.GetComponent<CarAIControl>().enabled = true;
 
-        GameSystem.Instance.CurDrivingMode = DrivingMode.VictoryLap;
+        GameState.CurDrivingMode = DrivingMode.VictoryLap;
 
         Transform tWaypointCircuit = transform.Find(Strings.WaypointCircuit);
 
