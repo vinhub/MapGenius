@@ -33,11 +33,11 @@ public class Test : MonoBehaviour
 
         //RunInfoMessageTest();
 
-        //StartCoroutine(RunMapPanelTest());
+        StartCoroutine(RunMapPanelTest());
 
         //RunVictoryLapTest();
 
-        RunLevelUpTest();
+        //RunLevelUpTest();
     }
 
     private void RunPopupMessageTest()

@@ -406,6 +406,8 @@ public class GameSystem : MonoBehaviour
 
         m_isGamePaused = true;
 
+        m_carController.StopCar();
+
         PauseAllAudio();
 
         m_timeScaleSav = Time.timeScale;
@@ -420,9 +422,9 @@ public class GameSystem : MonoBehaviour
         if (!m_isGamePaused)
             return;
 
-        m_carController.StopCar();
-
         Time.timeScale = m_timeScaleSav;
+
+        m_carController.StopCar();
 
         ResumePausedAudio();
 
@@ -791,6 +793,8 @@ public class GameSystem : MonoBehaviour
 
     public IEnumerator DoVictoryLap()
     {
+        PauseGame();
+
         m_carController.Move(0, 0, -1, 1);
         m_carController.StopCar();
 
@@ -799,6 +803,8 @@ public class GameSystem : MonoBehaviour
         yield return new WaitForSecondsRealtime(6f);
 
         PopupMessage.HideMessage();
+
+        ContinueGame(false);
 
         VictoryLap.SetActive(true);
     }
