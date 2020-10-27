@@ -37,7 +37,16 @@ public class PanelManager : MonoBehaviour {
 
     private void Update()
     {
-        m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.timeSinceLevelLoad);
+        if (GameState.CurDrivingMode == DrivingMode.Normal)
+        {
+            m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.timeSinceLevelLoad);
+            m_timeText.color = Color.white;
+        }
+        else
+        {
+            m_timeText.text = String.Format(Strings.TimeTextFormat, 0);
+            m_timeText.color = Color.grey;
+        }
     }
 
     public void OpenPanel(GameObject goPanel)
