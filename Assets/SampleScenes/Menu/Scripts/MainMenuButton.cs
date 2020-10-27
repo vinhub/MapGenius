@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,22 @@ public class MainMenuButton : MonoBehaviour
         m_buttonClickAudioSource.Play();
         GameSystem.Instance.PauseGame();
         m_mainMenu.SetActive(true);
+
+        for (int iLevel = 0; iLevel < GameState.LevelInfos.Length; iLevel++)
+        {
+            LevelInfo levelInfo = GameState.LevelInfos[iLevel];
+            if (!levelInfo.IsAvailable || !levelInfo.IsEnabled)
+                continue;
+
+            Transform tButton = transform.parent.Find(Strings.LevelsMenuPath + "/" + levelInfo.getName());
+            Button levelButton = tButton.GetComponent<Button>();
+            levelButton.interactable = true;
+
+            TMP_Text labelText = tButton.Find(Strings.ButtonLabelPath).GetComponent<TMP_Text>();
+            labelText.text = levelInfo.getName();
+            labelText.color = Color.white;
+        }
+
         m_mainMenuRectTransform.DOAnchorPosY(0f, 0.6f).SetEase(Ease.InOutCubic).SetUpdate(true);
     }
 

@@ -91,7 +91,7 @@ public class GameSystem : MonoBehaviour
     private void InitGame()
     {
         // show game instructions at the start of the game unless user has asked to hide them
-        if (GameState.isGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
+        if (GameState.IsGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
         {
             m_mainPanelManager.OpenInstructionsPanel();
         }
@@ -338,15 +338,19 @@ public class GameSystem : MonoBehaviour
         switch (PlayerState.CurGameLevel)
         {
             case GameLevel.Downtown:
-                GoToLevel(GameLevel.Smalltown.ToString());
+                // enable Smalltown level
+                LevelInfo levelInfo = LevelInfo.getLevelInfo(GameLevel.Smalltown);
+                levelInfo.IsEnabled = true;
+
+                GoToLevel(GameLevel.Smalltown);
                 break;
 
             case GameLevel.Smalltown:
-                GoToLevel(GameLevel.Oldtown.ToString());
+                GoToLevel(GameLevel.Oldtown);
                 break;
 
             case GameLevel.Oldtown:
-                GoToLevel(GameLevel.FutureTown.ToString());
+                GoToLevel(GameLevel.FutureTown);
                 break;
 
             case GameLevel.FutureTown:
@@ -355,32 +359,34 @@ public class GameSystem : MonoBehaviour
         }
     }
 
-    public void GoToLevel(string gameLevel)
+    public void GoToLevel(GameLevel gameLevel)
     {
         ContinueGame(false);
 
         switch (gameLevel)
         {
-            case "Downtown":
+            case GameLevel.Downtown:
                 PlayerState.CurGameLevel = GameLevel.Downtown;
                 break;
 
-            case "Smalltown":
+            case GameLevel.Smalltown:
                 PlayerState.CurGameLevel = GameLevel.Smalltown;
                 break;
 
-            case "Oldtown":
+            case GameLevel.Oldtown:
                 GameOver();
                 //TODO: StaticGlobals.CurGameLevel = GameLevel.Oldtown;
                 break;
 
-            case "FutureTown":
+            case GameLevel.FutureTown:
                 GameOver();
                 //TODO: StaticGlobals.CurGameLevel = GameLevel.FutureTown;
                 break;
         }
 
-        SceneManager.LoadScene(gameLevel);
+        LevelInfo levelInfo = LevelInfo.getLevelInfo(gameLevel);
+
+        SceneManager.LoadScene(levelInfo.getName());
     }
 
     // retry the same level without changing anything

@@ -24,6 +24,7 @@
     public const string PanelsName = "Panels";
     public const string PanelManagerPath = "PanelManager";
     public const string OpenMenuButtonPath = "OpenMenuButton";
+    public const string LevelsMenuPath = "MainMenu/Window/Levels";
     public const string InstructionsPanelPath = "Panels/Instructions";
     public const string InstructionSteps = "Window/Instructions/Background";
     public const string AboutPanelPath = "Panels/About";
@@ -37,7 +38,7 @@
     //public const string OnTrackrLocatorPath = "UI/OnTrackLocator";
     public const string CloseButtonPath = "Window/ButtonBar/CloseButton";
     public const string ActionButtonPath = "Window/ButtonBar/ActionButton";
-    public const string CloseButtonLabelPath = "Background/Label";
+    public const string ButtonLabelPath = "Background/Label";
     public const string ActionButtonLabelPath = "Window/ButtonBar/ActionButton/Background/Label";
     public const string ButtonBarTogglePath = "Window/ButtonBar/Toggle";
     public const string MapImagePath = "Window/MapPanel/MapBackground/MapImage";

@@ -35,7 +35,9 @@ public class Test : MonoBehaviour
 
         //StartCoroutine(RunMapPanelTest());
 
-        RunVictoryLapTest();
+        //RunVictoryLapTest();
+
+        RunLevelUpTest();
     }
 
     private void RunPopupMessageTest()
@@ -75,5 +77,10 @@ public class Test : MonoBehaviour
     {
         GameSystem.Instance.PauseGame();
         GameSystem.Instance.ContinueGame(true);
+    }
+
+    private void RunLevelUpTest()
+    {
+        GameSystem.Instance.LevelUp();
     }
 }

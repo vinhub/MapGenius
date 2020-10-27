@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using DG.Tweening;
 using TMPro;
+using System.Linq;
 
 public class PanelManager : MonoBehaviour {
 
@@ -92,7 +93,7 @@ public class PanelManager : MonoBehaviour {
         hideInstructionsToggle.GetComponent<Toggle>().isOn = (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 1);
 
         // show the "don't show this again" toggle only when starting the game
-        hideInstructionsToggle.gameObject.SetActive(GameState.isGameStarting);
+        hideInstructionsToggle.gameObject.SetActive(GameState.IsGameStarting);
     }
 
     private void SetupInstructionsPanel()
@@ -109,9 +110,9 @@ public class PanelManager : MonoBehaviour {
 
         Transform tCloseButton = m_instructionsPanel.transform.Find(Strings.CloseButtonPath);
 
-        TMP_Text closePanelText = tCloseButton.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
+        TMP_Text closePanelText = tCloseButton.Find(Strings.ButtonLabelPath).GetComponent<TMP_Text>();
 
-        closePanelText.text = isLastInstruction ? (GameState.isGameStarting ? Strings.StartGame : Strings.ContinueGame) : Strings.Next;
+        closePanelText.text = isLastInstruction ? (GameState.IsGameStarting ? Strings.StartGame : Strings.ContinueGame) : Strings.Next;
 
         Button closeButton = tCloseButton.GetComponent<Button>();
         
@@ -139,7 +140,7 @@ public class PanelManager : MonoBehaviour {
 
         Debug.Assert(m_goPanel == m_instructionsPanel);
 
-        if (GameState.isGameStarting) // instructions panel is being shown at the start of the game
+        if (GameState.IsGameStarting) // instructions panel is being shown at the start of the game
         {
             Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
             if (hideInstructionsToggle.gameObject.activeInHierarchy)
@@ -150,7 +151,7 @@ public class PanelManager : MonoBehaviour {
 
             GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
 
-            GameState.isGameStarting = false;
+            GameState.IsGameStarting = false;
         }
 
         m_iInstructionStep = 0;
@@ -250,8 +251,9 @@ public class PanelManager : MonoBehaviour {
         GameSystem.Instance.NewGame();
     }
 
-    public void GoToLevel(string gameLevel)
+    public void GoToLevel(string gameLevelName)
     {
+        GameLevel gameLevel = GameState.LevelInfos.First<LevelInfo>(li => { return li.getName() == gameLevelName; }).GameLevel;
         GameSystem.Instance.GoToLevel(gameLevel);
     }
 
