@@ -422,16 +422,17 @@ public class GameSystem : MonoBehaviour
         if (!m_isGamePaused)
             return;
 
+        if (fVictoryLap)
+        {
+            StartCoroutine(DoVictoryLap());
+            return;
+        }
+
         Time.timeScale = m_timeScaleSav;
 
         m_carController.StopCar();
 
         ResumePausedAudio();
-
-        if (fVictoryLap)
-        {
-            StartCoroutine(DoVictoryLap());
-        }
 
         m_isGamePaused = false;
     }
@@ -793,7 +794,7 @@ public class GameSystem : MonoBehaviour
 
     public IEnumerator DoVictoryLap()
     {
-        PauseGame();
+        Debug.Assert(m_isGamePaused);
 
         m_carController.Move(0, 0, -1, 1);
         m_carController.StopCar();
@@ -804,9 +805,9 @@ public class GameSystem : MonoBehaviour
 
         PopupMessage.HideMessage();
 
-        ContinueGame(false);
-
         VictoryLap.SetActive(true);
+
+        ContinueGame(false);
     }
 
     public void ShowInfoMessage(string message, float duration)
