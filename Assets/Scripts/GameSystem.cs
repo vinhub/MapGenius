@@ -46,7 +46,7 @@ public class GameSystem : MonoBehaviour
     private MainMenuButton m_mainMenuButton;
     private PanelManager m_mainPanelManager;
     private Transform m_tPlayermarksList;
-    private bool m_firstLandmarkCrossed = false; // true only when the first landmark at the lowest level is crossed (used for showing helpful animation)
+    private bool m_firstLandmarkCrossed = true; // true only until the first landmark is crossed (used for showing first marker)
 
     // current car location
     public Quaternion OnTrackRotation { get; private set; } = Quaternion.identity;
@@ -99,8 +99,6 @@ public class GameSystem : MonoBehaviour
         {
             PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, LevelInfo.getLevelInfo(PlayerState.CurGameLevel).getName()), 1f);
         }
-
-        m_firstLandmarkCrossed = (PlayerState.CurGameLevel == GameLevel.Downtown); // show how to mark only at the beginning of the first level
 
         m_graph = GameObject.Find(Strings.GraphPath);
  
