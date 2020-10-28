@@ -46,7 +46,7 @@ public class GameSystem : MonoBehaviour
     private MainMenuButton m_mainMenuButton;
     private PanelManager m_mainPanelManager;
     private Transform m_tPlayermarksList;
-    private bool m_firstLandmarkCrossed = true;
+    private bool m_firstLandmarkCrossed = false; // true only when the first landmark at the lowest level is crossed (used for showing helpful animation)
 
     // current car location
     public Quaternion OnTrackRotation { get; private set; } = Quaternion.identity;
@@ -97,8 +97,10 @@ public class GameSystem : MonoBehaviour
         }
         else
         {
-            PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, PlayerState.CurGameLevel.ToString()), 1f);
+            PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, LevelInfo.getLevelInfo(PlayerState.CurGameLevel).getName()), 1f);
         }
+
+        m_firstLandmarkCrossed = (PlayerState.CurGameLevel == GameLevel.Downtown); // show how to mark only at the beginning of the first level
 
         m_graph = GameObject.Find(Strings.GraphPath);
  
@@ -515,8 +517,8 @@ public class GameSystem : MonoBehaviour
     private IEnumerator HandleLandmarkCrossed(string landmarkName)
     {
         // flash a popup letting the player know they crossed the landmark
-        PopupMessageType type = m_firstLandmarkCrossed ? PopupMessageType.FirstLandmarkCrossed : PopupMessageType.OtherLandmarkCrossed;
-        string message = m_firstLandmarkCrossed ? String.Format(Strings.FirstLandmarkCrossedMessageFormat, landmarkName) : String.Format(Strings.OtherLandmarkCrossedMessageFormat, landmarkName);
+        PopupMessageType type = m_firstLandmarkCrossed ? PopupMessageType.ShowHowToMark : PopupMessageType.NormalLandmarkCrossed;
+        string message = m_firstLandmarkCrossed ? String.Format(Strings.ShowHowToMarkMessageFormat, landmarkName) : String.Format(Strings.LandmarkCrossedMessageFormat, landmarkName);
 
         PopupMessage.ShowMessage(type, message);
 

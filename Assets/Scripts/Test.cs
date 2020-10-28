@@ -42,7 +42,7 @@ public class Test : MonoBehaviour
 
     private void RunPopupMessageTest()
     {
-        PopupMessage.ShowMessage(PopupMessageType.FirstLandmarkCrossed, string.Format(Strings.OtherLandmarkCrossedMessageFormat, "Post Office"));
+        PopupMessage.ShowMessage(PopupMessageType.ShowHowToMark, string.Format(Strings.LandmarkCrossedMessageFormat, "Post Office"));
     }
 
     private void RunInfoMessageTest()
