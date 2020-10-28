@@ -44,7 +44,7 @@ public class MainMenuButton : MonoBehaviour
 
             TMP_Text labelText = tButton.Find(Strings.ButtonLabelPath).GetComponent<TMP_Text>();
             labelText.text = levelInfo.getName();
-            labelText.color = Color.white;
+            labelText.color = Constants.ActiveTextColor;
         }
 
         m_mainMenuRectTransform.DOAnchorPosY(0f, 0.6f).SetEase(Ease.InOutCubic).SetUpdate(true);

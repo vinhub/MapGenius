@@ -1,4 +1,12 @@
-﻿public static class Strings
+﻿using UnityEngine;
+
+public static class Constants
+{
+    public static readonly Color ActiveTextColor = Color.white;
+    public static readonly Color InactiveTextColor = Color.gray;
+}
+
+public static class Strings
 {
     // non-localizable
 

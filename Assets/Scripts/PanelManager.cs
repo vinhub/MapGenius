@@ -40,12 +40,12 @@ public class PanelManager : MonoBehaviour {
         if (GameState.CurDrivingMode == DrivingMode.Normal)
         {
             m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.timeSinceLevelLoad);
-            m_timeText.color = Color.white;
+            m_timeText.color = Constants.ActiveTextColor;
         }
         else
         {
             m_timeText.text = String.Format(Strings.TimeTextFormat, 0);
-            m_timeText.color = Color.grey;
+            m_timeText.color = Constants.InactiveTextColor;
         }
     }
 
