@@ -226,8 +226,8 @@ public class GameSystem : MonoBehaviour
     {
         // use a position about 1/3 of the way along the road as the car position, looking along the road
         OnTrackRoad = road;
-        OnTrackOrigPoint = road.origPoints.Length / 3;
-        Debug.Assert(road.origPoints.Length >= 3);
+        OnTrackOrigPoint = road.origPoints.Length / 4;
+        Debug.Assert(road.origPoints.Length >= 4);
         OnTrackRotation = Quaternion.LookRotation(road.origPoints[OnTrackOrigPoint + 1] - road.origPoints[OnTrackOrigPoint], Vector3.up);
     }
 
