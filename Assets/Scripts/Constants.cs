@@ -108,7 +108,7 @@ public static class Strings
     public const string CarSpeedStatusFormat = "Speed: {0:F0}";
     public const string CarRevsStatusFormat = "Revs: {0:d3}";
     public const string GetBackOnTrackMessage = "Car is stuck? Press T to get it back on track.";
-    public const string StartingInstructionsMessage = "Drive the car using the W, A, S, D or arrow keys (or standard joystick controls).";
+    public const string StartingInstructionsMessage = "Drive the car using the W, A, S, D or arrow keys or standard joystick controls.";
     public const string VictoryLapEndPrompt = "<b><color=#00ff00ff>Victory lap over!</color></b>\r\n\r\nMove to next level or drive around freely for a while?";
     public const string MoveToNextLevel = "Move to next level";
     public const string StartFreeDrive = "Drive around freely";
