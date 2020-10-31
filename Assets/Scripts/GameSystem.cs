@@ -361,8 +361,6 @@ public class GameSystem : MonoBehaviour
 
     public void GoToLevel(GameLevel gameLevel)
     {
-        ContinueGame(false);
-
         switch (gameLevel)
         {
             case GameLevel.Downtown:
@@ -376,13 +374,15 @@ public class GameSystem : MonoBehaviour
             case GameLevel.Oldtown:
                 GameOver();
                 //TODO: StaticGlobals.CurGameLevel = GameLevel.Oldtown;
-                break;
+                return;
 
             case GameLevel.FutureTown:
                 GameOver();
                 //TODO: StaticGlobals.CurGameLevel = GameLevel.FutureTown;
-                break;
+                return;
         }
+
+        ContinueGame(false);
 
         LevelInfo levelInfo = LevelInfo.getLevelInfo(gameLevel);
 
