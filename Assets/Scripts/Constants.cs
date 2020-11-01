@@ -13,6 +13,7 @@ public static class Strings
     // general non-localizable strings
     public static readonly string[] CarColliderNames = { "ColliderFront" };
     public const string HideInstructionsAtStart = "HideInstructionsAtStart";
+    public const string PlayerName = "PlayerName";
 
     // panel names
     public const string MapPanelName = "Map";

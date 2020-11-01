@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class PlayerState
 {
+    public static string PlayerName { get; set; } = "MapGenius!";
     public static GameLevel CurGameLevel { get; set; } = GameLevel.Downtown;
     public static float TotalScore { get; private set; } = 0f; // player's total score so far
 

@@ -24,6 +24,7 @@ public class GameSystem : MonoBehaviour
     private CarController m_carController;
     public GameObject LandmarkPrefab; // prefab for landmarks
     public GameObject PlayermarksListItemPrefab; // prefab for playermarks list item in the map panel
+    public TMP_Text LicensePlateText; // user's name will be displayed here
 
     // car status
     private TMP_Text m_carSpeedText, m_carRevsText;
@@ -90,6 +91,13 @@ public class GameSystem : MonoBehaviour
 
     private void InitGame()
     {
+        // update player name and license plate text
+        string playerName = PlayerPrefs.GetString(Strings.PlayerName);
+        if (!String.IsNullOrEmpty(playerName))
+            PlayerState.PlayerName = playerName;
+
+        LicensePlateText.text = PlayerState.PlayerName;
+
         // show game instructions at the start of the game unless user has asked to hide them
         if (GameState.IsGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
         {
