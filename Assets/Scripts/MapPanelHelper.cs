@@ -58,7 +58,7 @@ public class MapPanelHelper : MonoBehaviour
             // add landmarks to the map help player know where they are (without telling them which landmark is which)
             AddLandmarksToMap();
 
-            if (PlayerState.CurGameLevel <= GameLevel.Smalltown)
+            if (PlayerState.PlayerGameLevel <= GameLevel.Smalltown)
             {
                 // for lower levels, always show hint
                 Transform tHint = m_tMapPanel.Find(Strings.HintPath);
@@ -253,7 +253,7 @@ public class MapPanelHelper : MonoBehaviour
 
     private void DisplayScore(bool isNewScore)
     {
-        m_levelText.text = String.Format(Strings.LevelTextFormat, PlayerState.CurGameLevel);
+        m_levelText.text = String.Format(Strings.LevelTextFormat, PlayerState.PlayerGameLevel);
         m_totalScoreText.text = String.Format(Strings.ScoreTextFormat,
             (int)Math.Round(PlayerState.TotalScore, MidpointRounding.AwayFromZero));
 
@@ -360,7 +360,7 @@ public class MapPanelHelper : MonoBehaviour
         if ((m_phCur != null) && (m_phCur.State == PlayermarkHandler.PlayermarkState.CurrentlyVisiting))
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.Visited);
-            m_phCur.SetScoreFactor(((PlayerState.CurGameLevel > GameLevel.Smalltown) && m_revealedLandmarksOnMap) ? 50f : 100f);
+            m_phCur.SetScoreFactor(((PlayerState.PlayerGameLevel > GameLevel.Smalltown) && m_revealedLandmarksOnMap) ? 50f : 100f);
         }
 
         // check if level is complete

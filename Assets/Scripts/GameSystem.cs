@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
@@ -65,6 +66,10 @@ public class GameSystem : MonoBehaviour
         m_instance = this;
 
         DOTween.useSmoothDeltaTime = true;
+
+        // read playerprefs
+        PlayerState.InitPlayerName();
+        PlayerState.InitPlayerGameLevel();
     }
 
     private void Start()
@@ -91,12 +96,7 @@ public class GameSystem : MonoBehaviour
 
     private void InitGame()
     {
-        // update player name and license plate text
-        string playerName = PlayerPrefs.GetString(Strings.PlayerName);
-        if (!String.IsNullOrEmpty(playerName))
-            PlayerState.PlayerName = playerName;
-
-        LicensePlateText.text = PlayerState.PlayerName;
+        SetLicensePlate();
 
         // show game instructions at the start of the game unless user has asked to hide them
         if (GameState.IsGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
@@ -105,11 +105,11 @@ public class GameSystem : MonoBehaviour
         }
         else
         {
-            PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, LevelInfo.getLevelInfo(PlayerState.CurGameLevel).getName()), 1f);
+            PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, LevelInfo.getLevelInfo(PlayerState.PlayerGameLevel).getName()), 1f);
         }
 
         m_graph = GameObject.Find(Strings.GraphPath);
- 
+
         // now that we have a graph, we can gather some frequently needed references
         m_tNodeHolder = m_graph.transform.Find(Strings.NodeHolderPath).transform;
         m_tRoadHolder = m_graph.transform.Find(Strings.RoadHolderPath).transform;
@@ -117,7 +117,8 @@ public class GameSystem : MonoBehaviour
 
         if (GameState.RetryingGame)
         {
-            LoadGameState();
+            // use the init game state we had remembered
+            LoadInitGameState();
 
             GameState.RetryingGame = false;
         }
@@ -126,12 +127,18 @@ public class GameSystem : MonoBehaviour
             // init landmarks, car initial pos etc.
             InitGameState();
 
-            SaveGameState();
+            // remember them so they can be reused in case user wants to retry
+            RememberInitGameState();
         }
 
         // place car some distance from the first landmark
         Car.transform.position = CarCameraRig.transform.position = OnTrackRoad.origPoints[OnTrackOrigPoint];
         Car.transform.rotation = CarCameraRig.transform.rotation = OnTrackRotation;
+    }
+
+    public void SetLicensePlate()
+    {
+        LicensePlateText.text = String.IsNullOrEmpty(PlayerState.PlayerName) ? Strings.GameName : PlayerState.PlayerName;
     }
 
     private void InitGameState()
@@ -343,7 +350,7 @@ public class GameSystem : MonoBehaviour
 
     public void LevelUp()
     {
-        switch (PlayerState.CurGameLevel)
+        switch (PlayerState.PlayerGameLevel)
         {
             case GameLevel.Downtown:
                 // enable Smalltown level
@@ -372,21 +379,21 @@ public class GameSystem : MonoBehaviour
         switch (gameLevel)
         {
             case GameLevel.Downtown:
-                PlayerState.CurGameLevel = GameLevel.Downtown;
+                PlayerState.SetPlayerGameLevel(GameLevel.Downtown);
                 break;
 
             case GameLevel.Smalltown:
-                PlayerState.CurGameLevel = GameLevel.Smalltown;
+                PlayerState.SetPlayerGameLevel(GameLevel.Smalltown);
                 break;
 
             case GameLevel.Oldtown:
+                // TODO: Implement
                 GameOver();
-                //TODO: StaticGlobals.CurGameLevel = GameLevel.Oldtown;
                 return;
 
             case GameLevel.FutureTown:
+                // TODO: Implement
                 GameOver();
-                //TODO: StaticGlobals.CurGameLevel = GameLevel.FutureTown;
                 return;
         }
 
@@ -539,53 +546,53 @@ public class GameSystem : MonoBehaviour
         m_firstLandmarkCrossed = false;
     }
 
-    private void SaveGameState()
+    private void RememberInitGameState()
     {
-        if (GameState.SavedStateExists)
+        if (GameState.InitStateExists)
             ClearGameState();
 
-        GameState.SavedLandmarks = new List<SavedLandmark>();
+        GameState.InitLandmarks = new List<LandmarkParams>();
 
         foreach(Transform tLandmark in m_tLandmarks)
         {
             GameObject goLandmark = tLandmark.gameObject;
 
-            SavedLandmark sl = new SavedLandmark();
+            LandmarkParams sl = new LandmarkParams();
             sl.name = goLandmark.name;
             sl.pos = tLandmark.position;
             sl.rotation = tLandmark.rotation;
 
-            GameState.SavedLandmarks.Add(sl);
+            GameState.InitLandmarks.Add(sl);
         }
 
-        GameState.SavedRoadOnTrack = OnTrackRoad;
-        GameState.SavedOrigPointIndexOnTrack = OnTrackOrigPoint;
-        GameState.SavedRotationOnTrack = OnTrackRotation;
+        GameState.InitRoadOnTrack = OnTrackRoad;
+        GameState.InitOrigPointIndexOnTrack = OnTrackOrigPoint;
+        GameState.InitRotationOnTrack = OnTrackRotation;
     }
 
-    private void LoadGameState()
+    private void LoadInitGameState()
     {
-        if (!GameState.SavedStateExists)
+        if (!GameState.InitStateExists)
             return;
 
-        for (int iLandmark = 0; iLandmark < GameState.SavedLandmarks.Count; iLandmark++)
+        for (int iLandmark = 0; iLandmark < GameState.InitLandmarks.Count; iLandmark++)
         {
-            CreateLandmark(iLandmark, GameState.SavedLandmarks[iLandmark].pos, GameState.SavedLandmarks[iLandmark].rotation);
+            CreateLandmark(iLandmark, GameState.InitLandmarks[iLandmark].pos, GameState.InitLandmarks[iLandmark].rotation);
         }
 
-        OnTrackRoad = GameState.SavedRoadOnTrack;
-        OnTrackOrigPoint = GameState.SavedOrigPointIndexOnTrack;
-        OnTrackRotation = GameState.SavedRotationOnTrack;
+        OnTrackRoad = GameState.InitRoadOnTrack;
+        OnTrackOrigPoint = GameState.InitOrigPointIndexOnTrack;
+        OnTrackRotation = GameState.InitRotationOnTrack;
     }
 
     private void ClearGameState()
     {
-        GameState.SavedLandmarks.Clear();
-        GameState.SavedLandmarks = null;
+        GameState.InitLandmarks.Clear();
+        GameState.InitLandmarks = null;
 
-        GameState.SavedRoadOnTrack = null;
-        GameState.SavedOrigPointIndexOnTrack = -1;
-        GameState.SavedRotationOnTrack = Quaternion.identity;
+        GameState.InitRoadOnTrack = null;
+        GameState.InitOrigPointIndexOnTrack = -1;
+        GameState.InitRotationOnTrack = Quaternion.identity;
     }
 
     private bool UpdateCarStatus()

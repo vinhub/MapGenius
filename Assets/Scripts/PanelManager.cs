@@ -107,7 +107,7 @@ public class PanelManager : MonoBehaviour {
 
     private void SetupInstructionsPanel()
     {
-        Transform tInstructionSteps = m_instructionsPanel.transform.Find(Strings.InstructionSteps);
+        Transform tInstructionSteps = m_instructionsPanel.transform.Find(Strings.InstructionStepsPath);
         bool isLastInstruction = (m_iInstructionStep == tInstructionSteps.childCount - 1);
 
         // show current step
@@ -128,17 +128,42 @@ public class PanelManager : MonoBehaviour {
         closeButton.onClick.RemoveAllListeners();
 
         if (isLastInstruction)
-            closeButton.onClick.AddListener(ClosePanelAndContinue);
+        {
+            TMP_InputField inputField = m_instructionsPanel.transform.Find(Strings.PlayerNameTextPath).GetComponent<TMP_InputField>();
+            if (!String.IsNullOrEmpty(PlayerState.PlayerName))
+                inputField.text = PlayerState.PlayerName;
+
+            closeButton.interactable = !String.IsNullOrEmpty(PlayerState.PlayerName);
+            closeButton.onClick.AddListener(OnClickCloseInstructionsPanel);
+        }
         else
             closeButton.onClick.AddListener(OnClickNextInstruction);
 
         closeButton.onClick.AddListener(m_buttonClickAudioSource.Play);
     }
 
+    public void OnNameValueChanged(string value)
+    {
+        Button closeButton = m_instructionsPanel.transform.Find(Strings.CloseButtonPath).GetComponent<Button>();
+        closeButton.interactable = !String.IsNullOrEmpty(value);
+    }
+
     public void OnClickNextInstruction()
     {
         m_iInstructionStep++;
         SetupInstructionsPanel();
+    }
+
+    public void OnClickCloseInstructionsPanel()
+    {
+        TMP_InputField inputField = m_instructionsPanel.transform.Find(Strings.PlayerNameTextPath).GetComponent<TMP_InputField>();
+        if (!String.IsNullOrEmpty(inputField.text))
+        {
+            PlayerState.SetPlayerName(inputField.text);
+            GameSystem.Instance.SetLicensePlate();
+        }
+
+        ClosePanelAndContinue();
     }
 
     // called when the CloseButton is clicked on the Instructions panel

@@ -26,8 +26,8 @@ public class LevelInfo
     public static LevelInfo getLevelInfo(GameLevel gameLevel) { return GameState.LevelInfos[(int)gameLevel]; }
 }
 
-// saved as a part of the game state
-public struct SavedLandmark
+// remembered as a part of the init game state
+public struct LandmarkParams
 {
     public string name;
     public Vector3 pos;
@@ -49,11 +49,11 @@ public static class GameState
         new LevelInfo(GameLevel.FutureTown, false, false),
     };
 
-    // saved game state related items
+    // remember initial game state so the same game state can be reinitialized for retrying the game
     public static bool RetryingGame { get; set; }
-    public static bool SavedStateExists { get { return SavedLandmarks != null; } }
-    public static List<SavedLandmark> SavedLandmarks { get; set; }
-    public static Quaternion SavedRotationOnTrack  { get; set; }
-    public static CiDyRoad SavedRoadOnTrack { get; set; }
-    public static int SavedOrigPointIndexOnTrack { get; set; }
+    public static bool InitStateExists { get { return InitLandmarks != null; } }
+    public static List<LandmarkParams> InitLandmarks { get; set; }
+    public static Quaternion InitRotationOnTrack  { get; set; }
+    public static CiDyRoad InitRoadOnTrack { get; set; }
+    public static int InitOrigPointIndexOnTrack { get; set; }
 }

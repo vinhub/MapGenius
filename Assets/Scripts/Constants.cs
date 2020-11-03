@@ -14,6 +14,9 @@ public static class Strings
     public static readonly string[] CarColliderNames = { "ColliderFront" };
     public const string HideInstructionsAtStart = "HideInstructionsAtStart";
     public const string PlayerName = "PlayerName";
+    public const string GameName = "MapGenius";
+    public const string PlayerGameLevel = "PlayerGameLevel";
+    public const string PlayerScore = "PlayerScore";
 
     // panel names
     public const string MapPanelName = "Map";
@@ -35,7 +38,8 @@ public static class Strings
     public const string OpenMenuButtonPath = "OpenMenuButton";
     public const string LevelsMenuPath = "MainMenu/Window/Levels";
     public const string InstructionsPanelPath = "Panels/Instructions";
-    public const string InstructionSteps = "Window/Background/Instructions";
+    public const string InstructionStepsPath = "Window/Background/Instructions";
+    public const string PlayerNameTextPath = "Window/Background/Instructions/Instructions5/NameText";
     public const string AboutPanelPath = "Panels/About";
     public const string MapPanelPath = "Panels/Map";
     public const string StatusBarScoreTextPath = "ScoreStatus/Window/ScoreText";
