@@ -31,9 +31,10 @@ public static class PlayerState
 
     public static void SetPlayerName(string playerName)
     {
-        if (String.IsNullOrEmpty(playerName))
+        if (String.IsNullOrWhiteSpace(playerName))
         {
             PlayerPrefs.DeleteKey(Strings.PlayerName);
+            PlayerName = null;
         }
         else
         {
@@ -44,7 +45,7 @@ public static class PlayerState
 
     public static void SetPlayerGameLevel(string playerGameLevel)
     {
-        if (String.IsNullOrEmpty(playerGameLevel))
+        if (String.IsNullOrWhiteSpace(playerGameLevel))
         {
             PlayerGameLevel = GameLevel.Downtown;
             PlayerPrefs.DeleteKey(Strings.PlayerGameLevel);

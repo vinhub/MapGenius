@@ -138,7 +138,7 @@ public class GameSystem : MonoBehaviour
 
     public void SetLicensePlate()
     {
-        LicensePlateText.text = String.IsNullOrEmpty(PlayerState.PlayerName) ? Strings.GameName : PlayerState.PlayerName;
+        LicensePlateText.text = String.IsNullOrWhiteSpace(PlayerState.PlayerName) ? Strings.GameName : PlayerState.PlayerName;
     }
 
     private void InitGameState()

@@ -130,22 +130,15 @@ public class PanelManager : MonoBehaviour {
         if (isLastInstruction)
         {
             TMP_InputField inputField = m_instructionsPanel.transform.Find(Strings.PlayerNameTextPath).GetComponent<TMP_InputField>();
-            if (!String.IsNullOrEmpty(PlayerState.PlayerName))
+            if (!String.IsNullOrWhiteSpace(PlayerState.PlayerName))
                 inputField.text = PlayerState.PlayerName;
 
-            closeButton.interactable = !String.IsNullOrEmpty(PlayerState.PlayerName);
             closeButton.onClick.AddListener(OnClickCloseInstructionsPanel);
         }
         else
             closeButton.onClick.AddListener(OnClickNextInstruction);
 
         closeButton.onClick.AddListener(m_buttonClickAudioSource.Play);
-    }
-
-    public void OnNameValueChanged(string value)
-    {
-        Button closeButton = m_instructionsPanel.transform.Find(Strings.CloseButtonPath).GetComponent<Button>();
-        closeButton.interactable = !String.IsNullOrEmpty(value);
     }
 
     public void OnClickNextInstruction()
@@ -157,12 +150,12 @@ public class PanelManager : MonoBehaviour {
     public void OnClickCloseInstructionsPanel()
     {
         TMP_InputField inputField = m_instructionsPanel.transform.Find(Strings.PlayerNameTextPath).GetComponent<TMP_InputField>();
-        if (!String.IsNullOrEmpty(inputField.text))
-        {
-            PlayerState.SetPlayerName(inputField.text);
-            GameSystem.Instance.SetLicensePlate();
-        }
+        if (String.IsNullOrWhiteSpace(inputField.text.Trim()))
+            PlayerState.SetPlayerName(null);
+        else
+            PlayerState.SetPlayerName(inputField.text.Trim());
 
+        GameSystem.Instance.SetLicensePlate();
         ClosePanelAndContinue();
     }
 
