@@ -71,6 +71,8 @@ public class GameSystem : MonoBehaviour
         PlayerState.InitPlayerDrivingMode();
         PlayerState.InitPlayerTotalScore();
 
+        GameState.IsGameStarting = (PlayerState.PlayerGameLevel == GameLevel.Downtown) && (PlayerState.PlayerDrivingMode == DrivingMode.Normal);
+
         // load the approp scene
         SceneManager.LoadScene(PlayerState.PlayerGameLevel.ToString());
     }

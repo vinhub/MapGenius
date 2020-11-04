@@ -37,7 +37,7 @@ public struct LandmarkParams
 public static class GameState
 {
     // general globals
-    public static bool IsGameStarting { get; set; } = true; // true only when the game is just starting, set to false when the instructions dialog is closed.
+    public static bool IsGameStarting { get; set; } // true only when the game is just starting at the lowest level, so instructions dialog can be show. Set to false when the instructions dialog is closed.
     public const int MaxLevelScore = 100; // max score for a level
 
     public static LevelInfo[] LevelInfos = new LevelInfo[]
