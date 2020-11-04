@@ -260,7 +260,7 @@ public class PanelManager : MonoBehaviour {
 
     public void DisplayScore()
     {
-        m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(PlayerState.TotalScore, MidpointRounding.AwayFromZero));
+        m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(PlayerState.PlayerTotalScore, MidpointRounding.AwayFromZero));
     }
 
     public void ContinueGame(bool fVictoryLap)

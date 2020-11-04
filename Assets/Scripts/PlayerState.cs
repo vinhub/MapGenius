@@ -7,7 +7,7 @@ public static class PlayerState
 {
     public static string PlayerName { get; private set; }
     public static GameLevel PlayerGameLevel { get; private set; }
-    public static float TotalScore { get; private set; } = 0f; // player's total score so far
+    public static float PlayerTotalScore { get; private set; } // player's total score so far
 
     public static void InitPlayerName()
     {
@@ -62,9 +62,19 @@ public static class PlayerState
         SetPlayerGameLevel(playerGameLevel.ToString());
     }
 
-    public static void IncrementScore(float levelScore)
+    public static void InitPlayerTotalScore()
     {
-        TotalScore += levelScore;
-        PlayerPrefs.SetFloat(Strings.PlayerScore, TotalScore);
+        float score = 0f;
+
+        if (PlayerPrefs.HasKey(Strings.PlayerTotalScore))
+            score = PlayerPrefs.GetFloat(Strings.PlayerTotalScore, 0f);
+
+        PlayerTotalScore = score;
+    }
+
+    public static void IncrementTotalScore(float levelScore)
+    {
+        PlayerTotalScore += levelScore;
+        PlayerPrefs.SetFloat(Strings.PlayerTotalScore, PlayerTotalScore);
     }
 }

@@ -123,7 +123,7 @@ public class MapPanelHelper : MonoBehaviour
 
             if (levelScore == GameState.MaxLevelScore) // max score achieved
             {
-                PlayerState.IncrementScore(levelScore);
+                PlayerState.IncrementTotalScore(levelScore);
                 DisplayScore(true);
 
                 m_actionButtonText.text = Strings.VictoryLap;
@@ -255,7 +255,7 @@ public class MapPanelHelper : MonoBehaviour
     {
         m_levelText.text = String.Format(Strings.LevelTextFormat, PlayerState.PlayerGameLevel);
         m_totalScoreText.text = String.Format(Strings.ScoreTextFormat,
-            (int)Math.Round(PlayerState.TotalScore, MidpointRounding.AwayFromZero));
+            (int)Math.Round(PlayerState.PlayerTotalScore, MidpointRounding.AwayFromZero));
 
         m_panelManager.DisplayScore();
 

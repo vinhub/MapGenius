@@ -16,7 +16,7 @@ public static class Strings
     public const string PlayerName = "PlayerName";
     public const string GameName = "MapGenius";
     public const string PlayerGameLevel = "PlayerGameLevel";
-    public const string PlayerScore = "PlayerScore";
+    public const string PlayerTotalScore = "PlayerTotalScore";
 
     // panel names
     public const string MapPanelName = "Map";
@@ -97,7 +97,6 @@ public static class Strings
     public const string NewGame = "New Game";
     public const string RetryGame = "Try Again";
     public const string VictoryLap = "Take a Victory Lap!";
-    public const string CheckScore = "Check Score";
     public const string Next = "Next";
 
     // format strings

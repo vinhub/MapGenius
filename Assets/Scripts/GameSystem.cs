@@ -70,6 +70,7 @@ public class GameSystem : MonoBehaviour
         // read playerprefs
         PlayerState.InitPlayerName();
         PlayerState.InitPlayerGameLevel();
+        PlayerState.InitPlayerTotalScore();
     }
 
     private void Start()
