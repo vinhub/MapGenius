@@ -5,7 +5,7 @@ using TriangleNet.Voronoi.Legacy;
 using UnityEngine;
 
 // generic stuff
-public enum GameLevel { Downtown = 0, Smalltown = 1, Oldtown = 2, FutureTown = 3 };
+public enum GameLevel { Downtown = 0, Smalltown = 1, Oldtown = 2, FutureTown = 3, Exit = 4 }; // Exit is a placeholder for game exit, not a real level
 public enum DrivingMode { Normal, Free, VictoryLap };
 
 public class LevelInfo
@@ -46,6 +46,7 @@ public static class GameState
         new LevelInfo(GameLevel.Smalltown, true, false),
         new LevelInfo(GameLevel.Oldtown, false, false),
         new LevelInfo(GameLevel.FutureTown, false, false),
+        new LevelInfo(GameLevel.Exit, false, false), // placeholder
     };
 
     // remember initial game state so the same game state can be reinitialized for retrying the game

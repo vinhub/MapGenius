@@ -141,6 +141,8 @@ public class GameSystem : MonoBehaviour
         {
             default:
             case DrivingMode.Normal:
+                EnableLevelsUpto(PlayerState.PlayerGameLevel);
+
                 // show game instructions at the start of the game unless user has asked to hide them
                 if (GameState.IsGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
                 {
@@ -157,6 +159,8 @@ public class GameSystem : MonoBehaviour
                 break;
 
             case DrivingMode.VictoryLap:
+                EnableLevelsUpto(PlayerState.PlayerGameLevel);
+
                 StartCoroutine(DoVictoryLap());
                 break;
         }
@@ -327,6 +331,31 @@ public class GameSystem : MonoBehaviour
             ShowInfoMessage(Strings.GetBackOnTrackMessage, 3f);
     }
 
+    private GameLevel GetNextLevel(GameLevel gameLevel)
+    {
+        switch (gameLevel)
+        {
+            case GameLevel.Downtown: return GameLevel.Smalltown;
+            case GameLevel.Smalltown: return GameLevel.Oldtown;
+            case GameLevel.Oldtown: return GameLevel.FutureTown;
+            case GameLevel.FutureTown: return GameLevel.Exit;
+        }
+
+        return GameLevel.Exit;
+    }
+
+    private void EnableLevelsUpto(GameLevel gameLevel)
+    {
+        foreach (GameLevel gl in Enum.GetValues(typeof(GameLevel)))
+        {
+            LevelInfo levelInfo = LevelInfo.getLevelInfo(gl);
+            levelInfo.IsEnabled = true;
+
+            if (gl == gameLevel)
+                break;
+        }
+    }
+
     private void HandleHotkeys()
     {
         bool fShowMap = Input.GetKeyUp(KeyCode.M);
@@ -362,11 +391,6 @@ public class GameSystem : MonoBehaviour
         }
     }
 
-    private void OnGui()
-    {
-        // common GUI code goes here
-    }
-
     public void NewGame()
     {
         ContinueGame(false);
@@ -376,28 +400,12 @@ public class GameSystem : MonoBehaviour
 
     public void LevelUp()
     {
-        switch (PlayerState.PlayerGameLevel)
-        {
-            case GameLevel.Downtown:
-                // enable Smalltown level
-                LevelInfo levelInfo = LevelInfo.getLevelInfo(GameLevel.Smalltown);
-                levelInfo.IsEnabled = true;
+        GameLevel gameLevelNext = GetNextLevel(PlayerState.PlayerGameLevel);
 
-                GoToLevel(GameLevel.Smalltown);
-                break;
-
-            case GameLevel.Smalltown:
-                GoToLevel(GameLevel.Oldtown);
-                break;
-
-            case GameLevel.Oldtown:
-                GoToLevel(GameLevel.FutureTown);
-                break;
-
-            case GameLevel.FutureTown:
-                GameOver();
-                break;
-        }
+        if (gameLevelNext == GameLevel.Exit)
+            GameOver();
+        else
+            GoToLevel(gameLevelNext);
     }
 
     public void GoToLevel(GameLevel gameLevel)
@@ -531,7 +539,6 @@ public class GameSystem : MonoBehaviour
         }
     }
 
-
     private void ResumePausedAudio()
     {
         foreach (AudioSource audio in m_pausedAudioSources)
@@ -542,7 +549,6 @@ public class GameSystem : MonoBehaviour
 
         m_pausedAudioSources.Clear();
     }
-
 
     // called when the player crosses a landmark
     public void LandmarkCrossed(string landmarkName)
@@ -831,7 +837,11 @@ public class GameSystem : MonoBehaviour
     public void StartFreeDrive()
     {
         PlayerState.SetPlayerDrivingMode(DrivingMode.Free);
+
+        EnableLevelsUpto(GetNextLevel(PlayerState.PlayerGameLevel));
+
         ShowInfoMessage(Strings.FreeDriveMessage, 3f);
+        
         ContinueGame(false);
     }
 
