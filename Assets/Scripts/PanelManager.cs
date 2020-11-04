@@ -37,7 +37,7 @@ public class PanelManager : MonoBehaviour {
 
     private void Update()
     {
-        if (GameState.CurDrivingMode == DrivingMode.Normal)
+        if (PlayerState.PlayerDrivingMode == DrivingMode.Normal)
         {
             m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.timeSinceLevelLoad);
             m_timeText.color = Constants.ActiveTextColor;

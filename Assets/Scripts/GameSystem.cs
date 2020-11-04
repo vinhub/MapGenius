@@ -61,16 +61,25 @@ public class GameSystem : MonoBehaviour
 
     public GameObject VictoryLap;
 
+    
+    [RuntimeInitializeOnLoadMethod]
+    private static void InitializeOnLoad()
+    {
+        // read playerprefs
+        PlayerState.InitPlayerName();
+        PlayerState.InitPlayerGameLevel();
+        PlayerState.InitPlayerDrivingMode();
+        PlayerState.InitPlayerTotalScore();
+
+        // load the approp scene
+        SceneManager.LoadScene(PlayerState.PlayerGameLevel.ToString());
+    }
+
     private void Awake()
     {
         m_instance = this;
 
         DOTween.useSmoothDeltaTime = true;
-
-        // read playerprefs
-        PlayerState.InitPlayerName();
-        PlayerState.InitPlayerGameLevel();
-        PlayerState.InitPlayerTotalScore();
     }
 
     private void Start()
@@ -90,24 +99,12 @@ public class GameSystem : MonoBehaviour
         m_infoMessageText = tInfoMessage.Find(Strings.InfoMessageTextPath).GetComponent<TMP_Text>();
         m_infoMessageAudioSource = m_infoMessageText.GetComponent<AudioSource>();
 
-        GameState.CurDrivingMode = DrivingMode.Normal;
-
         InitGame();
     }
 
     private void InitGame()
     {
         SetLicensePlate();
-
-        // show game instructions at the start of the game unless user has asked to hide them
-        if (GameState.IsGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
-        {
-            m_mainPanelManager.OpenInstructionsPanel();
-        }
-        else
-        {
-            PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, LevelInfo.getLevelInfo(PlayerState.PlayerGameLevel).getName()), 1f);
-        }
 
         m_graph = GameObject.Find(Strings.GraphPath);
 
@@ -135,6 +132,34 @@ public class GameSystem : MonoBehaviour
         // place car some distance from the first landmark
         Car.transform.position = CarCameraRig.transform.position = OnTrackRoad.origPoints[OnTrackOrigPoint];
         Car.transform.rotation = CarCameraRig.transform.rotation = OnTrackRotation;
+
+        // display initial score
+        m_mainPanelManager.DisplayScore();
+
+        // apply driving mode
+        switch (PlayerState.PlayerDrivingMode)
+        {
+            default:
+            case DrivingMode.Normal:
+                // show game instructions at the start of the game unless user has asked to hide them
+                if (GameState.IsGameStarting && (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 0))
+                {
+                    m_mainPanelManager.OpenInstructionsPanel();
+                }
+                else
+                {
+                    PopupMessage.ShowMessage(PopupMessageType.LevelStarting, String.Format(Strings.LevelStartingMessageFormat, LevelInfo.getLevelInfo(PlayerState.PlayerGameLevel).getName()), 1f);
+                }
+                break;
+
+            case DrivingMode.Free:
+                StartFreeDrive();
+                break;
+
+            case DrivingMode.VictoryLap:
+                StartCoroutine(DoVictoryLap());
+                break;
+        }
     }
 
     public void SetLicensePlate()
@@ -398,6 +423,8 @@ public class GameSystem : MonoBehaviour
                 return;
         }
 
+        PlayerState.SetPlayerDrivingMode(DrivingMode.Normal);
+        
         ContinueGame(false);
 
         LevelInfo levelInfo = LevelInfo.getLevelInfo(gameLevel);
@@ -520,7 +547,7 @@ public class GameSystem : MonoBehaviour
     // called when the player crosses a landmark
     public void LandmarkCrossed(string landmarkName)
     {
-        if ((GameState.CurDrivingMode != DrivingMode.Normal) || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or victory lap mode or already processing a landmark?
+        if ((PlayerState.PlayerDrivingMode != DrivingMode.Normal) || !String.IsNullOrEmpty(m_mainPanelManager.CurLandmarkName)) // in free drive mode or victory lap mode or already processing a landmark?
             return;
 
         PauseGame();
@@ -803,15 +830,13 @@ public class GameSystem : MonoBehaviour
     // allow player to freely drive without worrying about landmarks etc.
     public void StartFreeDrive()
     {
-        GameState.CurDrivingMode = DrivingMode.Free;
+        PlayerState.SetPlayerDrivingMode(DrivingMode.Free);
         ShowInfoMessage(Strings.FreeDriveMessage, 3f);
         ContinueGame(false);
     }
 
     public IEnumerator DoVictoryLap()
     {
-        Debug.Assert(m_isGamePaused);
-
         m_carController.Move(0, 0, -1, 1);
         m_carController.StopCar();
 

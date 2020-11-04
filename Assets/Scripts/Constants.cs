@@ -17,6 +17,7 @@ public static class Strings
     public const string GameName = "MapGenius";
     public const string PlayerGameLevel = "PlayerGameLevel";
     public const string PlayerTotalScore = "PlayerTotalScore";
+    public const string PlayerDrivingMode = "PlayerDrivingMode";
 
     // panel names
     public const string MapPanelName = "Map";

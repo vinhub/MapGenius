@@ -39,7 +39,6 @@ public static class GameState
     // general globals
     public static bool IsGameStarting { get; set; } = true; // true only when the game is just starting, set to false when the instructions dialog is closed.
     public const int MaxLevelScore = 100; // max score for a level
-    public static DrivingMode CurDrivingMode = DrivingMode.Normal;
 
     public static LevelInfo[] LevelInfos = new LevelInfo[]
     {
