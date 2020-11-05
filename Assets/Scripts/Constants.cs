@@ -33,11 +33,11 @@ public static class Strings
     public const string PlayermarkIndexPath2 = "PlayermarkIndex";
     public const string PlayermarkTextPath = "PlayermarkText";
     public const string MainMenuName = "MainMenu";
-    public const string ContinueGameButtonPath = "MainMenu/Window/ContinueGame";
+    public const string ContinueGameButtonPath = "MainMenu/Window/Background/ContinueGame";
     public const string PanelsName = "Panels";
     public const string PanelManagerPath = "PanelManager";
     public const string OpenMenuButtonPath = "OpenMenuButton";
-    public const string LevelsMenuPath = "MainMenu/Window/Levels";
+    public const string LevelsMenuPath = "MainMenu/Window/Background/Levels";
     public const string InstructionsPanelPath = "Panels/Instructions";
     public const string InstructionStepsPath = "Window/Background/Instructions";
     public const string PlayerNameTextPath = "Window/Background/Instructions/Instructions5/NameText";
