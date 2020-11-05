@@ -121,23 +121,26 @@ public class MapPanelHelper : MonoBehaviour
 
             StartCoroutine(ShowLevelCompleteMessage(levelScore));
 
+            Button actionButton = m_tActionButton.GetComponent<Button>();
+
             if (levelScore == GameState.MaxLevelScore) // max score achieved
             {
                 PlayerState.IncrementPlayerTotalScore(levelScore);
                 DisplayScore(true);
 
                 m_actionButtonText.text = Strings.VictoryLap;
-                m_tActionButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                m_tActionButton.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickVictoryLap);
+                actionButton.onClick.RemoveAllListeners();
+                actionButton.onClick.AddListener(m_panelManager.OnClickVictoryLap);
             }
             else
             {
                 m_actionButtonText.text = Strings.RetryGame;
-                m_tActionButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                m_tActionButton.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
+                actionButton.onClick.RemoveAllListeners();
+                actionButton.onClick.AddListener(m_panelManager.OnClickRetryGame);
             }
 
-            m_tActionButton.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
+            actionButton.onClick.AddListener(m_buttonClickAudioSource.Play);
+            actionButton.interactable = false; // disable it for now, will enable when level complete message is hidden
 
             return false;
         }
@@ -198,6 +201,9 @@ public class MapPanelHelper : MonoBehaviour
         yield return new WaitForSecondsRealtime(5f);
 
         PopupMessage.HideMessage();
+
+        Button actionButton = m_tActionButton.GetComponent<Button>();
+        actionButton.interactable = true;
     }
 
     private float CalcLevelScore()
