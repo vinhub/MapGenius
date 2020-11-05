@@ -4621,7 +4621,7 @@ RectTransform:
   m_Children:
   - {fileID: 3440297481958320799}
   m_Father: {fileID: 5630321672815368781}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -5236,7 +5236,7 @@ RectTransform:
   m_Children:
   - {fileID: 6269193113782220748}
   m_Father: {fileID: 5630321672815368781}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -8910,7 +8910,7 @@ RectTransform:
   m_Children:
   - {fileID: 5736685844601331286}
   m_Father: {fileID: 5630321672815368781}
-  m_RootOrder: 7
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -9777,7 +9777,7 @@ RectTransform:
   m_Children:
   - {fileID: 5736685844860753129}
   m_Father: {fileID: 5630321672815368781}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -10112,7 +10112,7 @@ RectTransform:
   m_Children:
   - {fileID: 5736685845015982562}
   m_Father: {fileID: 5630321672815368781}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -10311,7 +10311,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Game
+  m_text: Restart Game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 259499a8c61decd45af828ca72300d48, type: 2}
   m_sharedMaterial: {fileID: -3209803605574384551, guid: 259499a8c61decd45af828ca72300d48,
@@ -10394,7 +10394,7 @@ GameObject:
   - component: {fileID: 5736685845059533780}
   - component: {fileID: 5736685845062483440}
   m_Layer: 5
-  m_Name: NewGame
+  m_Name: RestartGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10472,8 +10472,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5736685844750866035}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: NewGame
+        m_TargetAssemblyTypeName: PanelManager, Assembly-CSharp
+        m_MethodName: RestartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12887,13 +12887,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5736685845098850318}
-  - {fileID: 3440297481958320795}
   - {fileID: 5736685844860753133}
+  - {fileID: 5736685844601331282}
   - {fileID: 5736685845066335380}
+  - {fileID: 3440297481958320795}
   - {fileID: 614859943309390457}
   - {fileID: 85012361007146620}
   - {fileID: 5736685845015982566}
-  - {fileID: 5736685844601331282}
   - {fileID: 4054616049188053692}
   m_Father: {fileID: 5736685844845153050}
   m_RootOrder: 0
@@ -13241,7 +13241,7 @@ RectTransform:
   m_Children:
   - {fileID: 1463819035134358528}
   m_Father: {fileID: 5630321672815368781}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}

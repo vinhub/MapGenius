@@ -49,8 +49,8 @@ public static class GameState
         new LevelInfo(GameLevel.Exit, false, false), // placeholder
     };
 
-    // remember initial game state so the same game state can be reinitialized for retrying the game
-    public static bool RetryingGame { get; set; }
+    // remember initial game state so the same game state can be reinitialized for retrying the level
+    public static bool RetryingLevel { get; set; }
     public static bool InitStateExists { get { return InitLandmarks != null; } }
     public static List<LandmarkParams> InitLandmarks { get; set; }
     public static Quaternion InitRotationOnTrack  { get; set; }

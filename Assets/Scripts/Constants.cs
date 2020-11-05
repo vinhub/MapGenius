@@ -95,8 +95,7 @@ public static class Strings
     // text field values
     public const string StartGame = "Start Game";
     public const string ContinueGame = "Continue Game";
-    public const string NewGame = "New Game";
-    public const string RetryGame = "Try Again";
+    public const string RetryLevel = "Try Again";
     public const string VictoryLap = "Take a Victory Lap!";
     public const string Next = "Next";
 

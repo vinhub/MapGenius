@@ -134,9 +134,9 @@ public class MapPanelHelper : MonoBehaviour
             }
             else
             {
-                m_actionButtonText.text = Strings.RetryGame;
+                m_actionButtonText.text = Strings.RetryLevel;
                 actionButton.onClick.RemoveAllListeners();
-                actionButton.onClick.AddListener(m_panelManager.OnClickRetryGame);
+                actionButton.onClick.AddListener(m_panelManager.OnClickRetryLevel);
             }
 
             actionButton.onClick.AddListener(m_buttonClickAudioSource.Play);

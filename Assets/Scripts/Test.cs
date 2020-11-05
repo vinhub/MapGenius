@@ -21,18 +21,6 @@ public class Test : MonoBehaviour
         
     }
 
-    public void ResetGame()
-    {
-        // get into known clean state
-        PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, 0);
-        PlayerState.SetPlayerGameLevel(null);
-        PlayerState.SetPlayerDrivingMode(null);
-        PlayerState.SetPlayerName(null);
-        PlayerState.SetPlayerTotalScore(0);
-
-        SceneManager.LoadScene(PlayerState.PlayerGameLevel.ToString());
-    }
-
     IEnumerator LateStart(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);

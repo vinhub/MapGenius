@@ -115,12 +115,12 @@ public class GameSystem : MonoBehaviour
         m_tRoadHolder = m_graph.transform.Find(Strings.RoadHolderPath).transform;
         m_tLandmarks = GameObject.Find(Strings.LandmarksPath).transform;
 
-        if (GameState.RetryingGame)
+        if (GameState.RetryingLevel)
         {
             // use the init game state we had remembered
             LoadInitGameState();
 
-            GameState.RetryingGame = false;
+            GameState.RetryingLevel = false;
         }
         else
         {
@@ -365,7 +365,6 @@ public class GameSystem : MonoBehaviour
         bool fEscape = Input.GetKeyUp(KeyCode.Escape);
         bool fBackOnTrack = false;
         bool fRunTests = false;
-        bool fResetGame = Debug.isDebugBuild && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyUp(KeyCode.R);
 
         if (Input.GetKeyUp(KeyCode.T))
         {
@@ -392,17 +391,22 @@ public class GameSystem : MonoBehaviour
         {
             Resources.FindObjectsOfTypeAll<Test>()[0].gameObject.SetActive(true);
         }
-        else if (fResetGame)
-        {
-            Resources.FindObjectsOfTypeAll<Test>()[0].ResetGame();
-        }
     }
 
-    public void NewGame()
+    public void RestartGame()
     {
         ContinueGame(false);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // get into known clean state
+        PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, 0);
+        PlayerState.SetPlayerGameLevel(null);
+        PlayerState.SetPlayerDrivingMode(null);
+        PlayerState.SetPlayerName(null);
+        PlayerState.SetPlayerTotalScore(0);
+
+        GameState.IsGameStarting = true;
+
+        SceneManager.LoadScene(PlayerState.PlayerGameLevel.ToString());
     }
 
     public void LevelUp()
@@ -448,11 +452,11 @@ public class GameSystem : MonoBehaviour
     }
 
     // retry the same level without changing anything
-    public void RetryGame()
+    public void RetryLevel()
     {
         ContinueGame(false);
 
-        GameState.RetryingGame = true;
+        GameState.RetryingLevel = true;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

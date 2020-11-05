@@ -234,12 +234,12 @@ public class PanelManager : MonoBehaviour {
         ContinueGame(false);
     }
 
-    public void OnClickRetryGame()
+    public void OnClickRetryLevel()
     {
         if (!ClosePanel(false))
             return;
 
-        RetryGame();
+        RetryLevel();
     }
 
     public void OnClickVictoryLap()
@@ -250,12 +250,12 @@ public class PanelManager : MonoBehaviour {
         ContinueGame(true);
     }
 
-    public void OnClickNewGame()
+    public void OnClickRestartGame()
     {
         if (!ClosePanel(false))
             return;
 
-        NewGame();
+        RestartGame();
     }
 
     public void DisplayScore()
@@ -268,14 +268,14 @@ public class PanelManager : MonoBehaviour {
         GameSystem.Instance.ContinueGame(fVictoryLap);
     }
 
-    public void RetryGame()
+    public void RetryLevel()
     {
-        GameSystem.Instance.RetryGame();
+        GameSystem.Instance.RetryLevel();
     }
 
-    public void NewGame()
+    public void RestartGame()
     {
-        GameSystem.Instance.NewGame();
+        GameSystem.Instance.RestartGame();
     }
 
     public void GoToLevel(string gameLevelName)
