@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Test : MonoBehaviour
 {
     private void Awake()
     {
-        PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, 0);
     }
 
     // Start is called before the first frame update
@@ -19,6 +19,18 @@ public class Test : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void ResetGame()
+    {
+        // get into known clean state
+        PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, 0);
+        PlayerState.SetPlayerGameLevel(null);
+        PlayerState.SetPlayerDrivingMode(null);
+        PlayerState.SetPlayerName(null);
+        PlayerState.SetPlayerTotalScore(0);
+
+        SceneManager.LoadScene(PlayerState.PlayerGameLevel.ToString());
     }
 
     IEnumerator LateStart(float waitTime)

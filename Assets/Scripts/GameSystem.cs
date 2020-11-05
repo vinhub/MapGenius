@@ -365,6 +365,7 @@ public class GameSystem : MonoBehaviour
         bool fEscape = Input.GetKeyUp(KeyCode.Escape);
         bool fBackOnTrack = false;
         bool fRunTests = false;
+        bool fResetGame = Debug.isDebugBuild && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyUp(KeyCode.R);
 
         if (Input.GetKeyUp(KeyCode.T))
         {
@@ -390,6 +391,10 @@ public class GameSystem : MonoBehaviour
         else if (fRunTests)
         {
             Resources.FindObjectsOfTypeAll<Test>()[0].gameObject.SetActive(true);
+        }
+        else if (fResetGame)
+        {
+            Resources.FindObjectsOfTypeAll<Test>()[0].ResetGame();
         }
     }
 

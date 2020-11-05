@@ -102,9 +102,14 @@ public static class PlayerState
         PlayerTotalScore = score;
     }
 
-    public static void IncrementTotalScore(float levelScore)
+    public static void SetPlayerTotalScore(float score)
     {
-        PlayerTotalScore += levelScore;
+        PlayerTotalScore = score;
         PlayerPrefs.SetFloat(Strings.PlayerTotalScore, PlayerTotalScore);
+    }
+
+    public static void IncrementPlayerTotalScore(float levelScore)
+    {
+        SetPlayerTotalScore(PlayerTotalScore + levelScore);
     }
 }
