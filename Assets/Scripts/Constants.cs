@@ -106,17 +106,18 @@ public static class Strings
     public const string ShowHowToMarkMessageFormat = "You just crossed the  <b><color=#00ffffff>\"{0}\"</color></b>  landmark!\r\n\r\nSince this is your first landmark, we will mark its position on the map for you.";
     public const string LandmarkCrossedMessageFormat = "You just crossed the  <b><color=#00ffffff>\"{0}\"</color></b>  landmark!\r\n\r\nDrag and drop the corresponding blinking marker to the appropriate position on the map.";
     public const string LevelStartingMessageFormat = "<b><color=#00ff00ff>Welcome to {0}.</color></b>";
-    public const string LevelWonMessageFormat = "<b><color=#00ff00ff>Congratulations! You won!</color></b>\r\n\r\nYou scored {0} points in {1} seconds!";
-    public const string LevelLostMessageFormat = "<b><color=#ff5733ff>Map completed, but with some mistakes.</color></b>\r\n\r\nYou scored {0} points in {1} seconds.";
+    public const string LevelWonMessageFormat = "<b><color=#00ff00ff>Congratulations! Level completed!</color></b>\r\n\r\nYou scored {0} points in {1} seconds!";
+    public const string LevelLostMessageFormat = "<b><color=#ff5733ff>Level completed, but with some mistakes.</color></b>\r\n\r\nYou scored {0} points in {1} seconds.";
     public const string CarSpeedStatusFormat = "Speed: {0:F0}";
     public const string CarRevsStatusFormat = "Revs: {0:d3}";
     public const string GetBackOnTrackMessage = "Car is stuck? Press T to get it back on track.";
     public const string StartingInstructionsMessage = "Drive the car using the W, A, S, D or arrow keys or standard joystick controls.";
-    public const string VictoryLapEndPrompt = "<b><color=#00ff00ff>Victory lap over!</color></b>\r\n\r\nMove to next level or drive around freely for a while?";
+    public const string VictoryLapEndPrompt = "<b><color=#00ff00ff>Victory lap over!</color></b>\r\n\r\nYou can move to the next level or drive around freely for a couple of minutes and then move on.";
+    public const string FreeDriveEndPrompt = "<b><color=#00ff00ff>Free drive checkpoint!</color></b>\r\n\r\nYou can move to the next level or continue to drive around freely.";
     public const string MoveToNextLevel = "Move to next level";
     public const string StartFreeDrive = "Drive around freely";
     public const string VictoryLapInfoMessage = "Sit back and relax! You are on auto-drive until the end of the victory lap.";
     public const string VictoryLapStartingMessage = "It's time to take a victory lap!\r\n\r\nJust sit back, relax, and let us drive you around for a bit. You'll get controls back at the end of the celebration.";
     public const string FreeDriveMessage = "Drive freely anywhere you want to, including offroad. Hit 'Esc' when bored.";
-    public const string GameOverMessage = "<b><color=#00ff00ff>Congratulations! You're a MapGenius!\r\n\r\nThanks for playing. Bye!</color></b>";
+    public const string GameOverMessage = "<b><color=#00ff00ff>Congratulations! Game over. You have proven yourself to be a MapGenius!\r\n\r\nThanks for playing. Good bye!</color></b>";
 }

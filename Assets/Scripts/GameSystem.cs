@@ -157,7 +157,7 @@ public class GameSystem : MonoBehaviour
                 break;
 
             case DrivingMode.Free:
-                StartFreeDrive();
+                StartCoroutine(StartFreeDrive());
                 break;
 
             case DrivingMode.VictoryLap:
@@ -379,7 +379,7 @@ public class GameSystem : MonoBehaviour
         else if (fShowMap && !IsGamePaused())
             m_mainPanelManager.OpenMapPanel();
         else if (fFreeDrive)
-            StartFreeDrive();
+            StartCoroutine(StartFreeDrive());
         else if (fEscape)
         {
             if (m_mainPanelManager.IsPanelOpen())
@@ -845,7 +845,7 @@ public class GameSystem : MonoBehaviour
     }
 
     // allow player to freely drive without worrying about landmarks etc.
-    public void StartFreeDrive()
+    public IEnumerator StartFreeDrive()
     {
         PlayerState.SetPlayerDrivingMode(DrivingMode.Free);
 
@@ -854,6 +854,18 @@ public class GameSystem : MonoBehaviour
         ShowInfoMessage(Strings.FreeDriveMessage, 3f);
         
         ContinueGame(false);
+
+        yield return new WaitForSecondsRealtime(120f);
+
+        GameSystem.Instance.PauseGame();
+
+        PromptMessage.ShowMessage(Strings.FreeDriveEndPrompt, Strings.MoveToNextLevel, Strings.StartFreeDrive,
+            (levelUp) => {
+                if (levelUp)
+                    GameSystem.Instance.LevelUp();
+                else
+                    StartCoroutine(GameSystem.Instance.StartFreeDrive());
+            });
     }
 
     public IEnumerator DoVictoryLap()

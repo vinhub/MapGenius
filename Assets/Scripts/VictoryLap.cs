@@ -213,7 +213,7 @@ public class VictoryLap : MonoBehaviour
                 if (levelUp)
                     GameSystem.Instance.LevelUp();
                 else
-                    GameSystem.Instance.StartFreeDrive();
+                    StartCoroutine(GameSystem.Instance.StartFreeDrive());
             });
     }
 

@@ -8230,8 +8230,8 @@ MonoBehaviour:
 
     - Spacebar: Handbrake,
 
-    - T: Get back on Track (if car is stuck
-    off-track).
+    - T: Get back on Track (if car gets
+    stuck off-track).
 
 '
   m_isRightToLeft: 0
