@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 
-public enum PopupMessageType { LevelStarting, FirstLandmarkCrossed, OtherLandmarkCrossed, LevelLost, LevelWon, VictoryLapStarting, GameOver };
+public enum PopupMessageType { LevelStarting, ShowHowToMark, NormalLandmarkCrossed, LevelLost, LevelWon, VictoryLapStarting, GameOver };
 
 public class PopupMessage : MonoBehaviour
 {

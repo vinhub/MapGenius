@@ -46,7 +46,7 @@ public class VictoryLap : MonoBehaviour
         m_car.GetComponent<WaypointProgressTracker>().enabled = true;
         m_car.GetComponent<CarAIControl>().enabled = true;
 
-        GameSystem.Instance.CurDrivingMode = DrivingMode.VictoryLap;
+        PlayerState.SetPlayerDrivingMode(DrivingMode.VictoryLap);
 
         Transform tWaypointCircuit = transform.Find(Strings.WaypointCircuit);
 
@@ -62,12 +62,12 @@ public class VictoryLap : MonoBehaviour
 
         StartCoroutine(TerminateVictoryLap());
 
-        m_isReady = true; // this will start the celebration
-
         // play victory music
         m_audioSources = GetComponents<AudioSource>();
         m_audioSources[0].Play();
         GameSystem.Instance.ShowInfoMessage(Strings.VictoryLapInfoMessage, 5f);
+
+        m_isReady = true; // this will start the celebration
     }
 
     // create various celebratory elements such as confetti and audience etc.
@@ -213,7 +213,7 @@ public class VictoryLap : MonoBehaviour
                 if (levelUp)
                     GameSystem.Instance.LevelUp();
                 else
-                    GameSystem.Instance.StartFreeDrive();
+                    StartCoroutine(GameSystem.Instance.StartFreeDrive());
             });
     }
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using DG.Tweening;
 using TMPro;
+using System.Linq;
 
 public class PanelManager : MonoBehaviour {
 
@@ -36,7 +37,16 @@ public class PanelManager : MonoBehaviour {
 
     private void Update()
     {
-        m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.timeSinceLevelLoad);
+        if (PlayerState.PlayerDrivingMode == DrivingMode.Normal)
+        {
+            m_timeText.text = String.Format(Strings.TimeTextFormat, (int)Time.timeSinceLevelLoad);
+            m_timeText.color = Constants.ActiveTextColor;
+        }
+        else
+        {
+            m_timeText.text = String.Format(Strings.TimeTextFormat, 0);
+            m_timeText.color = Constants.InactiveTextColor;
+        }
     }
 
     public void OpenPanel(GameObject goPanel)
@@ -92,12 +102,12 @@ public class PanelManager : MonoBehaviour {
         hideInstructionsToggle.GetComponent<Toggle>().isOn = (PlayerPrefs.GetInt(Strings.HideInstructionsAtStart, 0) == 1);
 
         // show the "don't show this again" toggle only when starting the game
-        hideInstructionsToggle.gameObject.SetActive(StaticGlobals.isGameStarting);
+        hideInstructionsToggle.gameObject.SetActive(GameState.IsGameStarting);
     }
 
     private void SetupInstructionsPanel()
     {
-        Transform tInstructionSteps = m_instructionsPanel.transform.Find(Strings.InstructionSteps);
+        Transform tInstructionSteps = m_instructionsPanel.transform.Find(Strings.InstructionStepsPath);
         bool isLastInstruction = (m_iInstructionStep == tInstructionSteps.childCount - 1);
 
         // show current step
@@ -109,16 +119,22 @@ public class PanelManager : MonoBehaviour {
 
         Transform tCloseButton = m_instructionsPanel.transform.Find(Strings.CloseButtonPath);
 
-        TMP_Text closePanelText = tCloseButton.Find(Strings.CloseButtonLabelPath).GetComponent<TMP_Text>();
+        TMP_Text closePanelText = tCloseButton.Find(Strings.ButtonLabelPath).GetComponent<TMP_Text>();
 
-        closePanelText.text = isLastInstruction ? (StaticGlobals.isGameStarting ? Strings.StartGame : Strings.ContinueGame) : Strings.Next;
+        closePanelText.text = isLastInstruction ? (GameState.IsGameStarting ? Strings.StartGame : Strings.ContinueGame) : Strings.Next;
 
         Button closeButton = tCloseButton.GetComponent<Button>();
         
         closeButton.onClick.RemoveAllListeners();
 
         if (isLastInstruction)
-            closeButton.onClick.AddListener(ClosePanelAndContinue);
+        {
+            TMP_InputField inputField = m_instructionsPanel.transform.Find(Strings.PlayerNameTextPath).GetComponent<TMP_InputField>();
+            if (!String.IsNullOrWhiteSpace(PlayerState.PlayerName))
+                inputField.text = PlayerState.PlayerName;
+
+            closeButton.onClick.AddListener(OnClickCloseInstructionsPanel);
+        }
         else
             closeButton.onClick.AddListener(OnClickNextInstruction);
 
@@ -131,6 +147,18 @@ public class PanelManager : MonoBehaviour {
         SetupInstructionsPanel();
     }
 
+    public void OnClickCloseInstructionsPanel()
+    {
+        TMP_InputField inputField = m_instructionsPanel.transform.Find(Strings.PlayerNameTextPath).GetComponent<TMP_InputField>();
+        if (String.IsNullOrWhiteSpace(inputField.text.Trim()))
+            PlayerState.SetPlayerName(null);
+        else
+            PlayerState.SetPlayerName(inputField.text.Trim());
+
+        GameSystem.Instance.SetLicensePlate();
+        ClosePanelAndContinue();
+    }
+
     // called when the CloseButton is clicked on the Instructions panel
     private void CloseInstructionsPanel()
 	{
@@ -139,7 +167,7 @@ public class PanelManager : MonoBehaviour {
 
         Debug.Assert(m_goPanel == m_instructionsPanel);
 
-        if (StaticGlobals.isGameStarting) // instructions panel is being shown at the start of the game
+        if (GameState.IsGameStarting) // instructions panel is being shown at the start of the game
         {
             Transform hideInstructionsToggle = m_instructionsPanel.transform.Find(Strings.ButtonBarTogglePath);
             if (hideInstructionsToggle.gameObject.activeInHierarchy)
@@ -150,7 +178,7 @@ public class PanelManager : MonoBehaviour {
 
             GameSystem.Instance.ShowInfoMessage(Strings.StartingInstructionsMessage, 5f);
 
-            StaticGlobals.isGameStarting = false;
+            GameState.IsGameStarting = false;
         }
 
         m_iInstructionStep = 0;
@@ -206,12 +234,12 @@ public class PanelManager : MonoBehaviour {
         ContinueGame(false);
     }
 
-    public void OnClickRetryGame()
+    public void OnClickRetryLevel()
     {
         if (!ClosePanel(false))
             return;
 
-        RetryGame();
+        RetryLevel();
     }
 
     public void OnClickVictoryLap()
@@ -222,17 +250,17 @@ public class PanelManager : MonoBehaviour {
         ContinueGame(true);
     }
 
-    public void OnClickNewGame()
+    public void OnClickRestartGame()
     {
         if (!ClosePanel(false))
             return;
 
-        NewGame();
+        RestartGame();
     }
 
-    public void UpdateScore()
+    public void DisplayScore()
     {
-        m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero));
+        m_scoreText.text = String.Format(Strings.ScoreTextFormat, (int)Math.Round(PlayerState.PlayerTotalScore, MidpointRounding.AwayFromZero));
     }
 
     public void ContinueGame(bool fVictoryLap)
@@ -240,18 +268,19 @@ public class PanelManager : MonoBehaviour {
         GameSystem.Instance.ContinueGame(fVictoryLap);
     }
 
-    public void RetryGame()
+    public void RetryLevel()
     {
-        GameSystem.Instance.RetryGame();
+        GameSystem.Instance.RetryLevel();
     }
 
-    public void NewGame()
+    public void RestartGame()
     {
-        GameSystem.Instance.NewGame();
+        GameSystem.Instance.RestartGame();
     }
 
-    public void GoToLevel(string gameLevel)
+    public void GoToLevel(string gameLevelName)
     {
+        GameLevel gameLevel = GameState.LevelInfos.First<LevelInfo>(li => { return li.getName() == gameLevelName; }).GameLevel;
         GameSystem.Instance.GoToLevel(gameLevel);
     }
 

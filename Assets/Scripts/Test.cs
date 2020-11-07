@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Test : MonoBehaviour
 {
     private void Awake()
     {
-        PlayerPrefs.SetInt(Strings.HideInstructionsAtStart, 0);
     }
 
     // Start is called before the first frame update
@@ -33,14 +33,16 @@ public class Test : MonoBehaviour
 
         //RunInfoMessageTest();
 
-        //StartCoroutine(RunMapPanelTest());
+        StartCoroutine(RunMapPanelTest());
 
-        RunVictoryLapTest();
+        //RunVictoryLapTest();
+
+        //RunLevelUpTest();
     }
 
     private void RunPopupMessageTest()
     {
-        PopupMessage.ShowMessage(PopupMessageType.FirstLandmarkCrossed, string.Format(Strings.OtherLandmarkCrossedMessageFormat, "Post Office"));
+        PopupMessage.ShowMessage(PopupMessageType.ShowHowToMark, string.Format(Strings.LandmarkCrossedMessageFormat, "Post Office"));
     }
 
     private void RunInfoMessageTest()
@@ -73,6 +75,12 @@ public class Test : MonoBehaviour
 
     private void RunVictoryLapTest()
     {
-        StartCoroutine(GameSystem.Instance.DoVictoryLap());
+        GameSystem.Instance.PauseGame();
+        GameSystem.Instance.ContinueGame(true);
+    }
+
+    private void RunLevelUpTest()
+    {
+        GameSystem.Instance.LevelUp();
     }
 }

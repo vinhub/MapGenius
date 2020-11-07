@@ -58,7 +58,7 @@ public class MapPanelHelper : MonoBehaviour
             // add landmarks to the map help player know where they are (without telling them which landmark is which)
             AddLandmarksToMap();
 
-            if (StaticGlobals.CurGameLevel <= GameLevel.Smalltown)
+            if (PlayerState.PlayerGameLevel <= GameLevel.Smalltown)
             {
                 // for lower levels, always show hint
                 Transform tHint = m_tMapPanel.Find(Strings.HintPath);
@@ -114,31 +114,33 @@ public class MapPanelHelper : MonoBehaviour
         SavePlayermarkChanges();
 
         // if level is complete, we should not close the panel but show the results
-        if (fCheckOkToClose && m_isLevelComplete && (GameSystem.Instance.CurDrivingMode == DrivingMode.Normal))
+        if (fCheckOkToClose && m_isLevelComplete && (PlayerState.PlayerDrivingMode == DrivingMode.Normal))
         {
             // Calculate and display score
             float levelScore = CalcLevelScore();
 
-            GameSystem.Instance.SetScore(levelScore);
+            StartCoroutine(ShowLevelCompleteMessage(levelScore));
 
-            StartCoroutine(ShowLevelCompleteMessage());
+            Button actionButton = m_tActionButton.GetComponent<Button>();
 
-            DisplayScore(true);
-
-            if (levelScore == StaticGlobals.MaxLevelScore) // max score achieved
+            if (levelScore == GameState.MaxLevelScore) // max score achieved
             {
+                PlayerState.IncrementPlayerTotalScore(levelScore);
+                DisplayScore(true);
+
                 m_actionButtonText.text = Strings.VictoryLap;
-                m_tActionButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                m_tActionButton.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickVictoryLap);
+                actionButton.onClick.RemoveAllListeners();
+                actionButton.onClick.AddListener(m_panelManager.OnClickVictoryLap);
             }
             else
             {
-                m_actionButtonText.text = Strings.RetryGame;
-                m_tActionButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                m_tActionButton.GetComponent<Button>().onClick.AddListener(m_panelManager.OnClickRetryGame);
+                m_actionButtonText.text = Strings.RetryLevel;
+                actionButton.onClick.RemoveAllListeners();
+                actionButton.onClick.AddListener(m_panelManager.OnClickRetryLevel);
             }
 
-            m_tActionButton.GetComponent<Button>().onClick.AddListener(m_buttonClickAudioSource.Play);
+            actionButton.onClick.AddListener(m_buttonClickAudioSource.Play);
+            actionButton.interactable = false; // disable it for now, will enable when level complete message is hidden
 
             return false;
         }
@@ -188,17 +190,20 @@ public class MapPanelHelper : MonoBehaviour
         }
     }
 
-    private IEnumerator ShowLevelCompleteMessage()
+    private IEnumerator ShowLevelCompleteMessage(float levelScore)
     {
-        PopupMessageType type = IsLevelWon() ? PopupMessageType.LevelWon : PopupMessageType.LevelLost;
-        string message = IsLevelWon() ? string.Format(Strings.LevelWonMessageFormat, GameSystem.Instance.LevelScore, (int)Time.timeSinceLevelLoad) :
-            string.Format(Strings.LevelLostMessageFormat, GameSystem.Instance.LevelScore, (int)Time.timeSinceLevelLoad);
+        PopupMessageType type = IsLevelWon(levelScore) ? PopupMessageType.LevelWon : PopupMessageType.LevelLost;
+        string message = IsLevelWon(levelScore) ? string.Format(Strings.LevelWonMessageFormat, levelScore, (int)Time.timeSinceLevelLoad) :
+            string.Format(Strings.LevelLostMessageFormat, levelScore, (int)Time.timeSinceLevelLoad);
 
         PopupMessage.ShowMessage(type, message);
 
         yield return new WaitForSecondsRealtime(5f);
 
         PopupMessage.HideMessage();
+
+        Button actionButton = m_tActionButton.GetComponent<Button>();
+        actionButton.interactable = true;
     }
 
     private float CalcLevelScore()
@@ -206,7 +211,7 @@ public class MapPanelHelper : MonoBehaviour
         float levelScore = 0f;
 
         int numLandmarksInLevel = m_goLandmarks.Length;
-        float maxLandmarkScore = (float)StaticGlobals.MaxLevelScore / numLandmarksInLevel;
+        float maxLandmarkScore = (float)GameState.MaxLevelScore / numLandmarksInLevel;
         int maxSlopDistance = 30; // amount of slop allowed in placement of playermark
 
         // calculate and add up the score for each landmark
@@ -254,9 +259,11 @@ public class MapPanelHelper : MonoBehaviour
 
     private void DisplayScore(bool isNewScore)
     {
-        m_levelText.text = String.Format(Strings.LevelTextFormat, StaticGlobals.CurGameLevel);
+        m_levelText.text = String.Format(Strings.LevelTextFormat, PlayerState.PlayerGameLevel);
         m_totalScoreText.text = String.Format(Strings.ScoreTextFormat,
-            (int)Math.Round(StaticGlobals.TotalScore, MidpointRounding.AwayFromZero));
+            (int)Math.Round(PlayerState.PlayerTotalScore, MidpointRounding.AwayFromZero));
+
+        m_panelManager.DisplayScore();
 
         if (isNewScore)
         {
@@ -359,7 +366,7 @@ public class MapPanelHelper : MonoBehaviour
         if ((m_phCur != null) && (m_phCur.State == PlayermarkHandler.PlayermarkState.CurrentlyVisiting))
         {
             m_phCur.SetState(PlayermarkHandler.PlayermarkState.Visited);
-            m_phCur.SetScoreFactor(((StaticGlobals.CurGameLevel > GameLevel.Smalltown) && m_revealedLandmarksOnMap) ? 50f : 100f);
+            m_phCur.SetScoreFactor(((PlayerState.PlayerGameLevel > GameLevel.Smalltown) && m_revealedLandmarksOnMap) ? 50f : 100f);
         }
 
         // check if level is complete
@@ -382,8 +389,8 @@ public class MapPanelHelper : MonoBehaviour
         return allPlayermarksVisited;
     }
 
-    private static bool IsLevelWon()
+    private static bool IsLevelWon(float levelScore)
     {
-        return (GameSystem.Instance.LevelScore == StaticGlobals.MaxLevelScore);
+        return (levelScore == GameState.MaxLevelScore);
     }
 }
