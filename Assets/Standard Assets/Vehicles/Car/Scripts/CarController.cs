@@ -191,14 +191,20 @@ namespace UnityStandardAssets.Vehicles.Car
         }
 
         // VINMOD: START
+        private Vector3 m_velocitySav;
         public void StopCar()
         {
             if (m_Rigidbody != null)
+            {
+                m_velocitySav = m_Rigidbody.velocity;
                 m_Rigidbody.velocity = Vector3.zero;
-            //Revs = 0;
-            //m_CurrentTorque = 0;
-            //Move(0, 0, -1f, 1f);
-            //m_carAudio.StopSound();
+            }
+        }
+
+        public void ResumeCar()
+        {
+            if (m_Rigidbody != null)
+                m_Rigidbody.velocity = m_velocitySav / 2f;
         }
         // VINMOD: END
 
