@@ -5,8 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Swing.Editor;
 using System.Threading;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 
 public class CiDyEditor : EditorWindow {
 	//Window Creation Functions
@@ -37,20 +35,9 @@ public class CiDyEditor : EditorWindow {
 
     private bool displayingProgressBar = false;
 
-    void SceneOpended(Scene newScene, OpenSceneMode mode) {
-        if(graph == null)
-            graph = FindObjectOfType(typeof(CiDyGraph)) as CiDyGraph;
-    }
-
-    private void OnDisable()
-    {
-        EditorSceneManager.sceneOpened -= SceneOpended;
-    }
-
     //Grab or Create a CiDyGraph
     void OnEnable(){
-       // Debug.Log ("OnEnable CiDyWindow");
-        EditorSceneManager.sceneOpened += SceneOpended;
+        //Debug.Log ("OnEnable CiDyWindow");
         //Check for an existing graph
         //hideFlags = HideFlags.HideAndDontSave;
         graph = FindObjectOfType (typeof(CiDyGraph)) as CiDyGraph;
@@ -186,9 +173,6 @@ public class CiDyEditor : EditorWindow {
 
     void OnGUI()
 	{
-        if (graph == null) {
-            return;
-        }
         //Check for Undo or Redo
         /*Event e = Event.current;
 		if(e.isKey){
@@ -474,21 +458,14 @@ public class CiDyEditor : EditorWindow {
 				GUILayout.EndScrollView();
 			}
 		}
-        //EditorGUI.EndChangeCheck();
-        if (EditorGUI.EndChangeCheck ()) {
+		if (EditorGUI.EndChangeCheck ()) {
 			//Debug.Log("Value Changed");
 			EditorUtility.SetDirty(this);
 		}
-
-        //Check if Dirty
-        if (GUI.changed)
-        {
-            DirtyScene();
-        }
-        //color field
-        //color = EditorGUILayout.ColorField(color, GUILayout.Width(200));
-        //Repaint Windows
-        SceneView.RepaintAll ();
+		//color field
+		//color = EditorGUILayout.ColorField(color, GUILayout.Width(200));
+		//Repaint Windows
+		SceneView.RepaintAll ();
 	}
 
     //This function is called by the Graph when there Is an Editor Utility Display
@@ -558,15 +535,17 @@ public class CiDyEditor : EditorWindow {
 
     // Window has been selected
     void OnFocus() {
-        // Remove delegate listener if it has previously
-        // Add (or re-add) the delegate.
-        SceneView.duringSceneGui -= this.OnSceneGUI;
+		// Remove delegate listener if it has previously
+		// been assigned.
+		SceneView.duringSceneGui -= this.OnSceneGUI;
+		// Add (or re-add) the delegate.
 		SceneView.duringSceneGui += this.OnSceneGUI;
-        //Undo.undoRedoPerformed -= this.CiDyUndoRedoCallback;
-        //Undo.undoRedoPerformed += this.CiDyUndoRedoCallback;
-    }
 
-    /*public void CiDyUndoRedoCallback()
+		//Undo.undoRedoPerformed -= this.CiDyUndoRedoCallback;
+		//Undo.undoRedoPerformed += this.CiDyUndoRedoCallback;
+	}
+	
+	/*public void CiDyUndoRedoCallback()
 	{
 		Debug.Log ("Undo/Redo Performed");
 		if(graph){
@@ -579,7 +558,7 @@ public class CiDyEditor : EditorWindow {
 		//SceneView.RepaintAll();
 	}*/
 
-    void OnDestroy() {
+	void OnDestroy() {
 		UpdateState ();
 		// When the window is destroyed, remove the delegate
 		// so that it will no longer do any drawing.
@@ -715,10 +694,6 @@ public class CiDyEditor : EditorWindow {
                                         Debug.Log("Cannot Place New Node at that position.");
                                         return;
                                     }
-                                    else {
-                                        //Node Created, Set Scene as Dirty
-
-                                    }
                                     //This is an acceptable place for a new Node.
                                     if (curData != null)
                                     {
@@ -754,8 +729,6 @@ public class CiDyEditor : EditorWindow {
                                         {
                                             ActivateVisuals();
                                         }
-                                        //Graph has Changed. Dirty Scene for Saving
-                                        DirtyScene();
                                     }
                                 }
                                 else if (hitTag == nodeTag)
@@ -825,8 +798,6 @@ public class CiDyEditor : EditorWindow {
                                     {
                                         graph.UpdateRoadCell(curRoad);
                                     }
-                                    //Graph has Changed. Dirty Scene for Saving
-                                    DirtyScene();
                                 }
                             }
                             else if (e.type == EventType.MouseDrag)
@@ -1070,11 +1041,6 @@ public class CiDyEditor : EditorWindow {
 		}
 	}
 
-    //Dirty Scene for Saving
-    void DirtyScene() {
-        EditorUtility.SetDirty(this);
-        EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-    }
 	public Rect userRect= new Rect(0,0,50,50);
 	public List<GameObject> selectedObjects = new List<GameObject>();//Dynamic list for the user interface.
 	public GameObject selectedPoint;
@@ -1303,8 +1269,6 @@ public class CiDyEditor : EditorWindow {
             //We have boundary Cells.
             graph.UpdateBoundaryCells(boundaryCell);
         }*/
-        //Graph has Changed. Dirty Scene for Saving
-        DirtyScene();
     }
 
 	//Change Control State(What we can interact with)
@@ -1328,9 +1292,7 @@ public class CiDyEditor : EditorWindow {
 
 	//Keep Track Of Dynamic User Edited Variables
 	void Update(){
-        if (graph == null) {
-            return;
-        }
+
         //Update Changed Values
         if (curNodeScale != nodeScale){
 			curNodeScale = nodeScale;
