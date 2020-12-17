@@ -533,6 +533,9 @@ public class GameSystem : MonoBehaviour
         yield return new WaitForSecondsRealtime(5f);
 
         PopupMessage.HideMessage();
+
+        PlayerState.Reset(); // reset state so if you play again, you start afresh
+
         QuitGame();
     }
 

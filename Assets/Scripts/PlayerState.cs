@@ -112,4 +112,12 @@ public static class PlayerState
     {
         SetPlayerTotalScore(PlayerTotalScore + levelScore);
     }
+
+    public static void Reset()
+    {
+        SetPlayerName(null);
+        SetPlayerGameLevel(null);
+        SetPlayerDrivingMode(null);
+        SetPlayerTotalScore(0f);
+    }
 }
